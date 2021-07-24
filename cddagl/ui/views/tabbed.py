@@ -30,7 +30,6 @@ from cddagl.ui.views.backups import BackupsTab
 from cddagl.ui.views.dialogs import AboutDialog, FaqDialog
 from cddagl.ui.views.fonts import FontsTab
 from cddagl.ui.views.main import MainTab
-from cddagl.ui.views.mods import ModsTab
 from cddagl.ui.views.settings import SettingsTab
 from cddagl.ui.views.soundpacks import SoundpacksTab
 from cddagl.ui.views.tilesets import TilesetsTab
@@ -416,7 +415,6 @@ class CentralWidget(QTabWidget):
 
         self.create_main_tab()
         self.create_backups_tab()
-        self.create_mods_tab()
         #self.create_tilesets_tab()
         self.create_soundpacks_tab()
         #self.create_fonts_tab()
@@ -425,7 +423,6 @@ class CentralWidget(QTabWidget):
     def set_text(self):
         self.setTabText(self.indexOf(self.main_tab), _('Main'))
         self.setTabText(self.indexOf(self.backups_tab), _('Backups'))
-        self.setTabText(self.indexOf(self.mods_tab), _('Mods'))
         #self.setTabText(self.indexOf(self.tilesets_tab), _('Tilesets'))
         self.setTabText(self.indexOf(self.soundpacks_tab), _('Soundpacks'))
         #self.setTabText(self.indexOf(self.fonts_tab), _('Fonts'))
@@ -433,7 +430,6 @@ class CentralWidget(QTabWidget):
 
         self.main_tab.set_text()
         self.backups_tab.set_text()
-        self.mods_tab.set_text()
         #self.tilesets_tab.set_text()
         self.soundpacks_tab.set_text()
         #self.fonts_tab.set_text()
@@ -448,11 +444,6 @@ class CentralWidget(QTabWidget):
         backups_tab = BackupsTab()
         self.addTab(backups_tab, _('Backups'))
         self.backups_tab = backups_tab
-
-    def create_mods_tab(self):
-        mods_tab = ModsTab()
-        self.addTab(mods_tab, _('Mods'))
-        self.mods_tab = mods_tab
 
     def create_tilesets_tab(self):
         tilesets_tab = TilesetsTab()

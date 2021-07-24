@@ -227,9 +227,6 @@ class SoundpacksTab(QTabWidget):
     def get_main_tab(self):
         return self.parentWidget().parentWidget().main_tab
 
-    def get_mods_tab(self):
-        return self.get_main_tab().get_mods_tab()
-
     def get_settings_tab(self):
         return self.get_main_tab().get_settings_tab()
 
@@ -408,7 +405,6 @@ class SoundpacksTab(QTabWidget):
                 self.repository_lv.setEnabled(False)
 
                 self.get_main_tab().disable_tab()
-                self.get_mods_tab().disable_tab()
                 self.get_settings_tab().disable_tab()
                 self.get_backups_tab().disable_tab()
             elif selected_info['type'] == 'browser_download':
@@ -427,7 +423,6 @@ class SoundpacksTab(QTabWidget):
                     self.repository_lv.setEnabled(False)
 
                     self.get_main_tab().disable_tab()
-                    self.get_mods_tab().disable_tab()
                     self.get_settings_tab().disable_tab()
                     self.get_backups_tab().disable_tab()
 
@@ -669,7 +664,6 @@ class SoundpacksTab(QTabWidget):
         self.install_new_button.setText(_('Install this soundpack'))
 
         self.get_main_tab().enable_tab()
-        self.get_mods_tab().enable_tab()
         self.get_settings_tab().enable_tab()
         self.get_backups_tab().enable_tab()
 

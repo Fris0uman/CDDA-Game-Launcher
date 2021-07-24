@@ -232,9 +232,6 @@ class BackupsTab(QTabWidget):
     def get_settings_tab(self):
         return self.get_main_tab().get_settings_tab()
 
-    def get_mods_tab(self):
-        return self.get_main_tab().get_mods_tab()
-
     def get_backups_tab(self):
         return self.get_main_tab().get_backups_tab()
 
@@ -537,7 +534,6 @@ class BackupsTab(QTabWidget):
         self.get_main_tab().disable_tab()
         self.get_soundpacks_tab().disable_tab()
         self.get_settings_tab().disable_tab()
-        self.get_mods_tab().disable_tab()
         self.get_backups_tab().disable_tab()
 
         self.restore_button.setEnabled(True)
@@ -639,7 +635,6 @@ class BackupsTab(QTabWidget):
         self.get_main_tab().enable_tab()
         self.get_soundpacks_tab().enable_tab()
         self.get_settings_tab().enable_tab()
-        self.get_mods_tab().enable_tab()
         self.get_backups_tab().enable_tab()
 
         self.restore_button.setText(_('Restore backup'))
@@ -908,7 +903,6 @@ class BackupsTab(QTabWidget):
         self.get_main_tab().disable_tab()
         self.get_soundpacks_tab().disable_tab()
         self.get_settings_tab().disable_tab()
-        self.get_mods_tab().disable_tab()
         self.get_backups_tab().disable_tab()
 
         if self.manual_backup:
@@ -1087,7 +1081,6 @@ class BackupsTab(QTabWidget):
         self.get_main_tab().enable_tab()
         self.get_soundpacks_tab().enable_tab()
         self.get_settings_tab().enable_tab()
-        self.get_mods_tab().enable_tab()
         self.get_backups_tab().enable_tab()
 
         if self.manual_backup:
