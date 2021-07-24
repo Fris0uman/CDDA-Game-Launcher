@@ -196,7 +196,7 @@ The launcher goes to great lengths not to delete any file that could be importan
 
 Poor antivirus products are known to detect the launcher as a threat and block its execution or delete the launcher. A simple workaround is to add the launcher binary in your antivirus whitelist or select the action to trust this binary when detected.
 
-If you are paranoid, you can always inspect the source code yourself and build the launcher from the source code. You are still likely to get false positives. There is little productive efforts we can do as software developers with these. We have [a nice building guide](https://github.com/remyroy/CDDA-Game-Launcher/blob/master/BUILDING.md) for those who want to build the launcher from the source code.
+If you are paranoid, you can always inspect the source code yourself and build the launcher from the source code. You are still likely to get false positives. There is little productive efforts we can do as software developers with these. We have [a nice building guide](https://github.com/Fris0uman/CDDA-Game-Launcher/blob/master/BUILDING.md) for those who want to build the launcher from the source code.
 
 Many people are dying to know why antivirus products are identifying the launcher as a threat. There has been many wild speculations to try to pinpoint the root cause for this. The best way to find out would be to ask those antivirus product developers. Unfortunatly, they are unlikely to respond for many good reasons. We could also speculate on this for days on end. Our current best speculation is because we use a component called PyInstaller [that is commonly flagged as a threat](https://github.com/pyinstaller/pyinstaller/issues/4633). Now, if you want see how deep the rabbit hole goes, you can keep on searching or speculating on why PyInstaller itself is commonly flagged as a threat. This research is left as an exercise to the reader.
 
@@ -211,7 +211,7 @@ You should [contact the game developpers](https://cataclysmdda.org/#ive-found-a-
 [TBD]
 ### The launcher keeps crashing when I start it. What can I do?
 
-You might need to delete your configs file to work around this issue. That filename is `configs.db` and it is located in `%LOCALAPPDATA%\CDDA Game Launcher\`. Some users have reported and encountered unrelated starting issues. In some cases, running a debug version of the launcher to get more logs might help to locate the issue. [Creating an issue about this](https://github.com/remyroy/CDDA-Game-Launcher/issues) is probably the way to go.
+You might need to delete your configs file to work around this issue. That filename is `configs.db` and it is located in `%LOCALAPPDATA%\CDDA Game Launcher\`. Some users have reported and encountered unrelated starting issues. In some cases, running a debug version of the launcher to get more logs might help to locate the issue. [Creating an issue about this](https://github.com/Fris0uman/CDDA-Game-Launcher/issues) is probably the way to go.
 
 ### I just installed the game and it already has a big list of mods. Is there something wrong?
 
@@ -261,23 +261,12 @@ class AboutDialog(QDialog):
         self.ok_button.setText(_('OK'))
         m = _('<p>CDDA Game Launcher version {version}</p>').format(version=version)
         m += _('<p>Get the latest release'
-               ' <a href="https://github.com/remyroy/CDDA-Game-Launcher/releases">on GitHub</a>.'
+               ' <a href="https://github.com/Fris0uman/CDDA-Game-Launcher/releases">on GitHub</a>.'
                '</p>')
         m += _('<p>Please report any issue'
-               ' <a href="https://github.com/remyroy/CDDA-Game-Launcher/issues/new">on GitHub</a>.'
+               ' <a href="https://github.com/Fris0uman/CDDA-Game-Launcher/issues/new">on GitHub</a>.'
                '</p>')
-        bitcoin_text = r'3N2BRM61bZLuFRHjSj2Lhtw6DrwPUGeTvV'
-        bitcoin_link = r'bitcoin:3N2BRM61bZLuFRHjSj2Lhtw6DrwPUGeTvV'
-        ether_link = r'https://etherscan.io/address/0xdb731476e913d75061a78105c3d1b5a7a03aa21b'
-        ether_text = r'0xdb731476e913d75061a78105c3d1b5a7a03aa21b'
-        m += _('<p>If you like the CDDA Game Launcher, you can buy me a beer by:</p>'
-               '<p>donating bitcoins to <a href="{bitcoin_link}">{bitcoin_text}</a></p>'
-               '<p><img src="btc-qr.png" /></p>'
-               '<p>or by donating ethers to <a href="{ether_link}">{ether_text}</a></p>'
-               '<p><img src="eth-qr.png" /></p>').format(bitcoin_text=bitcoin_text,
-                                                         bitcoin_link=bitcoin_link,
-                                                         ether_link=ether_link,
-                                                         ether_text=ether_text)
+        m += _('<p>Thanks to Rémy Roy for the <a href="https://github.com/remyroy/CDDA-Game-Launcher/">original implementation</a>' )
         m += _('<p>Thanks to the following people for their efforts in'
                ' translating the CDDA Game Launcher</p>'
                '<ul>'
