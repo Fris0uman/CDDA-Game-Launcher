@@ -81,9 +81,6 @@ class MainTab(QWidget):
     def get_soundpacks_tab(self):
         return self.parentWidget().parentWidget().soundpacks_tab
 
-    def get_mods_tab(self):
-        return self.parentWidget().parentWidget().mods_tab
-
     def get_backups_tab(self):
         return self.parentWidget().parentWidget().backups_tab
 
@@ -443,12 +440,10 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
             update_group_box.disable_controls(True)
 
             soundpacks_tab = main_tab.get_soundpacks_tab()
-            mods_tab = main_tab.get_mods_tab()
             settings_tab = main_tab.get_settings_tab()
             backups_tab = main_tab.get_backups_tab()
 
             soundpacks_tab.disable_tab()
-            mods_tab.disable_tab()
             settings_tab.disable_tab()
             backups_tab.disable_tab()
 
@@ -496,7 +491,6 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
         update_group_box = main_tab.update_group_box
 
         soundpacks_tab = main_tab.get_soundpacks_tab()
-        mods_tab = main_tab.get_mods_tab()
         settings_tab = main_tab.get_settings_tab()
         backups_tab = main_tab.get_backups_tab()
 
@@ -504,7 +498,6 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
         update_group_box.enable_controls()
 
         soundpacks_tab.enable_tab()
-        mods_tab.enable_tab()
         settings_tab.enable_tab()
         backups_tab.enable_tab()
 
@@ -536,14 +529,6 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
         directory = self.dir_combo.currentText()
         soundpacks_tab.game_dir_changed(directory)
 
-    def update_mods(self):
-        main_window = self.get_main_window()
-        central_widget = main_window.central_widget
-        mods_tab = central_widget.mods_tab
-
-        directory = self.dir_combo.currentText()
-        mods_tab.game_dir_changed(directory)
-
     def update_backups(self):
         main_window = self.get_main_window()
         central_widget = main_window.central_widget
@@ -558,13 +543,6 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
         soundpacks_tab = central_widget.soundpacks_tab
 
         soundpacks_tab.clear_soundpacks()
-
-    def clear_mods(self):
-        main_window = self.get_main_window()
-        central_widget = main_window.central_widget
-        mods_tab = central_widget.mods_tab
-
-        mods_tab.clear_mods()
 
     def clear_backups(self):
         main_window = self.get_main_window()
@@ -656,7 +634,6 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
                     self.update_version()
                     self.update_saves()
                     self.update_soundpacks()
-                    self.update_mods()
                     self.update_backups()
 
         if self.exe_path is None:
@@ -670,7 +647,6 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
             self.build_value_label.setText(_('Unknown'))
             self.saves_value_edit.setText(_('Unknown'))
             self.clear_soundpacks()
-            self.clear_mods()
             self.clear_backups()
         else:
             self.launch_game_button.setEnabled(True)
@@ -843,12 +819,10 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
             update_group_box.disable_controls(True)
 
             soundpacks_tab = main_tab.get_soundpacks_tab()
-            mods_tab = main_tab.get_mods_tab()
             settings_tab = main_tab.get_settings_tab()
             backups_tab = main_tab.get_backups_tab()
 
             soundpacks_tab.disable_tab()
-            mods_tab.disable_tab()
             settings_tab.disable_tab()
             backups_tab.disable_tab()
 
@@ -882,7 +856,6 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
                 update_group_box.enable_controls()
 
                 soundpacks_tab.enable_tab()
-                mods_tab.enable_tab()
                 settings_tab.enable_tab()
                 backups_tab.enable_tab()
 
@@ -1799,12 +1772,10 @@ class UpdateGroupBox(QGroupBox):
         self.disable_controls()
 
         soundpacks_tab = main_tab.get_soundpacks_tab()
-        mods_tab = main_tab.get_mods_tab()
         settings_tab = main_tab.get_settings_tab()
         backups_tab = main_tab.get_backups_tab()
 
         soundpacks_tab.disable_tab()
-        mods_tab.disable_tab()
         settings_tab.disable_tab()
         backups_tab.disable_tab()
 
@@ -2637,94 +2608,6 @@ class UpdateGroupBox(QGroupBox):
         main_window = self.get_main_window()
         status_bar = main_window.statusBar()
 
-        # Copy custom mods from previous version
-        # mods
-        mods_dir = os.path.join(self.game_dir, 'data', 'mods')
-        previous_mods_dir = os.path.join(self.game_dir, 'previous_version',
-            'data', 'mods')
-
-        if (os.path.isdir(mods_dir) and os.path.isdir(previous_mods_dir) and
-            self.in_post_extraction):
-            status_bar.showMessage(_('Restoring custom mods'))
-
-            official_set = {}
-            for entry in os.listdir(mods_dir):
-                entry_path = os.path.join(mods_dir, entry)
-                if os.path.isdir(entry_path):
-                    name = self.mod_ident(entry_path)
-                    if name is not None and name not in official_set:
-                        official_set[name] = entry_path
-            previous_set = {}
-            for entry in os.listdir(previous_mods_dir):
-                entry_path = os.path.join(previous_mods_dir, entry)
-                if os.path.isdir(entry_path):
-                    name = self.mod_ident(entry_path)
-                    if name is not None and name not in previous_set:
-                        previous_set[name] = entry_path
-
-            custom_set = set(previous_set.keys()) - set(official_set.keys())
-            for item in custom_set:
-                target_dir = os.path.join(mods_dir, os.path.basename(
-                    previous_set[item]))
-                if not os.path.exists(target_dir):
-                    shutil.copytree(previous_set[item], target_dir)
-
-            status_bar.clearMessage()
-
-        if not self.in_post_extraction:
-            return
-
-        # user mods
-        user_mods_dir = os.path.join(self.game_dir, 'mods')
-        previous_user_mods_dir = os.path.join(self.game_dir, 'previous_version',
-            'mods')
-
-        if (os.path.isdir(previous_user_mods_dir) and self.in_post_extraction):
-            status_bar.showMessage(_('Restoring user custom mods'))
-
-            if not os.path.exists(user_mods_dir):
-                os.makedirs(user_mods_dir)
-
-            official_set = {}
-            for entry in os.listdir(user_mods_dir):
-                entry_path = os.path.join(user_mods_dir, entry)
-                if os.path.isdir(entry_path):
-                    name = self.mod_ident(entry_path)
-                    if name is not None and name not in official_set:
-                        official_set[name] = entry_path
-            previous_set = {}
-            for entry in os.listdir(previous_user_mods_dir):
-                entry_path = os.path.join(previous_user_mods_dir, entry)
-                if os.path.isdir(entry_path):
-                    name = self.mod_ident(entry_path)
-                    if name is not None and name not in previous_set:
-                        previous_set[name] = entry_path
-
-            custom_set = set(previous_set.keys()) - set(official_set.keys())
-            for item in custom_set:
-                target_dir = os.path.join(user_mods_dir, os.path.basename(
-                    previous_set[item]))
-                if not os.path.exists(target_dir):
-                    shutil.copytree(previous_set[item], target_dir)
-
-            status_bar.clearMessage()
-
-        if not self.in_post_extraction:
-            return
-
-        # Copy user-default-mods.json if present
-        user_default_mods_file = os.path.join(mods_dir, 'user-default-mods.json')
-        previous_user_default_mods_file = os.path.join(previous_mods_dir, 'user-default-mods.json')
-
-        if (not os.path.exists(user_default_mods_file)
-            and os.path.isfile(previous_user_default_mods_file)):
-            status_bar.showMessage(_('Restoring {0}').format('user-default-mods.json'))
-
-            shutil.copy2(previous_user_default_mods_file,
-                user_default_mods_file)
-
-            status_bar.clearMessage()
-
         self.preserve_custom_fonts()
 
         if not self.in_post_extraction:
@@ -2793,16 +2676,13 @@ class UpdateGroupBox(QGroupBox):
         self.enable_controls(True)
 
         game_dir_group_box.update_soundpacks()
-        game_dir_group_box.update_mods()
         game_dir_group_box.update_backups()
 
         soundpacks_tab = main_tab.get_soundpacks_tab()
-        mods_tab = main_tab.get_mods_tab()
         settings_tab = main_tab.get_settings_tab()
         backups_tab = main_tab.get_backups_tab()
 
         soundpacks_tab.enable_tab()
-        mods_tab.enable_tab()
         settings_tab.enable_tab()
         backups_tab.enable_tab()
 

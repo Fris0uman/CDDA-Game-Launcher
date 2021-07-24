@@ -149,7 +149,7 @@ msgstr "Tasa de compresión"
 msgid "Modified date"
 msgstr "Fecha de modificación"
 
-#: cddagl/ui/views/backups.py:201 cddagl/ui/views/mods.py:252
+#: cddagl/ui/views/backups.py:201
 #: cddagl/ui/views/soundpacks.py:215
 msgid "Name:"
 msgstr "Nombre:"
@@ -206,7 +206,7 @@ msgstr "Extrayendo copia de seguridad"
 #: cddagl/ui/views/backups.py:498 cddagl/ui/views/backups.py:595
 #: cddagl/ui/views/backups.py:929 cddagl/ui/views/backups.py:1035
 #: cddagl/ui/views/main.py:2553 cddagl/ui/views/main.py:3442
-#: cddagl/ui/views/main.py:3530 cddagl/ui/views/mods.py:775
+#: cddagl/ui/views/main.py:3530
 #: cddagl/ui/views/soundpacks.py:700 cddagl/ui/views/tabbed.py:602
 msgid "{bytes_sec}/s"
 msgstr "{bytes_sec}/s"
@@ -553,9 +553,7 @@ msgstr "Algo salió mal"
 #: cddagl/ui/views/main.py:940 cddagl/ui/views/main.py:1049
 #: cddagl/ui/views/main.py:1139 cddagl/ui/views/main.py:1248
 #: cddagl/ui/views/main.py:2671 cddagl/ui/views/main.py:2769
-#: cddagl/ui/views/main.py:2867 cddagl/ui/views/mods.py:1050
-#: cddagl/ui/views/mods.py:1092 cddagl/ui/views/mods.py:1129
-#: cddagl/ui/views/mods.py:1165 cddagl/ui/views/soundpacks.py:1013
+#: cddagl/ui/views/main.py:2867 cddagl/ui/views/soundpacks.py:1013
 #: cddagl/ui/views/soundpacks.py:1049
 msgid "Unknown"
 msgstr "Desconocido"
@@ -564,7 +562,7 @@ msgstr "Desconocido"
 msgid "Directory:"
 msgstr "Directorio:"
 
-#: cddagl/ui/views/main.py:207 cddagl/ui/views/mods.py:266
+#: cddagl/ui/views/main.py:207
 msgid "Version:"
 msgstr "Versión:"
 
@@ -858,7 +856,6 @@ msgid "Installation cancelled"
 msgstr "Instalación cancelada"
 
 #: cddagl/ui/views/main.py:1706 cddagl/ui/views/main.py:1771
-#: cddagl/ui/views/mods.py:421 cddagl/ui/views/mods.py:608
 #: cddagl/ui/views/soundpacks.py:372 cddagl/ui/views/soundpacks.py:567
 msgid "Downloading: {0}"
 msgstr "Descargando: {0}"
@@ -871,14 +868,12 @@ msgstr "Cancelar actualización"
 msgid "Cancel installation"
 msgstr "Cancelar instalación"
 
-#: cddagl/ui/views/main.py:1810 cddagl/ui/views/mods.py:493
-#: cddagl/ui/views/mods.py:656 cddagl/ui/views/soundpacks.py:440
+#: cddagl/ui/views/main.py:1810 cddagl/ui/views/soundpacks.py:440
 #: cddagl/ui/views/soundpacks.py:603
 msgid "Testing downloaded file archive"
 msgstr "Comprobando fichero comprimido descargado"
 
-#: cddagl/ui/views/main.py:1847 cddagl/ui/views/mods.py:530
-#: cddagl/ui/views/mods.py:701 cddagl/ui/views/soundpacks.py:487
+#: cddagl/ui/views/main.py:1847 cddagl/ui/views/soundpacks.py:487
 #: cddagl/ui/views/soundpacks.py:649
 msgid "Downloaded archive is invalid"
 msgstr "El fichero comprimido descargado es inválido"
@@ -912,7 +907,7 @@ msgstr "Respaldando {0}"
 msgid "Could not move {srcpath} in {dstpath} ."
 msgstr "No se pudo mover {srcpath} in {dstpath}"
 
-#: cddagl/ui/views/main.py:2076 cddagl/ui/views/mods.py:858
+#: cddagl/ui/views/main.py:2076
 #: cddagl/ui/views/soundpacks.py:783
 msgid "Extracting {0}"
 msgstr "Extrayendo {0}"
@@ -1123,219 +1118,71 @@ msgstr "Analizando {name} - Se encontraron {file_count} {files} ({size})"
 msgid "Copying {name} - {entry}"
 msgstr "Copiando {name} - {entry}"
 
-#: cddagl/ui/views/mods.py:235 cddagl/ui/views/soundpacks.py:196
+#: cddagl/ui/views/soundpacks.py:196
 msgid "Installed"
 msgstr "Instalado"
 
-#: cddagl/ui/views/mods.py:236 cddagl/ui/views/mods.py:981
-#: cddagl/ui/views/mods.py:1053 cddagl/ui/views/soundpacks.py:197
+#: cddagl/ui/views/soundpacks.py:197
 #: cddagl/ui/views/soundpacks.py:896 cddagl/ui/views/soundpacks.py:952
 msgid "Disable"
 msgstr "Deshabilitado"
 
-#: cddagl/ui/views/mods.py:237 cddagl/ui/views/soundpacks.py:198
+#: cddagl/ui/views/soundpacks.py:198
 msgid "Delete"
 msgstr "Eliminar"
 
-#: cddagl/ui/views/mods.py:239
-msgid "Add this new mod to the repository"
-msgstr "Agregar este mod al repositorio"
-
-#: cddagl/ui/views/mods.py:240
-msgid ""
-"* Name: [Enter the name of the mod]\n"
-"* Url: [Enter the Url where we can find the mod]\n"
-"* Author: [Enter the name of the author]\n"
-"* Homepage: [Enter the Url of the author website or where the mod was published]\n"
-"* Mod not found in version: {version}\n"
-msgstr ""
-"* Nombre: [Ingresar nombre del Mod]\n"
-"* Url: [Ingresar la Url donde se puede descargar el Mod]\n"
-"* Autor: [Ingresar el nombre del autor del Mod]\n"
-"* Página principal: [Ingresar la Url del sitio del autor del Mod o donde el Mod fue publicado]\n"
-"* Mod no disponible en versión: {version}\n"
-
-#: cddagl/ui/views/mods.py:247
-msgid "<a href=\"{url}\">Suggest a new mod on GitHub</a>"
-msgstr "<a href=\"{url}\">Sugerir un nuevo Mod en GitHub</a>"
-
-#: cddagl/ui/views/mods.py:249 cddagl/ui/views/soundpacks.py:199
+#: cddagl/ui/views/soundpacks.py:199
 msgid "Repository"
 msgstr "Repositorio"
 
-#: cddagl/ui/views/mods.py:250 cddagl/ui/views/mods.py:723
-msgid "Install this mod"
-msgstr "Instalar este mod"
-
-#: cddagl/ui/views/mods.py:251 cddagl/ui/views/soundpacks.py:213
+#: cddagl/ui/views/soundpacks.py:213
 msgid "Details"
 msgstr "Detalles"
 
-#: cddagl/ui/views/mods.py:253
-msgid "Ident:"
-msgstr "Código Ident:"
-
-#: cddagl/ui/views/mods.py:254
-msgid "Author:"
-msgstr "Autor:"
-
-#: cddagl/ui/views/mods.py:255
-msgid "Description:"
-msgstr "Descripción:"
-
-#: cddagl/ui/views/mods.py:256
-msgid "Category:"
-msgstr "Categoría:"
-
-#: cddagl/ui/views/mods.py:260 cddagl/ui/views/mods.py:1095
-#: cddagl/ui/views/mods.py:1122 cddagl/ui/views/soundpacks.py:219
+#: cddagl/ui/views/soundpacks.py:219
 #: cddagl/ui/views/soundpacks.py:979 cddagl/ui/views/soundpacks.py:1006
 #: cddagl/ui/views/tabbed.py:476
 msgid "Url:"
 msgstr "Url:"
 
-#: cddagl/ui/views/mods.py:262 cddagl/ui/views/mods.py:1043
 #: cddagl/ui/views/soundpacks.py:221 cddagl/ui/views/soundpacks.py:946
 msgid "Path:"
 msgstr "Ruta:"
 
-#: cddagl/ui/views/mods.py:264 cddagl/ui/views/soundpacks.py:223
-#: cddagl/ui/views/tabbed.py:487
+#: cddagl/ui/views/soundpacks.py:223 cddagl/ui/views/tabbed.py:487
 msgid "Size:"
 msgstr "Tamaño:"
 
-#: cddagl/ui/views/mods.py:265 cddagl/ui/views/soundpacks.py:224
+#: cddagl/ui/views/soundpacks.py:224
 msgid "Home page:"
 msgstr "Página oficial:"
 
-#: cddagl/ui/views/mods.py:369
-msgid "Mod already present"
-msgstr "Mod ya instalado"
-
-#: cddagl/ui/views/mods.py:370
-msgid ""
-"It seems this mod is already installed. The launcher will not overwrite the "
-"mod if it has the same directory name. You might want to delete the mod "
-"first if you want to update it. Also, there can only be a single mod with "
-"the same ident value available in the game."
-msgstr ""
-"Parece que este Mod ya está instalado. El Launcher no va a sobrescribir el "
-"Mod si tiene el mismo nombre de directorio. Tal vez quieras eliminar el Mod "
-"primero si quieres actualizarlo. Además, puede haber solo un Mod con el "
-"mismo código Ident disponible en el juego."
-
-#: cddagl/ui/views/mods.py:377
-msgid "Are you sure you want to install the {name} mod?"
-msgstr "Estás seguro que quieres instalar el Mod {name}?"
-
-#: cddagl/ui/views/mods.py:380
-msgid "Install the mod"
-msgstr "Instalar el Mod"
-
-#: cddagl/ui/views/mods.py:382 cddagl/ui/views/soundpacks.py:335
+#: cddagl/ui/views/soundpacks.py:335
 msgid "Do not install again"
 msgstr "No instalar nuevamente"
 
-#: cddagl/ui/views/mods.py:456 cddagl/ui/views/mods.py:482
-msgid "Cancel mod installation"
-msgstr "Cancelar instalación del Mod"
-
-#: cddagl/ui/views/mods.py:476
-msgid "Could not find downloaded file archive"
-msgstr "No se pudo encontrar el fichero comprimido descargado"
-
-#: cddagl/ui/views/mods.py:502 cddagl/ui/views/mods.py:536
-#: cddagl/ui/views/mods.py:664 cddagl/ui/views/mods.py:707
 #: cddagl/ui/views/soundpacks.py:448 cddagl/ui/views/soundpacks.py:493
 #: cddagl/ui/views/soundpacks.py:611 cddagl/ui/views/soundpacks.py:655
 msgid "Selected file is a bad archive file"
 msgstr "El fichero seleccionado no es un fichero comprimido o está corrupto"
 
-#: cddagl/ui/views/mods.py:509 cddagl/ui/views/mods.py:671
 #: cddagl/ui/views/soundpacks.py:455 cddagl/ui/views/soundpacks.py:618
 msgid "Selected file is a password protected archive file"
 msgstr "El fichero seleccionado es un fichero comprimido con contraseña."
 
-#: cddagl/ui/views/mods.py:572 cddagl/ui/views/soundpacks.py:528
+#: cddagl/ui/views/soundpacks.py:528
 msgid "Soundpack installation cancelled"
 msgstr "Instalación del pack de sonidos cancelada"
 
-#: cddagl/ui/views/mods.py:649
-msgid "Could not find downloaded archive ({file})"
-msgstr "No se pudo encontrar el fichero comprimido descargado ({file})"
-
-#: cddagl/ui/views/mods.py:689 cddagl/ui/views/soundpacks.py:475
-#: cddagl/ui/views/soundpacks.py:637
-msgid "Unknown downloaded archive format ({extension})"
-msgstr "Fichero comprimido descargado con formato desconocido ({extension})"
-
-#: cddagl/ui/views/mods.py:887
-msgid "Finding the mod(s)"
-msgstr "Buscando Mods"
-
-#: cddagl/ui/views/mods.py:918
-msgid "Mod installation cancelled - There is no mod in the downloaded archive"
-msgstr ""
-"Instalación del Mod cancelada - No hay Mod en el fichero comprimido "
-"descargado"
-
-#: cddagl/ui/views/mods.py:930
-msgid ""
-"Mod installation cancelled - There is already a {basename} directory in "
-"{mods_dir}"
-msgstr ""
-"Instalación del Mod cancelada - Ya existe un directorio {basename} en "
-"{mods_dir}"
-
-#: cddagl/ui/views/mods.py:939
-msgid "Mod installation completed"
-msgstr "Instalación del Mod finalizada"
-
-#: cddagl/ui/views/mods.py:963 cddagl/ui/views/mods.py:980
-#: cddagl/ui/views/mods.py:1220
-msgid "*Error*"
-msgstr "*Error*"
-
-#: cddagl/ui/views/mods.py:964 cddagl/ui/views/mods.py:1218
 #: cddagl/ui/views/soundpacks.py:880 cddagl/ui/views/soundpacks.py:1098
 msgid " (Disabled)"
 msgstr " (Deshabilitado)"
 
-#: cddagl/ui/views/mods.py:965 cddagl/ui/views/mods.py:1055
 #: cddagl/ui/views/soundpacks.py:881 cddagl/ui/views/soundpacks.py:954
 msgid "Enable"
 msgstr "Habilitado"
 
-#: cddagl/ui/views/mods.py:997
-msgid "Delete mod"
-msgstr "Eliminar Mod"
-
-#: cddagl/ui/views/mods.py:998
-msgid "This will delete the mod directory. It cannot be undone."
-msgstr ""
-"Esto eliminará el directorio del Mod. La acción no puede ser revertida."
-
-#: cddagl/ui/views/mods.py:1000
-msgid "Are you sure you want to delete the {view} mod?"
-msgstr "Estás seguro que quieres eliminar el Mod {view}?"
-
-#: cddagl/ui/views/mods.py:1002
-msgid "Delete the mod"
-msgstr "Borrar Mod"
-
-#: cddagl/ui/views/mods.py:1004
-msgid "I want to keep the mod"
-msgstr "Quiero conservar el Mod"
-
-#: cddagl/ui/views/mods.py:1013
-msgid "Mod deletion cancelled"
-msgstr "Eliminación del Mod cancelada"
-
-#: cddagl/ui/views/mods.py:1018
-msgid "Mod deleted"
-msgstr "Mod eliminado"
-
-#: cddagl/ui/views/mods.py:1110 cddagl/ui/views/soundpacks.py:994
+#: cddagl/ui/views/soundpacks.py:994
 msgid "Getting remote size"
 msgstr "Obteniendo tamaño"
 
