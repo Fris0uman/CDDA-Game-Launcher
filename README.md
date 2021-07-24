@@ -2,7 +2,7 @@
 
 A [Cataclysm: Dark Days Ahead](https://cataclysmdda.org/) launcher with additional features.
 
-[Download here](https://github.com/remyroy/CDDA-Game-Launcher/releases).
+[Download here](https://github.com/Fris0uman/CDDA-Game-Launcher/releases).
 
 ## Implemented features
 
@@ -11,13 +11,7 @@ A [Cataclysm: Dark Days Ahead](https://cataclysmdda.org/) launcher with addition
 * Retreiving the available update builds
 * Automatically updating the game while preserving the user modifications
 * Soundpack manager
-* Mod manager
 * Save backups and automatic backups
-
-## Planned features
-
-* Tileset manager
-* Font presets
 
 ## FAQ
 
@@ -53,7 +47,7 @@ You should [contact the game developpers](https://cataclysmdda.org/#ive-found-a-
 
 ### How do I update to a new version of the game launcher?
 
-The launcher will automatically check for updated version on start. If it finds one, the launcher will prompt you to update. You can always download [the latest version on github](https://github.com/remyroy/CDDA-Game-Launcher/releases). Those using the portable version will have to manually download and manually update the launcher. From the help menu, you can also check for new updates.
+The launcher will automatically check for updated version on start. If it finds one, the launcher will prompt you to update. You can always download [the latest version on github](https://github.com/Fris0uman/CDDA-Game-Launcher/releases). Those using the portable version will have to manually download and manually update the launcher. From the help menu, you can also check for new updates.
 
 ### The launcher keeps crashing when I start it. What can I do?
 
@@ -63,21 +57,13 @@ You might need to delete your configs file to work around this issue. That filen
 
 The base game is bundled with a good number of mods. You can view them more like modules that you can activate or ignore when creating a new world in game. These mods or modules can provide a different game experience by adding new items, buildings, mobs, by disabling some game mechanics or by changing how you play the game. They are a simple way of having a distinctive playthrough using the same game engine. The game is quite enjoyable without any of these additional mods or by using the default mods when creating a new world. You should probably avoid using additional mods if you are new to the game for your first playthrough to get familiar with the game mechanics. Once you are comfortable, after one or a few playthroughs, I suggest you check back the base game mods or even some external mods for your next world.
 
-### A mod in the repository is broken or is crashing my game when enabled. What can I do? ###
-
-It is frequent for game updates to break mods especially on the experimental branch. You could try to see if there is an update for that mod. You could try updating that mod by removing it and installing it again. You could try to contact the mod author and ask him to update his mod.
-
-Maintaining external mods can be a difficult task for an ever expanding and changing base game. The only sure and *official* way to have good working mods is to have them included in the base game. If you are concerned about having a reliable gaming experience, you should consider using the base game mods exclusivly and you should consider using the stable branch.
-
-If you find out a mod in the repository is clearly abandonned and not working anymore, please [open an issue](https://github.com/remyroy/CDDA-Game-Launcher/issues) about it so it can be removed.
-
 ### Will you make a Linux or macOS version?
 
-Most likely not. You can check [the linux issue](https://github.com/remyroy/CDDA-Game-Launcher/issues/329) and [the mac issue](https://github.com/remyroy/CDDA-Game-Launcher/issues/73) for more information.
+[TBD]
 
 ### It does not work? Can you help me?
 
-Submit your issues [on Github](https://github.com/remyroy/CDDA-Game-Launcher/issues). Try to [report bugs effectively](http://www.chiark.greenend.org.uk/~sgtatham/bugs.html).
+Submit your issues [on Github](https://github.com/Fris0uman/CDDA-Game-Launcher/issues). Try to [report bugs effectively](http://www.chiark.greenend.org.uk/~sgtatham/bugs.html).
 
 ## Building
 
@@ -86,8 +72,6 @@ You can learn how to run and build the launcher by checking our [building guide]
 ## License
 
 This project is licensed under the terms of [the MIT license](LICENSE).
-
-Permission to use [the launcher icon](cddagl/resources/launcher.ico) was given by [Paul Davey aka Mattahan](http://mattahan.deviantart.com/).
 
 ## Contributing to this project
 
