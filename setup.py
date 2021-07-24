@@ -217,7 +217,7 @@ class FreezeWithPyInstaller(ExtendedCommand):
         window_mode = '-c' if bool(self.debug) else '-w'
 
         makespec_call = [
-            'pyi-makespec', '-D', window_mode, '--noupx',
+            'pyi-makespec', '-F', window_mode, '--noupx',
             '--hidden-import=lxml.cssselect',
             '--hidden-import=babel.numbers',
             '--hidden-import=pkg_resources.py2_warn',
@@ -244,6 +244,7 @@ class FreezeWithPyInstaller(ExtendedCommand):
         # Additional files
         added_files = [
             ('alembic', 'alembic'),
+            ('alembicrepo', 'alembicrepo'),
             ('data', 'data'),
             ('cddagl/resources', 'cddagl/resources'),
             ('cddagl/VERSION', 'cddagl')
