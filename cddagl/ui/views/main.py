@@ -11,10 +11,11 @@ import sys
 import tempfile
 import zipfile
 import random
+import requests
 
 from collections import deque
 from datetime import datetime, timedelta
-from io import BytesIO, TextIOWrapper
+from io import BytesIO, StringIO, TextIOWrapper
 from os import scandir
 from pathlib import Path
 from urllib.parse import urljoin
@@ -3104,7 +3105,58 @@ class UpdateGroupBox(QGroupBox):
             self.refresh_changelog()
 
     def refresh_changelog(self):
-        self.changelog_content.setHtml(_('<h3>Changelog is not available for experimental</h3>'))
+        ### "((?<![\w#])(?=[\w#])|(?<=[\w#])(?![\w#]))" is like a \b
+        ### that accepts "#" as word char too.
+        ### regex used to match issues / PR IDs like "#43151"
+        id_regex = re.compile(r'((?<![\w#])(?=[\w#])|(?<=[\w#])(?![\w#]))'
+                              r'#(?P<id>\d+)\b')
+
+        ### Get the last 100 PR
+        url = cons.CHANGELOG_URL + '100'
+
+        changelog_data = requests.get(url).json()
+        changelog_html = StringIO()
+
+        date = str()
+
+        for entry in changelog_data["items"]:
+            if entry["state"] == "open":
+             continue
+
+            if date != entry['closed_at'][0:10]:
+                date = entry['closed_at'][0:10]
+                changelog_html.write('</ul>')
+                changelog_html.write(
+                    '<h3>{0}</h3>'
+                    .format(date)
+                )
+                changelog_html.write('<ul>')
+            changelog_html.write(
+                    '<h4>{0}</h4>'
+                    .format(entry['title'])
+                )
+            changelog_html.write('<ul>')
+            body = entry['body'].split('####')
+            if len(body)>2:
+                if body[0] == '':
+                    msg = body[2]
+                else:
+                    msg = body[3]
+                msg=msg[18:]
+            else:
+                msg = entry['title']
+            commitid = entry['node_id']
+            link_repl = rf'<a href="{cons.CDDA_ISSUE_URL_ROOT}\g<id>">#\g<id></a>'
+            msg = id_regex.sub(link_repl, msg)
+            commit_name = entry['number']
+            if commitid:
+                commit_url = entry['html_url']
+                changelog_html.write(f'<li>{msg} [<a href="{commit_url}">{commit_name}</a>]</li>')
+            else:
+                changelog_html.write(f'<li>{msg}</li>')
+            changelog_html.write('</ul>')
+
+        self.changelog_content.setHtml(changelog_html.getvalue())
 
     def branch_clicked(self, button):
         if button is self.stable_radio_button:
