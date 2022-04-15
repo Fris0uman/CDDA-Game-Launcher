@@ -1472,12 +1472,6 @@ class UpdateGroupBox(QGroupBox):
             re.escape(asset_platform) + self.selected_build_type +
             r'b?(?P<build>[0-9\-]+)\.zip'
             )
-        target_regex_msvc = re.compile(
-            r'cdda-windows-' +
-            re.escape(asset_graphics) + r'-' +
-            re.escape(asset_platform) + r'-msvc-' +
-            r'b?(?P<build>[0-9\-]+)\.zip'
-            )
 
         build_regex = re.compile(r'[Bb]uild #?(?P<build>[0-9\-]+)')
 
@@ -1493,9 +1487,7 @@ class UpdateGroupBox(QGroupBox):
                     x for x in release['assets']
                     if 'browser_download_url' in x
                         and 'name' in x
-                        and (
-                            target_regex.search(x['name']) is not None or
-                            target_regex_msvc.search(x['name']) is not None )
+                        and target_regex.search(x['name']) is not None
                 )
                 asset = next(asset_iter, None)
 
@@ -2943,13 +2935,6 @@ class UpdateGroupBox(QGroupBox):
             r'b?(?P<build>[0-9\-]+)\.zip'
             )
 
-        target_regex_msvc = re.compile(
-            r'cdda-windows-' +
-            re.escape(asset_graphics) + r'-' +
-            re.escape(asset_platform) + r'-msvc-' +
-            r'b?(?P<build>[0-9\-]+)\.zip'
-            )
-
         build_regex = re.compile(r'[Bb]uild #?(?P<build>[0-9\-]+)')
 
         for release in releases:
@@ -2964,9 +2949,7 @@ class UpdateGroupBox(QGroupBox):
                         x for x in release['assets']
                         if 'browser_download_url' in x
                            and 'name' in x
-                           and (
-                               target_regex.search(x['name']) is not None or
-                               target_regex_msvc.search(x['name']) is not None)
+                           and target_regex.search(x['name']) is not None
                     )
                     asset = next(asset_iter, None)
 
