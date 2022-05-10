@@ -40,14 +40,14 @@
         "type": "direct_download",
         "viewname": "CO.AG SoundPack",
         "name": "CO.AG SoundPack",
-        "url": "https://github.com/Fris0uman/CDDA-Soundpacks/releases/download/2022-03-20/CO.AG-Music-Only.zip",
+        "url": "https://github.com/Fris0uman/CDDA-Soundpacks/releases/latest/download/CO.AG-Music-Only.zip",
         "homepage": "https://github.com/Fris0uman/CDDA-Soundpacks"
     },
     {
         "type": "direct_download",
         "viewname": "CC-Sounds",
         "name": "CC-Sounds",
-        "url": "https://github.com/Fris0uman/CDDA-Soundpacks/releases/download/2022-03-20/CC-Sounds.zip",
+        "url": "https://github.com/Fris0uman/CDDA-Soundpacks/releases/latest/download/CC-Sounds.zip",
         "homepage": "https://github.com/Fris0uman/CDDA-Soundpacks"
     },
     {
