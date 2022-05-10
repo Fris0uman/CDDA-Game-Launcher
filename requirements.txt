@@ -7,5 +7,6 @@ Babel
 pywinutils
 markdown2
 Werkzeug
+requests
 
 pylzma
