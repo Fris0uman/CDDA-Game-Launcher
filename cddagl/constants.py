@@ -15,15 +15,15 @@ GITHUB_XRL_RESET = b'X-RateLimit-Reset'
 
 CDDA_RELEASES = '/repos/CleverRaven/Cataclysm-DDA/releases'
 CDDA_RELEASE_BY_TAG = lambda tag: f'/repos/CleverRaven/Cataclysm-DDA/releases/tags/{tag}'
-CDDAGL_LATEST_RELEASE = '/repos/remyroy/CDDA-Game-Launcher/releases/latest'
+CDDAGL_LATEST_RELEASE = '/repos/Fris0uman/CDDA-Game-Launcher/releases/latest'
 
 CHANGELOG_URL = 'https://api.github.com/search/issues?q=repo%3Acleverraven/Cataclysm-DDA+is%3Apr+is%3Amerged&per_page='
 
-NEW_ISSUE_URL = 'https://github.com/remyroy/CDDA-Game-Launcher/issues/new'
+NEW_ISSUE_URL = 'https://github.com/Fris0uman/CDDA-Game-Launcher/issues/new'
 
 CDDA_ISSUE_URL_ROOT = 'https://github.com/CleverRaven/Cataclysm-DDA/issues/'
 CDDA_COMMIT_URL_ROOT = 'https://github.com/CleverRaven/Cataclysm-DDA/commit/'
-CDDAGL_ISSUE_URL_ROOT = 'https://github.com/remyroy/CDDA-Game-Launcher/issues/'
+CDDAGL_ISSUE_URL_ROOT = 'https://github.com/Fris0uman/CDDA-Game-Launcher/issues/'
 
 GAME_ISSUE_URL = 'https://cataclysmdda.org/#ive-found-a-bug--i-would-like-to-make-a-suggestion-what-should-i-do'
 
