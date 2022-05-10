@@ -3141,44 +3141,59 @@ class UpdateGroupBox(QGroupBox):
         changelog_data = requests.get(url).json()
         changelog_html = StringIO()
 
-        date = str()
+        changelog_sorted = dict()
 
         for entry in changelog_data["items"]:
             if entry["state"] == "open":
-             continue
+                continue
 
-            if date != entry['closed_at'][0:10]:
-                date = entry['closed_at'][0:10]
-                changelog_html.write('</ul>')
-                changelog_html.write(
+            new_date = entry['closed_at'][0:10]
+            new_entry = changelog_entry(title =entry['title'],
+                                        body = entry['body'].split('####'),
+                                        node_id =entry['node_id'],
+                                        number=entry['number'],
+                                        html_url=entry['html_url']
+                                        )
+                                        
+            if new_date in changelog_sorted:
+                changelog_sorted[new_date].append(new_entry)
+            else:
+                changelog_sorted.update({new_date : [new_entry]})
+
+        for date in sorted(changelog_sorted):
+            changelog_html.write('</ul>')
+            changelog_html.write(
                     '<h3>{0}</h3>'
                     .format(date)
                 )
+            for sorted_entry in changelog_sorted[date]:
                 changelog_html.write('<ul>')
-            changelog_html.write(
+                changelog_html.write(
                     '<h4>{0}</h4>'
-                    .format(entry['title'])
+                    .format(sorted_entry.title)
                 )
-            changelog_html.write('<ul>')
-            body = entry['body'].split('####')
-            if len(body)>2:
-                if body[0] == '':
-                    msg = body[2]
+                changelog_html.write('<ul>')
+                body = sorted_entry.body
+                if len(body)>2:
+                    if body[0] == '':
+                        msg = body[2]
+                    else:
+                        msg = body[3]
+                    msg=msg[18:]
                 else:
-                    msg = body[3]
-                msg=msg[18:]
-            else:
-                msg = entry['title']
-            commitid = entry['node_id']
-            link_repl = rf'<a href="{cons.CDDA_ISSUE_URL_ROOT}\g<id>">#\g<id></a>'
-            msg = id_regex.sub(link_repl, msg)
-            commit_name = entry['number']
-            if commitid:
-                commit_url = entry['html_url']
-                changelog_html.write(f'<li>{msg} [<a href="{commit_url}">{commit_name}</a>]</li>')
-            else:
-                changelog_html.write(f'<li>{msg}</li>')
-            changelog_html.write('</ul>')
+                    msg = sorted_entry.title
+
+                commitid = sorted_entry.node_id
+                link_repl = rf'<a href="{cons.CDDA_ISSUE_URL_ROOT}\g<id>">#\g<id></a>'
+                msg = id_regex.sub(link_repl, msg)
+                commit_name = sorted_entry.number
+                if commitid:
+                    commit_url = sorted_entry.html_url
+                    changelog_html.write(f'<li>{msg} [<a href="{commit_url}">{commit_name}</a>]</li>')
+                else:
+                    changelog_html.write(f'<li>{msg}</li>')
+                changelog_html.write('</ul>')
+                changelog_html.write('</ul>')
 
         self.changelog_content.setHtml(changelog_html.getvalue())
 
@@ -3219,6 +3234,14 @@ class UpdateGroupBox(QGroupBox):
         set_config_value('build_type', config_value)
 
         self.refresh_builds()
+
+class changelog_entry():
+    def __init__(self: str, title: str, body:str, node_id: str, number: str, html_url: str) -> None:
+        self.title = title
+        self.body = body
+        self.node_id = node_id
+        self.number = number
+        self.html_url = html_url
 
 
 # Recursively delete an entire directory tree while showing progress in a
