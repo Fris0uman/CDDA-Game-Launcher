@@ -2639,6 +2639,107 @@ class UpdateGroupBox(QGroupBox):
         main_window = self.get_main_window()
         status_bar = main_window.statusBar()
 
+       # Copy custom mods from previous version
+        # mods
+        mods_dir = os.path.join(self.game_dir, 'data', 'mods')
+        previous_mods_dir = os.path.join(self.game_dir, 'previous_version',
+            'data', 'mods')
+
+        if (os.path.isdir(mods_dir) and os.path.isdir(previous_mods_dir) and
+            self.in_post_extraction):
+            status_bar.showMessage(_('Restoring custom mods'))
+
+            official_set = {}
+            for entry in os.listdir(mods_dir):
+                entry_path = os.path.join(mods_dir, entry)
+                if os.path.isdir(entry_path):
+                    name = self.mod_ident(entry_path)
+                    if name is not None and name not in official_set:
+                        official_set[name] = entry_path
+            previous_set = {}
+            for entry in os.listdir(previous_mods_dir):
+                entry_path = os.path.join(previous_mods_dir, entry)
+                if os.path.isdir(entry_path):
+                    name = self.mod_ident(entry_path)
+                    if name is not None and name not in previous_set:
+                        previous_set[name] = entry_path
+
+            custom_set = set(previous_set.keys()) - set(official_set.keys())
+            for item in custom_set:
+                target_dir = os.path.join(mods_dir, os.path.basename(
+                    previous_set[item]))
+                if not os.path.exists(target_dir):
+                    shutil.copytree(previous_set[item], target_dir)
+
+            status_bar.clearMessage()
+
+        if not self.in_post_extraction:
+            return
+
+        # user mods
+        user_mods_dir = os.path.join(self.game_dir, 'mods')
+        previous_user_mods_dir = os.path.join(self.game_dir, 'previous_version',
+            'mods')
+
+        if (os.path.isdir(previous_user_mods_dir) and self.in_post_extraction):
+            status_bar.showMessage(_('Restoring user custom mods'))
+
+            if not os.path.exists(user_mods_dir):
+                os.makedirs(user_mods_dir)
+
+            official_set = {}
+            for entry in os.listdir(user_mods_dir):
+                entry_path = os.path.join(user_mods_dir, entry)
+                if os.path.isdir(entry_path):
+                    name = self.mod_ident(entry_path)
+                    if name is not None and name not in official_set:
+                        official_set[name] = entry_path
+            previous_set = {}
+            for entry in os.listdir(previous_user_mods_dir):
+                entry_path = os.path.join(previous_user_mods_dir, entry)
+                if os.path.isdir(entry_path):
+                    name = self.mod_ident(entry_path)
+                    if name is not None and name not in previous_set:
+                        previous_set[name] = entry_path
+
+            custom_set = set(previous_set.keys()) - set(official_set.keys())
+            for item in custom_set:
+                target_dir = os.path.join(user_mods_dir, os.path.basename(
+                    previous_set[item]))
+                if not os.path.exists(target_dir):
+                    shutil.copytree(previous_set[item], target_dir)
+
+            status_bar.clearMessage()
+
+        if not self.in_post_extraction:
+            return
+
+        # Copy user-default-mods.json if present
+        user_default_mods_file = os.path.join(mods_dir, 'user-default-mods.json')
+        previous_user_default_mods_file = os.path.join(previous_mods_dir, 'user-default-mods.json')
+
+        if (not os.path.exists(user_default_mods_file)
+            and os.path.isfile(previous_user_default_mods_file)):
+            status_bar.showMessage(_('Restoring {0}').format('user-default-mods.json'))
+
+            shutil.copy2(previous_user_default_mods_file,
+                user_default_mods_file)
+
+            status_bar.clearMessage()
+
+        self.preserve_custom_fonts()
+
+        if not self.in_post_extraction:
+            return
+
+        self.in_post_extraction = False
+
+        if config_true(get_config_value('remove_previous_version', 'False')):
+            self.remove_previous_version()
+        else:
+            self.after_updating_message()
+            self.finish_updating()
+
         self.preserve_custom_fonts()
 
         if not self.in_post_extraction:
