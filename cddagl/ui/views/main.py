@@ -3175,9 +3175,9 @@ class UpdateGroupBox(QGroupBox):
                 changelog_html.write('<ul>')
                 body = sorted_entry.body
                 if len(body)>2:
-                    if body[0] == '':
+                    if body[0].rstrip() == '':
                         msg = body[2]
-                    else:
+                    elif len(body)>3:
                         msg = body[3]
                     msg=msg[18:]
                 else:
