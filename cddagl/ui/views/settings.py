@@ -135,6 +135,18 @@ class LauncherSettingsGroupBox(QGroupBox):
         self.no_launcher_version_check_checkbox = (
             no_launcher_version_check_checkbox)
 
+        reverse_sort_changelog_checkbox = QCheckBox()
+        check_state = (Qt.Checked if config_true(get_config_value(
+            'reverse_sort_changelog', 'False')) 
+            else Qt.Unchecked)
+        reverse_sort_changelog_checkbox.setCheckState(
+            check_state)
+        reverse_sort_changelog_checkbox.stateChanged.connect(
+            self.rsc_changed)
+        layout.addWidget(reverse_sort_changelog_checkbox, 5, 0, 1, 2)
+        self.reverse_sort_changelog_checkbox = (
+            reverse_sort_changelog_checkbox)
+
         self.setLayout(layout)
         self.set_text()
 
@@ -154,6 +166,8 @@ class LauncherSettingsGroupBox(QGroupBox):
             'the launcher to be started'))
         self.no_launcher_version_check_checkbox.setText(_('Do not check '
             'for new version of the CDDA Game Launcher on launch'))
+        self.reverse_sort_changelog_checkbox.setText(_('Reverse sort '
+            'changelog'))
         self.setTitle(_('Launcher'))
 
     @property
@@ -201,6 +215,9 @@ class LauncherSettingsGroupBox(QGroupBox):
     def nlvcc_changed(self, state):
         set_config_value('prevent_version_check_launch',
             str(state != Qt.Unchecked))
+
+    def rsc_changed(self, state):
+        set_config_value('reverse_sort_changelog', str(state != Qt.Unchecked))
 
     def klo_changed(self, state):
         checked = state != Qt.Unchecked
