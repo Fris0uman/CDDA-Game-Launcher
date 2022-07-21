@@ -4,6 +4,8 @@ A [Cataclysm: Dark Days Ahead](https://cataclysmdda.org/) launcher with addition
 
 [Download here](https://github.com/Fris0uman/CDDA-Game-Launcher/releases).
 
+Forked from the project made by remyroy https://github.com/remyroy/CDDA-Game-Launcher
+
 ## Implemented features
 
 * Launching the game
