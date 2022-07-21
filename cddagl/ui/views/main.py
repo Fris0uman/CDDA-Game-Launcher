@@ -108,6 +108,7 @@ class GameDirGroupBox(QGroupBox):
         self.saves_size = 0
 
         self.dir_combo_inserting = False
+        self.sess_combo_inserting = False
 
         self.game_process = None
         self.game_process_id = None
@@ -635,8 +636,31 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
 
     def sess_directory_changed(self):
         directory = self.sess_combo.currentText()
-        self.last_session_directory = directory
         set_config_value('session_directory', directory)
+        self.add_session_dir()
+
+        if self.last_session_directory != directory:
+            self.update_soundpacks()
+
+        self.last_session_directory = directory
+
+    def add_session_dir(self):
+        new_session_dir = self.sess_combo.currentText()
+
+        session_dirs = json.loads(get_config_value('session_directories', '[]'))
+
+        try:
+            index = session_dirs.index(new_session_dir)
+            if index > 0:
+                del session_dirs[index]
+                session_dirs.insert(0, new_session_dir)
+        except ValueError:
+            session_dirs.insert(0, new_session_dir)
+
+        if len(session_dirs) > cons.MAX_SESSION_DIRECTORIES:
+            del session_dirs[cons.MAX_SESSION_DIRECTORIES:]
+
+        set_config_value('session_directories', json.dumps(session_dirs))
 
 
     def dc_index_changed(self, index):
@@ -2235,7 +2259,17 @@ class UpdateGroupBox(QGroupBox):
         backup_dir = os.path.join(game_dir, 'previous_version')
 
         dir_list = os.listdir(game_dir)
-        self.backup_dir_list = dir_list
+        self.backup_dir_list =[]
+
+        sessions = json.loads(get_config_value('session_directories', '[]'))
+        excluded_dirs = []
+        for session in sessions:
+            if os.path.dirname(session) == game_dir:
+                excluded_dirs.append( os.path.basename(os.path.normpath(session)))
+
+        for entry in dir_list:
+            if entry not in excluded_dirs:
+                self.backup_dir_list.append(entry)
 
         if (config_true(get_config_value('prevent_save_move', 'False'))
             and 'save' in dir_list):
