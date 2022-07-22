@@ -28,6 +28,7 @@ from cddagl.i18n import proxy_gettext as _
 from cddagl.sql.functions import get_config_value, set_config_value, config_true
 from cddagl.ui.views.backups import BackupsTab
 from cddagl.ui.views.dialogs import AboutDialog, FaqDialog
+from cddagl.ui.views.fonts import FontsTab
 from cddagl.ui.views.main import MainTab
 from cddagl.ui.views.settings import SettingsTab
 from cddagl.ui.views.soundpacks import SoundpacksTab
@@ -414,17 +415,20 @@ class CentralWidget(QTabWidget):
         self.create_main_tab()
         self.create_backups_tab()
         self.create_soundpacks_tab()
+        self.create_fonts_tab()
         self.create_settings_tab()
 
     def set_text(self):
         self.setTabText(self.indexOf(self.main_tab), _('Main'))
         self.setTabText(self.indexOf(self.backups_tab), _('Backups'))
         self.setTabText(self.indexOf(self.soundpacks_tab), _('Soundpacks'))
+        self.setTabText(self.indexOf(self.fonts_tab), _('Fonts'))
         self.setTabText(self.indexOf(self.settings_tab), _('Settings'))
 
         self.main_tab.set_text()
         self.backups_tab.set_text()
         self.soundpacks_tab.set_text()
+        self.fonts_tab.set_text()
         self.settings_tab.set_text()
 
     def create_main_tab(self):
@@ -441,6 +445,11 @@ class CentralWidget(QTabWidget):
         soundpacks_tab = SoundpacksTab()
         self.addTab(soundpacks_tab, _('Soundpacks'))
         self.soundpacks_tab = soundpacks_tab
+
+    def create_fonts_tab(self):
+        fonts_tab = FontsTab()
+        self.addTab(fonts_tab, _('Fonts'))
+        self.fonts_tab = fonts_tab
 
     def create_settings_tab(self):
         settings_tab = SettingsTab()
