@@ -646,6 +646,7 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
         if self.last_session_directory != directory:
             self.update_soundpacks()
             self.update_saves()
+            self.update_backups()
 
         self.last_session_directory = directory
 
