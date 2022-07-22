@@ -359,6 +359,10 @@ class GameDirGroupBox(QGroupBox):
                     ) as temp_move_dir:
 
                     excluded_entries = set(['previous_version'])
+                    sessions = json.loads(get_config_value('session_directories', '[]'))
+                    for session in sessions:
+                        if os.path.dirname(session) == game_dir:
+                            excluded_entries.add(os.path.basename(os.path.normpath(session)))
                     if config_true(get_config_value('prevent_save_move',
                         'False')):
                         excluded_entries.add('save')
@@ -1950,6 +1954,11 @@ class UpdateGroupBox(QGroupBox):
         temp_move_dir = tempfile.mkdtemp(prefix=cons.TEMP_PREFIX)
 
         excluded_entries = set(['previous_version'])
+        sessions = json.loads(get_config_value('session_directories', '[]'))
+        for session in sessions:
+            if os.path.dirname(session) == game_dir:
+                excluded_entries.add(os.path.basename(os.path.normpath(session)))
+
         if config_true(get_config_value('prevent_save_move', 'False')):
             excluded_entries.add('save')
         # Prevent moving the launcher if it's in the game directory
