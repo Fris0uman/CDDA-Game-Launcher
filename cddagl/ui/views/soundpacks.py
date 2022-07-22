@@ -27,6 +27,7 @@ from cddagl.constants import get_data_path, get_cddagl_path
 from cddagl.functions import sizeof_fmt, delete_path
 from cddagl.i18n import proxy_gettext as _
 from cddagl.ui.views.dialogs import BrowserDownloadDialog
+from cddagl.sql.functions import get_config_value
 
 logger = logging.getLogger('cddagl')
 
@@ -1136,7 +1137,12 @@ class SoundpacksTab(QTabWidget):
         self.size_le.setText('')
         self.homepage_tb.setText('')
 
+        session = get_config_value('session_directory')
         soundpacks_dir = os.path.join(new_dir, 'data', 'sound')
+        if session != 'default_session':
+            soundpacks_dir = os.path.join(session, 'sound')
+            if not os.path.isdir(soundpacks_dir) and os.path.isdir(session):
+                os.makedirs(soundpacks_dir)
         if os.path.isdir(soundpacks_dir):
             self.soundpacks_dir = soundpacks_dir
 

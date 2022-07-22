@@ -108,6 +108,7 @@ class GameDirGroupBox(QGroupBox):
         self.saves_size = 0
 
         self.dir_combo_inserting = False
+        self.sess_combo_inserting = False
 
         self.game_process = None
         self.game_process_id = None
@@ -119,8 +120,15 @@ class GameDirGroupBox(QGroupBox):
         layout.addWidget(dir_label, 0, 0, Qt.AlignRight)
         self.dir_label = dir_label
 
+        session_label = QLabel()
+        layout.addWidget(session_label, 1, 0, Qt.AlignRight)
+        self.session_label = session_label
+
         self.layout_dir = QHBoxLayout()
         layout.addLayout(self.layout_dir, 0, 1)
+
+        self.layout_sess = QHBoxLayout()
+        layout.addLayout(self.layout_sess, 1, 1)
 
         self.dir_combo = QComboBox()
         self.layout_dir.addWidget(self.dir_combo)
@@ -143,40 +151,61 @@ class GameDirGroupBox(QGroupBox):
         self.dir_state_icon.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
         self.dir_state_icon.hide()
 
+        self.sess_combo = QComboBox()
+        self.layout_sess.addWidget(self.sess_combo)
+        self.sess_combo.setEditable(True)
+        self.sess_combo.setInsertPolicy(QComboBox.InsertAtTop)
+        self.sess_combo.currentIndexChanged.connect(self.sess_index_changed)
+        self.sess_combo.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
+        session_directories = json.loads(get_config_value('session_directories', '[]'))
+        self.sess_combo_model = QStringListModel(session_directories, self)
+        self.sess_combo.setModel(self.sess_combo_model)
+
+        sess_change_button = QToolButton()
+        self.layout_sess.addWidget(sess_change_button)
+        sess_change_button.setText('...')
+        sess_change_button.clicked.connect(self.set_session_directory)
+        self.sess_change_button = sess_change_button
+
+        self.sess_state_icon = QLabel()
+        self.layout_sess.addWidget(self.sess_state_icon)
+        self.sess_state_icon.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        self.sess_state_icon.hide()
+
         version_label = QLabel()
-        layout.addWidget(version_label, 1, 0, Qt.AlignRight)
+        layout.addWidget(version_label, 2, 0, Qt.AlignRight)
         self.version_label = version_label
 
         version_value_label = QLineEdit()
         version_value_label.setReadOnly(True)
-        layout.addWidget(version_value_label, 1, 1)
+        layout.addWidget(version_value_label, 2, 1)
         self.version_value_label = version_value_label
 
         build_label = QLabel()
-        layout.addWidget(build_label, 2, 0, Qt.AlignRight)
+        layout.addWidget(build_label, 3, 0, Qt.AlignRight)
         self.build_label = build_label
 
         build_value_label = QLineEdit()
         build_value_label.setReadOnly(True)
         build_value_label.setText(_('Unknown'))
-        layout.addWidget(build_value_label, 2, 1)
+        layout.addWidget(build_value_label, 3, 1)
         self.build_value_label = build_value_label
 
         saves_label = QLabel()
-        layout.addWidget(saves_label, 3, 0, Qt.AlignRight)
+        layout.addWidget(saves_label, 4, 0, Qt.AlignRight)
         self.saves_label = saves_label
 
         saves_value_edit = QLineEdit()
         saves_value_edit.setReadOnly(True)
         saves_value_edit.setText(_('Unknown'))
-        layout.addWidget(saves_value_edit, 3, 1)
+        layout.addWidget(saves_value_edit, 4, 1)
         self.saves_value_edit = saves_value_edit
 
         saves_warning_label = QLabel()
         icon = QApplication.style().standardIcon(QStyle.SP_MessageBoxWarning)
         saves_warning_label.setPixmap(icon.pixmap(16, 16))
         saves_warning_label.hide()
-        layout.addWidget(saves_warning_label, 3, 2)
+        layout.addWidget(saves_warning_label, 4, 2)
         self.saves_warning_label = saves_warning_label
 
         buttons_container = QWidget()
@@ -197,7 +226,7 @@ class GameDirGroupBox(QGroupBox):
         buttons_layout.addWidget(restore_button, 0, 3, 1, 1)
         self.restore_button = restore_button
 
-        layout.addWidget(buttons_container, 4, 0, 1, 3)
+        layout.addWidget(buttons_container, 5, 0, 1, 3)
         self.buttons_container = buttons_container
         self.buttons_layout = buttons_layout
 
@@ -206,6 +235,7 @@ class GameDirGroupBox(QGroupBox):
 
     def set_text(self):
         self.dir_label.setText(_('Directory:'))
+        self.session_label.setText(_('Session:'))
         self.version_label.setText(_('Version:'))
         self.build_label.setText(_('Build:'))
         self.saves_label.setText(_('Saves:'))
@@ -238,6 +268,7 @@ class GameDirGroupBox(QGroupBox):
             self.shown = True
 
             self.last_game_directory = None
+            self.last_session_directory = None
 
             game_directory = get_config_value('game_directory')
             if game_directory is None:
@@ -248,6 +279,12 @@ class GameDirGroupBox(QGroupBox):
             self.set_dir_combo_value(game_directory)
 
             self.game_directory_changed()
+
+            sess_directory = get_config_value('session_directory')
+            if sess_directory is None:
+                sess_directory = 'default_session'
+            self.set_sess_combo_value(sess_directory)
+            self.sess_directory_changed()
 
         self.shown = True
 
@@ -265,9 +302,26 @@ class GameDirGroupBox(QGroupBox):
 
             self.dir_combo.setCurrentIndex(0)
 
+    def set_sess_combo_value(self, value):
+        sess_model = self.sess_combo.model()
+
+        index_list = sess_model.match(sess_model.index(0, 0), Qt.DisplayRole,
+            value, 1, Qt.MatchFixedString)
+        if len(index_list) > 0:
+            self.sess_combo.setCurrentIndex(index_list[0].row())
+        else:
+            self.sess_combo_inserting = True
+            self.sess_combo.insertItem(0, value)
+            self.sess_combo_inserting = False
+
+            self.sess_combo.setCurrentIndex(0)
+
     def disable_controls(self):
         self.dir_combo.setEnabled(False)
         self.dir_change_button.setEnabled(False)
+
+        self.sess_combo.setEnabled(False)
+        self.sess_change_button.setEnabled(False)
 
         self.launch_game_button.setEnabled(False)
         self.restore_button.setEnabled(False)
@@ -275,6 +329,9 @@ class GameDirGroupBox(QGroupBox):
     def enable_controls(self):
         self.dir_combo.setEnabled(True)
         self.dir_change_button.setEnabled(True)
+
+        self.sess_combo.setEnabled(True)
+        self.sess_change_button.setEnabled(True)
 
         self.launch_game_button.setEnabled(
             self.exe_path is not None and os.path.isfile(self.exe_path))
@@ -302,6 +359,10 @@ class GameDirGroupBox(QGroupBox):
                     ) as temp_move_dir:
 
                     excluded_entries = set(['previous_version'])
+                    sessions = json.loads(get_config_value('session_directories', '[]'))
+                    for session in sessions:
+                        if os.path.dirname(session) == game_dir:
+                            excluded_entries.add(os.path.basename(os.path.normpath(session)))
                     if config_true(get_config_value('prevent_save_move',
                         'False')):
                         excluded_entries.add('save')
@@ -390,6 +451,11 @@ class GameDirGroupBox(QGroupBox):
         params = get_config_value('command.params', '').strip()
         if params != '':
             params = ' ' + params
+
+        current_session = get_config_value('session_directory')
+        if current_session != 'default_session':
+            self.get_main_window().statusBar().showMessage(current_session)
+            params = params + ' ' + '--userdir' + ' ' + '\"' + current_session + '/\"'
 
         cmd = '"{exe_path}"{params}'.format(exe_path=self.exe_path,
             params=params)
@@ -559,6 +625,49 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
                 options=options)
         if directory:
             self.set_dir_combo_value(clean_qt_path(directory))
+
+    def set_session_directory(self):
+        options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
+        directory = QFileDialog.getExistingDirectory(self,
+                _('Session directory'), self.sess_combo.currentText(),
+                options=options)
+        if directory:
+            self.set_sess_combo_value(clean_qt_path(directory))
+
+    def sess_index_changed(self, index):
+        if self.shown and not self.sess_combo_inserting:
+            self.sess_directory_changed()
+
+    def sess_directory_changed(self):
+        directory = self.sess_combo.currentText()
+        set_config_value('session_directory', directory)
+        self.add_session_dir()
+
+        if self.last_session_directory != directory:
+            self.update_soundpacks()
+            self.update_saves()
+            self.update_backups()
+
+        self.last_session_directory = directory
+
+    def add_session_dir(self):
+        new_session_dir = self.sess_combo.currentText()
+
+        session_dirs = json.loads(get_config_value('session_directories', '[]'))
+
+        try:
+            index = session_dirs.index(new_session_dir)
+            if index > 0:
+                del session_dirs[index]
+                session_dirs.insert(0, new_session_dir)
+        except ValueError:
+            session_dirs.insert(0, new_session_dir)
+
+        if len(session_dirs) > cons.MAX_SESSION_DIRECTORIES:
+            del session_dirs[cons.MAX_SESSION_DIRECTORIES:]
+
+        set_config_value('session_directories', json.dumps(session_dirs))
+
 
     def dc_index_changed(self, index):
         if self.shown and not self.dir_combo_inserting:
@@ -900,12 +1009,16 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
 
     def update_saves(self):
         self.game_dir = self.dir_combo.currentText()
+        session = get_config_value('session_directory')
 
         if (self.update_saves_timer is not None and self.update_saves_timer.isActive()):
             self.update_saves_timer.stop()
             self.saves_value_edit.setText(_('Unknown'))
 
         save_dir = os.path.join(self.game_dir, 'save')
+        if session != 'default_session':
+            save_dir = os.path.join(session, 'save')
+
         if not os.path.isdir(save_dir):
             self.saves_value_edit.setText(
                 '{world_count} {worlds} - {character_count} {characters}'
@@ -1847,6 +1960,11 @@ class UpdateGroupBox(QGroupBox):
         temp_move_dir = tempfile.mkdtemp(prefix=cons.TEMP_PREFIX)
 
         excluded_entries = set(['previous_version'])
+        sessions = json.loads(get_config_value('session_directories', '[]'))
+        for session in sessions:
+            if os.path.dirname(session) == game_dir:
+                excluded_entries.add(os.path.basename(os.path.normpath(session)))
+
         if config_true(get_config_value('prevent_save_move', 'False')):
             excluded_entries.add('save')
         # Prevent moving the launcher if it's in the game directory
@@ -2156,7 +2274,17 @@ class UpdateGroupBox(QGroupBox):
         backup_dir = os.path.join(game_dir, 'previous_version')
 
         dir_list = os.listdir(game_dir)
-        self.backup_dir_list = dir_list
+        self.backup_dir_list =[]
+
+        sessions = json.loads(get_config_value('session_directories', '[]'))
+        excluded_dirs = []
+        for session in sessions:
+            if os.path.dirname(session) == game_dir:
+                excluded_dirs.append( os.path.basename(os.path.normpath(session)))
+
+        for entry in dir_list:
+            if entry not in excluded_dirs:
+                self.backup_dir_list.append(entry)
 
         if (config_true(get_config_value('prevent_save_move', 'False'))
             and 'save' in dir_list):

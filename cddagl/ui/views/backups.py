@@ -358,7 +358,7 @@ class BackupsTab(QTabWidget):
                 self.extracting_thread.quit()
 
                 def completed():
-                    save_dir = os.path.join(self.game_dir, 'save')
+                    save_dir = self.get_save_dir()
                     delete_path(save_dir)
                     if self.temp_save_dir is not None:
                         retry_rename(self.temp_save_dir, save_dir)
@@ -408,7 +408,7 @@ class BackupsTab(QTabWidget):
                 before_last_restore_name = _('before_last_restore')
 
                 if backup_name.lower() == before_last_restore_name.lower():
-                    backup_dir = os.path.join(self.game_dir, 'save_backups')
+                    backup_dir = self.get_backup_dir()
 
                     name_lower = backup_name.lower()
                     name_key = alphanum_key(name_lower)
@@ -470,7 +470,7 @@ class BackupsTab(QTabWidget):
         status_bar = main_window.statusBar()
 
         self.temp_save_dir = None
-        save_dir = os.path.join(self.game_dir, 'save')
+        save_dir = self.get_save_dir()
         if os.path.isdir(save_dir):
             temp_save_dir = os.path.join(self.game_dir, 'save-{0}'.format(
                 '%08x' % random.randrange(16**8)))
@@ -758,7 +758,7 @@ class BackupsTab(QTabWidget):
 
         search_start = (_('auto') + '_').lower()
 
-        backup_dir = os.path.join(self.game_dir, 'save_backups')
+        backup_dir = self.get_backup_dir()
         if not os.path.isdir(backup_dir):
             return
 
@@ -797,7 +797,7 @@ class BackupsTab(QTabWidget):
                 self.after_backup = None
             return
 
-        save_dir = os.path.join(self.game_dir, 'save')
+        save_dir = self.get_save_dir()
         if not os.path.isdir(save_dir):
             status_bar.showMessage(_('Save directory not found'))
             if self.after_backup is not None:
@@ -806,7 +806,7 @@ class BackupsTab(QTabWidget):
             return
         self.save_dir = save_dir
 
-        backup_dir = os.path.join(self.game_dir, 'save_backups')
+        backup_dir = self.get_backup_dir()
         if not os.path.isdir(backup_dir):
             if os.path.isfile(backup_dir):
                 os.remove(backup_dir)
@@ -1090,11 +1090,21 @@ class BackupsTab(QTabWidget):
     def game_dir_changed(self, new_dir):
         self.game_dir = new_dir
 
-        save_dir = os.path.join(self.game_dir, 'save')
+        save_dir = self.get_save_dir()
+
         if os.path.isdir(save_dir):
             self.backup_current_button.setEnabled(True)
 
         self.update_backups_table()
+
+    def get_save_dir(self):
+        save_dir = os.path.join(self.game_dir, 'save')
+        session = get_config_value('session_directory')
+        if session != 'default_session':
+            save_dir = os.path.join(session, 'save')
+            if not os.path.isdir(save_dir) and os.path.isdir(session):
+                os.makedirs(save_dir)
+        return save_dir
 
     def backups_table_header_sort(self, index, order):
         self.backups_table.sortItems(index, order)
@@ -1126,6 +1136,15 @@ class BackupsTab(QTabWidget):
     def app_locale(self):
         return QApplication.instance().app_locale
 
+    def get_backup_dir(self):
+        backup_dir = os.path.join(self.game_dir, 'save_backups')
+        session = get_config_value('session_directory')
+        if session != 'default_session':
+            backup_dir = os.path.join(session, 'save_backups')
+            if not os.path.isdir(backup_dir) and os.path.isdir(session):
+                os.makedirs(backup_dir)
+        return backup_dir
+
     def update_backups_table(self):
         selection_model = self.backups_table.selectionModel()
         if selection_model is None or not selection_model.hasSelection():
@@ -1150,7 +1169,8 @@ class BackupsTab(QTabWidget):
         if self.game_dir is None:
             return
 
-        backup_dir = os.path.join(self.game_dir, 'save_backups')
+        backup_dir = self.get_backup_dir()
+
         if not os.path.isdir(backup_dir):
             return
 
@@ -1164,7 +1184,11 @@ class BackupsTab(QTabWidget):
         self.update_backups_timer = timer
 
         self.backups_scan = scandir(backup_dir)
-
+        save_dir_name = get_config_value('session_directory')
+        if save_dir_name == 'default_session':
+            save_dir_name = 'save/'
+        else:
+            save_dir_name = os.path.basename(os.path.normpath(save_dir_name))
         def timeout():
             try:
                 entry = next(self.backups_scan)
@@ -1176,14 +1200,14 @@ class BackupsTab(QTabWidget):
                     try:
                         with zipfile.ZipFile(entry.path) as zfile:
                             for info in zfile.infolist():
-                                if not info.filename.startswith('save/'):
+                                if not info.filename.startswith(save_dir_name):
                                     return
 
                                 uncompressed_size += info.file_size
 
                                 path_items = info.filename.split('/')
-
-                                if len(path_items) == 3:
+                                target_length = 3 if get_config_value('session_directory') =='default_session' else 4
+                                if len(path_items) == target_length:
                                     save_file = path_items[-1]
                                     if save_file.endswith('.sav'):
                                         character_count += 1
