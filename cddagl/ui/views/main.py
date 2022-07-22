@@ -645,6 +645,7 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
 
         if self.last_session_directory != directory:
             self.update_soundpacks()
+            self.update_saves()
 
         self.last_session_directory = directory
 
@@ -1007,12 +1008,16 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
 
     def update_saves(self):
         self.game_dir = self.dir_combo.currentText()
+        session = get_config_value('session_directory')
 
         if (self.update_saves_timer is not None and self.update_saves_timer.isActive()):
             self.update_saves_timer.stop()
             self.saves_value_edit.setText(_('Unknown'))
 
         save_dir = os.path.join(self.game_dir, 'save')
+        if session != 'default_session':
+            save_dir = os.path.join(session, 'save')
+
         if not os.path.isdir(save_dir):
             self.saves_value_edit.setText(
                 '{world_count} {worlds} - {character_count} {characters}'
