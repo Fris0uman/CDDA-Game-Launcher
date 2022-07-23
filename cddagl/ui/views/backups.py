@@ -1100,7 +1100,7 @@ class BackupsTab(QTabWidget):
     def get_save_dir(self):
         save_dir = os.path.join(self.game_dir, 'save')
         session = get_config_value('session_directory')
-        if session != 'default_session':
+        if session != 'default_session' and session is not None:
             save_dir = os.path.join(session, 'save')
             if not os.path.isdir(save_dir) and os.path.isdir(session):
                 os.makedirs(save_dir)
@@ -1139,7 +1139,7 @@ class BackupsTab(QTabWidget):
     def get_backup_dir(self):
         backup_dir = os.path.join(self.game_dir, 'save_backups')
         session = get_config_value('session_directory')
-        if session != 'default_session':
+        if session != 'default_session' and session is not None:
             backup_dir = os.path.join(session, 'save_backups')
             if not os.path.isdir(backup_dir) and os.path.isdir(session):
                 os.makedirs(backup_dir)
@@ -1185,7 +1185,7 @@ class BackupsTab(QTabWidget):
 
         self.backups_scan = scandir(backup_dir)
         save_dir_name = get_config_value('session_directory')
-        if save_dir_name == 'default_session':
+        if save_dir_name == 'default_session' or save_dir_name is None:
             save_dir_name = 'save/'
         else:
             save_dir_name = os.path.basename(os.path.normpath(save_dir_name))
