@@ -453,7 +453,7 @@ class GameDirGroupBox(QGroupBox):
             params = ' ' + params
 
         current_session = get_config_value('session_directory')
-        if current_session != 'default_session' and not None:
+        if current_session != 'default_session' and current_session is not None:
             self.get_main_window().statusBar().showMessage(current_session)
             params = params + ' ' + '--userdir' + ' ' + '\"' + current_session + '/\"'
 
@@ -1016,7 +1016,7 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
             self.saves_value_edit.setText(_('Unknown'))
 
         save_dir = os.path.join(self.game_dir, 'save')
-        if session != 'default_session' and not None:
+        if session != 'default_session' and session is not None:
             save_dir = os.path.join(session, 'save')
 
         if not os.path.isdir(save_dir):
