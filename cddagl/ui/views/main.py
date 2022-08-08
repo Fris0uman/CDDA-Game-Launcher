@@ -281,7 +281,7 @@ class GameDirGroupBox(QGroupBox):
             self.game_directory_changed()
 
             sess_directory = get_config_value('session_directory')
-            if sess_directory is None:
+            if sess_directory is None or sess_directory == game_directory:
                 sess_directory = 'default_session'
             self.set_sess_combo_value(sess_directory)
             self.sess_directory_changed()
@@ -640,6 +640,12 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
 
     def sess_directory_changed(self):
         directory = self.sess_combo.currentText()
+        game_dir = self.dir_combo.currentText()
+        if directory == game_dir:
+            directory = 'default_session'
+            self.sess_combo.setCurrentText(directory)
+            self.sess_directory_changed()
+
         set_config_value('session_directory', directory)
         self.add_session_dir()
 
@@ -675,6 +681,10 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
 
     def game_directory_changed(self):
         directory = self.dir_combo.currentText()
+        sess_dir = self.sess_combo.currentText()
+        if directory == sess_dir:
+            self.sess_combo.setCurrentText('default_session')
+            self.sess_directory_changed()
 
         main_window = self.get_main_window()
         status_bar = main_window.statusBar()
