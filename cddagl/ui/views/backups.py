@@ -807,6 +807,9 @@ class BackupsTab(QTabWidget):
         self.save_dir = save_dir
 
         backup_dir = self.get_backup_dir()
+        if backup_dir == '':
+            status_bar.showMessage(_('Backup directory invalid'))
+            return
         if not os.path.isdir(backup_dir):
             if os.path.isfile(backup_dir):
                 os.remove(backup_dir)
@@ -1103,7 +1106,11 @@ class BackupsTab(QTabWidget):
         if session != 'default_session' and session is not None:
             save_dir = os.path.join(session, 'save')
             if not os.path.isdir(save_dir) and os.path.isdir(session):
-                os.makedirs(save_dir)
+                try:
+                    os.makedirs(save_dir)
+                except PermissionError:
+                    self.backup_current_button.setEnabled(False)
+
         return save_dir
 
     def backups_table_header_sort(self, index, order):
@@ -1142,7 +1149,12 @@ class BackupsTab(QTabWidget):
         if session != 'default_session' and session is not None:
             backup_dir = os.path.join(session, 'save_backups')
             if not os.path.isdir(backup_dir) and os.path.isdir(session):
-                os.makedirs(backup_dir)
+                try:
+                    os.makedirs(backup_dir)
+                except PermissionError:
+                    backup_dir = ''
+                    self.backup_current_button.setEnabled(False)
+
         return backup_dir
 
     def update_backups_table(self):

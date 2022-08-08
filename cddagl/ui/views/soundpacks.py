@@ -1139,10 +1139,14 @@ class SoundpacksTab(QTabWidget):
 
         session = get_config_value('session_directory')
         soundpacks_dir = os.path.join(new_dir, 'data', 'sound')
-        if session != 'default_session' and session is  not None:
+        if session != 'default_session' and session is not None:
             soundpacks_dir = os.path.join(session, 'sound')
             if not os.path.isdir(soundpacks_dir) and os.path.isdir(session):
-                os.makedirs(soundpacks_dir)
+                try:
+                    os.makedirs(soundpacks_dir)
+                except PermissionError:
+                    pass
+
         if os.path.isdir(soundpacks_dir):
             self.soundpacks_dir = soundpacks_dir
 
