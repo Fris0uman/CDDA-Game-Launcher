@@ -2,7 +2,9 @@ import html
 import json
 import logging
 import os
+import pathlib
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -570,7 +572,14 @@ class LauncherUpdateDialog(QDialog):
                 self.http_reply.downloadProgress.connect(self.dl_progress)
             else:
                 # Download completed
-                subprocess.Popen([self.downloaded_file])
+                exe_path = sys.executable
+                current_dir = os.path.dirname(sys.executable)
+                old_exe_dir = os.path.join(current_dir, 'old_launcher')
+                delete_path(old_exe_dir)
+                os.makedirs(old_exe_dir)
+                shutil.move(exe_path, old_exe_dir)
+                shutil.move(self.downloaded_file, exe_path)
+                subprocess.Popen([exe_path])
 
                 self.updated = True
                 self.done(0)
