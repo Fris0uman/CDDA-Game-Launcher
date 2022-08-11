@@ -10,6 +10,8 @@ from datetime import datetime
 from distutils.version import LooseVersion
 from io import BytesIO, TextIOWrapper
 from urllib.parse import urljoin
+from pathlib import Path
+from shutil import move
 
 import markdown2
 from PyQt5.QtCore import Qt, QUrl, pyqtSignal, QByteArray, QThread
@@ -570,7 +572,16 @@ class LauncherUpdateDialog(QDialog):
                 self.http_reply.downloadProgress.connect(self.dl_progress)
             else:
                 # Download completed
-                subprocess.Popen([self.downloaded_file])
+                exe_path = sys.executable
+
+                current_dir = Path(exe_path).parent
+                old_exe_dir = Path(current_dir / 'old_launcher')
+                Path(old_exe_dir / 'Launcher.exe').unlink(missing_ok=True)
+                Path(old_exe_dir).mkdir(parents=True, exist_ok=True)
+
+                move(exe_path, old_exe_dir)
+                move(self.downloaded_file, exe_path)
+                subprocess.Popen([exe_path])
 
                 self.updated = True
                 self.done(0)
