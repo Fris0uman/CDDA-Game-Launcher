@@ -2,9 +2,7 @@ import html
 import json
 import logging
 import os
-import pathlib
 import re
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -12,6 +10,8 @@ from datetime import datetime
 from distutils.version import LooseVersion
 from io import BytesIO, TextIOWrapper
 from urllib.parse import urljoin
+from pathlib import Path
+from shutil import move
 
 import markdown2
 from PyQt5.QtCore import Qt, QUrl, pyqtSignal, QByteArray, QThread
@@ -573,12 +573,14 @@ class LauncherUpdateDialog(QDialog):
             else:
                 # Download completed
                 exe_path = sys.executable
-                current_dir = os.path.dirname(sys.executable)
-                old_exe_dir = os.path.join(current_dir, 'old_launcher')
-                delete_path(old_exe_dir)
-                os.makedirs(old_exe_dir)
-                shutil.move(exe_path, old_exe_dir)
-                shutil.move(self.downloaded_file, exe_path)
+
+                current_dir = Path(exe_path).parent
+                old_exe_dir = Path(current_dir / 'old_launcher')
+                Path(old_exe_dir / 'Launcher.exe').unlink(missing_ok=True)
+                Path(old_exe_dir).mkdir(parents=True, exist_ok=True)
+
+                move(exe_path, old_exe_dir)
+                move(self.downloaded_file, exe_path)
                 subprocess.Popen([exe_path])
 
                 self.updated = True
