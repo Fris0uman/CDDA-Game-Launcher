@@ -54,6 +54,18 @@ from cddagl.win32 import (
 logger = logging.getLogger('cddagl')
 
 
+def _copyfileobj_patched(fsrc, fdst, length=16*1024*1024):
+    """Patches shutil method to hugely improve copy speed"""
+    while 1:
+        buf = fsrc.read(length)
+        if not buf:
+            break
+        fdst.write(buf)
+
+
+shutil.copyfileobj = _copyfileobj_patched
+
+
 class MainTab(QWidget):
     def __init__(self):
         super(MainTab, self).__init__()
@@ -776,7 +788,7 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
             self.check_running_process(self.exe_path)
 
         self.last_game_directory = directory
-        
+
         set_config_value('game_directory', directory)
 
     @property
@@ -832,7 +844,7 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
                     commit_sha = match.group('commitsha')
                     if len(commit_sha) >= 7:
                         self.game_version = commit_sha[:7]
-        
+
         self.opened_exe = open(self.exe_path, 'rb')
 
         def timeout():
@@ -864,7 +876,7 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
 
                 if is_stable:
                     self.game_version = stable_version
-                
+
                 if self.game_version == '':
                     self.game_version = _('Unknown')
                 else:
@@ -1539,7 +1551,7 @@ class UpdateGroupBox(QGroupBox):
             self.api_reply.finished.connect(self.find_build_finished)
             self.api_reply.readyRead.connect(self.find_build_ready_read)
             return
-        
+
         requests_remaining = None
         if self.api_reply.hasRawHeader(cons.GITHUB_XRL_REMAINING):
             requests_remaining = self.api_reply.rawHeader(cons.GITHUB_XRL_REMAINING)
@@ -1553,7 +1565,7 @@ class UpdateGroupBox(QGroupBox):
 
         if requests_remaining is not None and requests_remaining <= 10:
             self.warn_rate_limit(requests_remaining, reset_dt)
-        
+
         main_window = self.get_main_window()
         status_bar = main_window.statusBar()
 
@@ -1583,7 +1595,7 @@ class UpdateGroupBox(QGroupBox):
 
         if release is None:
             return
-        
+
         builds = self.builds
 
         asset_platform = self.base_asset['Platform']
@@ -1731,7 +1743,7 @@ class UpdateGroupBox(QGroupBox):
 
                     if new_subdirectory_msgbox.exec() == 1:
                         return
-                    
+
                     os.makedirs(subdir)
                     game_dir = subdir
                     game_dir_group_box.set_dir_combo_value(subdir)
@@ -1877,7 +1889,7 @@ class UpdateGroupBox(QGroupBox):
         main_tab = self.get_main_tab()
         game_dir_group_box = main_tab.game_dir_group_box
         game_dir = game_dir_group_box.dir_combo.currentText()
-        
+
         logger.info(
             'Updating CDDA...\n'
             'CDDAGL Directory: {}\n'
@@ -3325,7 +3337,7 @@ class UpdateGroupBox(QGroupBox):
                     'date': arrow.get(version_details['released_on']).datetime
                 }
                 builds.append(build)
-            
+
             builds.sort(key=lambda x: (x['date'], x['number']), reverse=True)
             self.builds = builds
 
@@ -3342,7 +3354,7 @@ class UpdateGroupBox(QGroupBox):
                 self.builds_combo.addItem(
                     '{name} ({delta}) [{number}]'.format(name=build['name'], delta=human_delta,
                         number=build['number']), userData=build)
-            
+
             main_tab = self.get_main_tab()
             game_dir_group_box = main_tab.game_dir_group_box
 
@@ -3360,7 +3372,7 @@ class UpdateGroupBox(QGroupBox):
 
             self.changelog_content.setHtml(cons.STABLE_CHANGELOG)
 
-            
+
         elif selected_branch is self.experimental_radio_button:
             release_asset = cons.BASE_ASSETS['Tiles'][selected_platform]
 
@@ -3396,7 +3408,7 @@ class UpdateGroupBox(QGroupBox):
                                         number=entry['number'],
                                         html_url=entry['html_url']
                                         )
-                                        
+
             if new_date in changelog_sorted:
                 changelog_sorted[new_date].append(new_entry)
             else:
@@ -3444,11 +3456,11 @@ class UpdateGroupBox(QGroupBox):
             config_value = cons.CONFIG_BRANCH_STABLE
         if button is self.experimental_radio_button:
             config_value = cons.CONFIG_BRANCH_EXPERIMENTAL
-        
+
         set_config_value(cons.CONFIG_BRANCH_KEY, config_value)
 
         self.branch_changed()
-    
+
     def branch_changed(self):
         # Perform branch change
 
