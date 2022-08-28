@@ -3415,7 +3415,7 @@ class UpdateGroupBox(QGroupBox):
                 changelog_sorted.update({new_date : [new_entry]})
 
         dated_changelog = sorted(changelog_sorted)
-        if config_true(get_config_value('reverse_sort_changelog', 'False')):
+        if config_true(get_config_value('reverse_sort_changelog', 'True')):
             dated_changelog = reversed(dated_changelog)
 
         for date in dated_changelog:

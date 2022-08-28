@@ -137,7 +137,7 @@ class LauncherSettingsGroupBox(QGroupBox):
 
         reverse_sort_changelog_checkbox = QCheckBox()
         check_state = (Qt.Checked if config_true(get_config_value(
-            'reverse_sort_changelog', 'False')) 
+            'reverse_sort_changelog', 'True'))
             else Qt.Unchecked)
         reverse_sort_changelog_checkbox.setCheckState(
             check_state)
