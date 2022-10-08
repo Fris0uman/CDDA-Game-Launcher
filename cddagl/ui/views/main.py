@@ -3401,9 +3401,15 @@ class UpdateGroupBox(QGroupBox):
             if entry["state"] == "open":
                 continue
 
+            new_body = ""
+            try:
+                new_body = entry['body'].split('####')
+            except:
+                print("Can't parse body")
+
             new_date = entry['closed_at'][0:10]
             new_entry = changelog_entry(title =entry['title'],
-                                        body = entry['body'].split('####'),
+                                        body = new_body,
                                         node_id =entry['node_id'],
                                         number=entry['number'],
                                         html_url=entry['html_url']
