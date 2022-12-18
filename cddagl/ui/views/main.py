@@ -246,7 +246,7 @@ class GameDirGroupBox(QGroupBox):
         self.set_text()
 
     def set_text(self):
-        self.dir_label.setText(_('Directory:'))
+        self.dir_label.setText(_('Game Directory:'))
         self.session_label.setText(_('User Data:'))
         self.version_label.setText(_('Version:'))
         self.build_label.setText(_('Build:'))
