@@ -2300,10 +2300,6 @@ class UpdateGroupBox(QGroupBox):
             if os.path.dirname(session) == game_dir:
                 excluded_dirs.append( os.path.basename(os.path.normpath(session)))
 
-        for entry in dir_list:
-            if entry not in excluded_dirs:
-                self.backup_dir_list.append(entry)
-
         if (config_true(get_config_value('prevent_save_move', 'False'))
             and 'save' in dir_list):
             dir_list.remove('save')
@@ -2314,6 +2310,10 @@ class UpdateGroupBox(QGroupBox):
             launcher_name = os.path.basename(launcher_exe)
             if launcher_name in dir_list:
                 dir_list.remove(launcher_name)
+
+        for entry in dir_list:
+            if entry not in excluded_dirs:
+                self.backup_dir_list.append(entry)
 
         if len(dir_list) > 0:
             status_bar.showMessage(_('Backing up current game'))
