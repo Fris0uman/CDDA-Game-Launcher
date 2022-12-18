@@ -293,8 +293,9 @@ class GameDirGroupBox(QGroupBox):
             self.game_directory_changed()
 
             sess_directory = get_config_value('session_directory')
-            if sess_directory is None or sess_directory == game_directory:
-                sess_directory = 'default_session'
+            # Check for default_session for compatibility with 1.6.3
+            if sess_directory == 'default_session' or sess_directory is None:
+                sess_directory = game_directory
             self.set_sess_combo_value(sess_directory)
             self.sess_directory_changed()
 
@@ -465,7 +466,7 @@ class GameDirGroupBox(QGroupBox):
             params = ' ' + params
 
         current_session = get_config_value('session_directory')
-        if current_session != 'default_session' and current_session is not None:
+        if current_session != self.game_dir and current_session is not None:
             self.get_main_window().statusBar().showMessage(current_session)
             params = params + ' ' + '--userdir' + ' ' + '\"' + current_session + '/\"'
 
@@ -652,11 +653,6 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
 
     def sess_directory_changed(self):
         directory = self.sess_combo.currentText()
-        game_dir = self.dir_combo.currentText()
-        if directory == game_dir:
-            directory = 'default_session'
-            self.sess_combo.setCurrentText(directory)
-            self.sess_directory_changed()
 
         set_config_value('session_directory', directory)
         self.add_session_dir()
@@ -694,8 +690,8 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
     def game_directory_changed(self):
         directory = self.dir_combo.currentText()
         sess_dir = self.sess_combo.currentText()
-        if directory == sess_dir:
-            self.sess_combo.setCurrentText('default_session')
+        if not os.path.isdir(sess_dir):
+            self.sess_combo.setCurrentText(directory)
             self.sess_directory_changed()
 
         main_window = self.get_main_window()
@@ -1038,7 +1034,7 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
             self.saves_value_edit.setText(_('Unknown'))
 
         save_dir = os.path.join(self.game_dir, 'save')
-        if session != 'default_session' and session is not None:
+        if session != self.game_dir and session is not None:
             save_dir = os.path.join(session, 'save')
 
         if not os.path.isdir(save_dir):
