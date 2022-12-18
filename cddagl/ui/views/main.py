@@ -247,7 +247,7 @@ class GameDirGroupBox(QGroupBox):
 
     def set_text(self):
         self.dir_label.setText(_('Directory:'))
-        self.session_label.setText(_('Session:'))
+        self.session_label.setText(_('User Data:'))
         self.version_label.setText(_('Version:'))
         self.build_label.setText(_('Build:'))
         self.saves_label.setText(_('Saves:'))
@@ -2298,7 +2298,7 @@ class UpdateGroupBox(QGroupBox):
         excluded_dirs = []
         for session in sessions:
             if os.path.dirname(session) == game_dir:
-                excluded_dirs.append( os.path.basename(os.path.normpath(session)))
+                excluded_dirs.append(os.path.basename(os.path.normpath(session)))
 
         if (config_true(get_config_value('prevent_save_move', 'False'))
             and 'save' in dir_list):
