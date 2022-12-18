@@ -2527,12 +2527,12 @@ class UpdateGroupBox(QGroupBox):
                         values = json.load(f)
                         if isinstance(values, dict):
                             if values.get('type', '') == 'MOD_INFO':
-                                return values.get('ident', None)
+                                return values.get('id', None)
                         elif isinstance(values, list):
                             for item in values:
                                 if (isinstance(item, dict)
                                     and item.get('type', '') == 'MOD_INFO'):
-                                        return item.get('ident', None)
+                                        return item.get('id', None)
                     except ValueError:
                         pass
             except FileNotFoundError:
