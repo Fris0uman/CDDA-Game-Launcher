@@ -246,8 +246,8 @@ class GameDirGroupBox(QGroupBox):
         self.set_text()
 
     def set_text(self):
-        self.dir_label.setText(_('Directory:'))
-        self.session_label.setText(_('Session:'))
+        self.dir_label.setText(_('Game Directory:'))
+        self.session_label.setText(_('User Data:'))
         self.version_label.setText(_('Version:'))
         self.build_label.setText(_('Build:'))
         self.saves_label.setText(_('Saves:'))
@@ -293,8 +293,9 @@ class GameDirGroupBox(QGroupBox):
             self.game_directory_changed()
 
             sess_directory = get_config_value('session_directory')
-            if sess_directory is None or sess_directory == game_directory:
-                sess_directory = 'default_session'
+            # Check for default_session for compatibility with 1.6.3
+            if sess_directory == 'default_session' or sess_directory is None:
+                sess_directory = game_directory
             self.set_sess_combo_value(sess_directory)
             self.sess_directory_changed()
 
@@ -465,7 +466,7 @@ class GameDirGroupBox(QGroupBox):
             params = ' ' + params
 
         current_session = get_config_value('session_directory')
-        if current_session != 'default_session' and current_session is not None:
+        if current_session != self.game_dir and current_session is not None:
             self.get_main_window().statusBar().showMessage(current_session)
             params = params + ' ' + '--userdir' + ' ' + '\"' + current_session + '/\"'
 
@@ -652,11 +653,6 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
 
     def sess_directory_changed(self):
         directory = self.sess_combo.currentText()
-        game_dir = self.dir_combo.currentText()
-        if directory == game_dir:
-            directory = 'default_session'
-            self.sess_combo.setCurrentText(directory)
-            self.sess_directory_changed()
 
         set_config_value('session_directory', directory)
         self.add_session_dir()
@@ -694,8 +690,8 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
     def game_directory_changed(self):
         directory = self.dir_combo.currentText()
         sess_dir = self.sess_combo.currentText()
-        if directory == sess_dir:
-            self.sess_combo.setCurrentText('default_session')
+        if not os.path.isdir(sess_dir):
+            self.sess_combo.setCurrentText(directory)
             self.sess_directory_changed()
 
         main_window = self.get_main_window()
@@ -1038,7 +1034,7 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
             self.saves_value_edit.setText(_('Unknown'))
 
         save_dir = os.path.join(self.game_dir, 'save')
-        if session != 'default_session' and session is not None:
+        if session != self.game_dir and session is not None:
             save_dir = os.path.join(session, 'save')
 
         if not os.path.isdir(save_dir):
@@ -2302,11 +2298,7 @@ class UpdateGroupBox(QGroupBox):
         excluded_dirs = []
         for session in sessions:
             if os.path.dirname(session) == game_dir:
-                excluded_dirs.append( os.path.basename(os.path.normpath(session)))
-
-        for entry in dir_list:
-            if entry not in excluded_dirs:
-                self.backup_dir_list.append(entry)
+                excluded_dirs.append(os.path.basename(os.path.normpath(session)))
 
         if (config_true(get_config_value('prevent_save_move', 'False'))
             and 'save' in dir_list):
@@ -2318,6 +2310,10 @@ class UpdateGroupBox(QGroupBox):
             launcher_name = os.path.basename(launcher_exe)
             if launcher_name in dir_list:
                 dir_list.remove(launcher_name)
+
+        for entry in dir_list:
+            if entry not in excluded_dirs:
+                self.backup_dir_list.append(entry)
 
         if len(dir_list) > 0:
             status_bar.showMessage(_('Backing up current game'))
@@ -2531,12 +2527,12 @@ class UpdateGroupBox(QGroupBox):
                         values = json.load(f)
                         if isinstance(values, dict):
                             if values.get('type', '') == 'MOD_INFO':
-                                return values.get('ident', None)
+                                return values.get('id', None)
                         elif isinstance(values, list):
                             for item in values:
                                 if (isinstance(item, dict)
                                     and item.get('type', '') == 'MOD_INFO'):
-                                        return item.get('ident', None)
+                                        return item.get('id', None)
                     except ValueError:
                         pass
             except FileNotFoundError:
