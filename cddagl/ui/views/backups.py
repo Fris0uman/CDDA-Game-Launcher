@@ -1103,6 +1103,11 @@ class BackupsTab(QTabWidget):
     def get_save_dir(self):
         save_dir = os.path.join(self.game_dir, 'save')
         session = get_config_value('session_directory')
+
+        #For compatibility with 1.6.3
+        if session == 'default_session':
+            session = self.game_dir
+
         if session != self.game_dir and session is not None:
             save_dir = os.path.join(session, 'save')
             if not os.path.isdir(save_dir) and os.path.isdir(session):
@@ -1146,6 +1151,11 @@ class BackupsTab(QTabWidget):
     def get_backup_dir(self):
         backup_dir = os.path.join(self.game_dir, 'save_backups')
         session = get_config_value('session_directory')
+
+        #For compatibility with 1.6.3
+        if session == 'default_session':
+            session = self.game_dir
+
         if session != self.game_dir and session is not None:
             backup_dir = os.path.join(session, 'save_backups')
             if not os.path.isdir(backup_dir) and os.path.isdir(session):
@@ -1196,12 +1206,8 @@ class BackupsTab(QTabWidget):
         self.update_backups_timer = timer
 
         self.backups_scan = scandir(backup_dir)
-        save_dir_name = get_config_value('session_directory')
-        # Check default_session for compatibility with 1.6.3
-        if save_dir_name == 'default_session' or save_dir_name is None:
-            save_dir_name = 'save/'
-        else:
-            save_dir_name = os.path.basename(os.path.normpath(save_dir_name))
+
+        save_dir_name = os.path.basename(os.path.normpath(self.get_save_dir()))
         def timeout():
             try:
                 entry = next(self.backups_scan)
@@ -1218,8 +1224,14 @@ class BackupsTab(QTabWidget):
 
                                 uncompressed_size += info.file_size
 
+                                # For compatibility with 1.6.3
+                                session = get_config_value('session_directory')
+                                if session == 'default_session':
+                                    session = self.game_dir
+
                                 path_items = info.filename.split('/')
-                                target_length = 3 if get_config_value('session_directory') == self.game_dir else 4
+                                target_length = 3 if session == self.game_dir else 4
+
                                 if len(path_items) == target_length:
                                     save_file = path_items[-1]
                                     if save_file.endswith('.sav'):

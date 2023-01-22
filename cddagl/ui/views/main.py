@@ -1029,6 +1029,10 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
         self.game_dir = self.dir_combo.currentText()
         session = get_config_value('session_directory')
 
+        #For compatibility with 1.6.3
+        if session == 'default_session':
+            session = self.game_dir
+
         if (self.update_saves_timer is not None and self.update_saves_timer.isActive()):
             self.update_saves_timer.stop()
             self.saves_value_edit.setText(_('Unknown'))
