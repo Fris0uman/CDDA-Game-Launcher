@@ -52,6 +52,16 @@ BASE_ASSETS = {
 }
 
 STABLE_ASSETS = {
+    '0.G': {
+        'name': '0.G Gaiman',
+        'number': '2023-03-01-0054',
+        'released_on': '2023-03-01T00:54:25Z',
+        'github_release': 'https://github.com/CleverRaven/Cataclysm-DDA/releases/tag/0.G',
+        'Tiles': {
+            'x64': 'https://github.com/CleverRaven/Cataclysm-DDA/releases/download/0.G/cdda-windows-tiles-x64-2023-03-01-0054.zip',
+            'x86': 'https://github.com/CleverRaven/Cataclysm-DDA/releases/download/0.G/cdda-windows-tiles-x32-msvc-2023-03-01-0054.zip'
+        }
+    },
     '0.F-3': {
         'name': '0.F Frank-3',
         'number': '11002',
@@ -155,6 +165,41 @@ STABLE_ASSETS = {
 }
 
 STABLE_CHANGELOG = '''
+
+<h3>0.G Gaiman</h3>
+
+<p>Highlights</p>
+<ul>
+<li>Effect on condition brings a scripting pseudo language to Cataclysm.  Some of its key uses in 0.G have been the introduction of portal storms, NPC faction development over time and random encounters in already explored maps.</li>
+<li>The introduction of hobbies has added a new tab to character creation that allows the player to select one or more hobbies/backgrounds that flesh out what your character was doing prior to the Cataclysm in skills and traits.</li>
+<li>JSONized sidebar allows almost total control of what your sidebar looks like and what information it displays is up to you!</li>
+<li>The skill system has been greatly expanded with many new proficiencies and many new ways to learn them, as well as the groundwork for practice-based skill improvement, including a skill rust system that doesn't suck because it caps effective skill lost and regenerates faster than regular skill gain.</li>
+<li>Passively boil water by putting dirty water into a fireproof container then placing the container on top of a fire.  Walk away and after an amount of time dependent on the amount of water to boil it will all be clean water!</li>
+<li>Monster weakpoints! Many monsters now have weakpoints that the player can hit to apply various effects and extra damage to the monster.  As the player dissects more corpses of monsters they can learn weakpoint proficiencies that increase the player's odds of hitting weakpoints.</li>
+<li>Characters now have cardio which will respond to your playstyle.  Go for a run every day and perform hard labor and your stamina will slowly go further and further.  Spend three months reading and performing low intensity crafts and your cardio will suffer.</li>
+<li>A half dozen new in repo mods: Innawoods for the survival from scratch you crave. Backrooms which takes place in the neverending backrooms dimension, Massachusetts mod for people who desire geographic accuracy, Xedra Evolved a science fantasy mod with weird magic and vampirism, Tropicataclysm for your Cataclysm at a warmer latitude and the Megafauna mod which targets an ancient epoch with creatures that outsize our modern equivalents, similar to Dinomod.</li>
+<li>Take over a friendly NPC upon your death, if you've managed to recruit any NPCs to your faction you are given an option to take over one of them in the event of your character's death.</li>
+<li>Appliances and building based powergrids, allow you to set up various tools or even usable arcade machines in your home base.</li>
+<li>Two new Iso tilesets have been added to the game.</li>
+<li>Simple monster aggression differentation. Some monsters now know if another monster made them angry instead of the PC.  If they get angry at other monsters they may not get angry at the PC.</li>
+<li>Vehicles now have solid walls even when angled which prevents monsters and fields from entering an angled vehicle.</li>
+<li>Dozens of updates and content additions to Dinomod, Aftershock and Magiclysm.</li>
+<li>Map memory is now unlimited, you will no longer forget places you have been before.</li>
+<li>There has been a distinct push to make many options and possibilities clearer to the player without having to search for them, UI that makes suggestions as to why the player might want to perform an action.</li>
+<li>Electrical fields can now produce EMP that will destroy unprotected electronics</li>
+<li>Perspiration now exists so that your PC can wear heavy armor during summer without overheating, instead they'll sweat heavily and experience thirst faster.</li>
+</ul>
+
+<p>Statistics</p>
+<ul>
+<li>7889 files changed, 11643312 insertions(+), 5022361 deletions(-)</li>
+<li>13,201 commits</li>
+<li>~218 new contributors</li>
+</ul>
+
+<p>For a larger, but still incomplete listing of features, see <a href="https://github.com/CleverRaven/Cataclysm-DDA/blob/0.G/data/changelog.txt">https://github.com/CleverRaven/Cataclysm-DDA/blob/0.G/data/changelog.txt</a></p>
+
+
 <h3>0.F-3 Frank-3</h3>
 
 <p>Point release <strong>Frank-3</strong> includes following features and bugfixes backported to <a href="https://github.com/CleverRaven/Cataclysm-DDA/releases/tag/0.F">original Frank release</a>:</p>
