@@ -42,6 +42,8 @@ class BackupsTab(QTabWidget):
         self.backup_compressing = False
 
         self.compressing_timer = None
+        self.scale_factor = 0 # Number of bits to shift file size right so we don't overflow the QProgressBar
+        self.filestep = 0 # File counter so we don't update the progress bar every single file
 
         current_backups_gb = QGroupBox()
         self.current_backups_gb = current_backups_gb
@@ -519,7 +521,9 @@ class BackupsTab(QTabWidget):
             extracting_size_label)
 
         progress_bar = QProgressBar()
-        progress_bar.setRange(0, self.total_extract_size)
+        self.filestep = 0
+        self.scale_factor = max(0,int(self.total_extract_size.bit_length()) - 31) 
+        progress_bar.setRange(0, self.total_extract_size >> self.scale_factor) 
         progress_bar.setValue(0)
         status_bar.addWidget(progress_bar)
         self.extracting_progress_bar = progress_bar
@@ -586,22 +590,26 @@ class BackupsTab(QTabWidget):
 
         def completed_extract():
             self.extract_size += self.next_extract_file.file_size
-            self.extracting_progress_bar.setValue(self.extract_size)
+            
+            self.filestep += 1
+            if self.filestep == 100:
+                self.filestep = 0
+                self.extracting_progress_bar.setValue(self.extract_size >> self.scale_factor) 
 
-            self.extracting_size_label.setText(
-                '{bytes_read}/{total_bytes}'
-                .format(bytes_read=sizeof_fmt(self.extract_size),
-                        total_bytes=sizeof_fmt(self.total_extract_size))
-            )
+                self.extracting_size_label.setText(
+                    '{bytes_read}/{total_bytes}'
+                    .format(bytes_read=sizeof_fmt(self.extract_size),
+                            total_bytes=sizeof_fmt(self.total_extract_size))
+                )
 
-            delta_bytes = self.extract_size - self.last_extract_bytes
-            delta_time = datetime.utcnow() - self.last_extract
-            if delta_time.total_seconds() == 0:
-                delta_time = timedelta.resolution
+                delta_bytes = self.extract_size - self.last_extract_bytes
+                delta_time = datetime.utcnow() - self.last_extract
+                if delta_time.total_seconds() == 0:
+                    delta_time = timedelta.resolution
 
-            bytes_secs = delta_bytes / delta_time.total_seconds()
-            self.extracting_speed_label.setText(_('{bytes_sec}/s'
-                ).format(bytes_sec=sizeof_fmt(bytes_secs)))
+                bytes_secs = delta_bytes / delta_time.total_seconds()
+                self.extracting_speed_label.setText(_('{bytes_sec}/s'
+                    ).format(bytes_sec=sizeof_fmt(bytes_secs)))
 
             self.last_extract_bytes = self.extract_size
             self.last_extract = datetime.utcnow()
@@ -901,6 +909,7 @@ class BackupsTab(QTabWidget):
 
         self.total_backup_size = 0
         self.total_files = 0
+        self.filestep = 0
 
         self.disable_tab()
         self.get_main_tab().disable_tab()
@@ -922,10 +931,13 @@ class BackupsTab(QTabWidget):
                     entry = next(self.backup_scan)
 
                     if entry.is_file():
-                        self.compressing_label.setText(
-                            _('Found {filename} in {path}').format(
-                                filename=entry.name,
-                                path=os.path.dirname(entry.path)))
+                        self.filestep += 1
+                        if self.filestep == 100:
+                            self.filestep = 0
+                            self.compressing_label.setText(
+                                _('Found {filename} in {path}').format(
+                                    filename=entry.name,
+                                    path=os.path.dirname(entry.path)))
                         self.backup_files.append(entry.path)
                         self.total_backup_size += entry.stat().st_size
                         self.backup_file_sizes[entry.path
@@ -962,7 +974,9 @@ class BackupsTab(QTabWidget):
                             compressing_size_label)
 
                         progress_bar = QProgressBar()
-                        progress_bar.setRange(0, self.total_backup_size)
+                        self.filestep = 0
+                        self.scale_factor = max(0,int(self.total_backup_size.bit_length()) - 31) 
+                        progress_bar.setRange(0, self.total_backup_size >> self.scale_factor) 
                         progress_bar.setValue(0)
                         status_bar.addWidget(progress_bar)
                         self.compressing_progress_bar = progress_bar
@@ -1037,25 +1051,29 @@ class BackupsTab(QTabWidget):
 
         def completed_compress():
             self.comp_size += self.backup_file_sizes[self.next_backup_file]
-            self.compressing_progress_bar.setValue(self.comp_size)
+            self.filestep += 1
+            if self.filestep == 100:
+                self.filestep = 0
 
-            self.compressing_size_label.setText(
-                '{bytes_read}/{total_bytes}'
-                .format(bytes_read=sizeof_fmt(self.comp_size),
-                        total_bytes=sizeof_fmt(self.total_backup_size))
-            )
+                self.compressing_progress_bar.setValue(self.comp_size >> self.scale_factor) 
 
-            delta_bytes = self.comp_size - self.last_comp_bytes
-            delta_time = datetime.utcnow() - self.last_comp
-            if delta_time.total_seconds() == 0:
-                delta_time = timedelta.resolution
+                self.compressing_size_label.setText(
+                    '{bytes_read}/{total_bytes}'
+                    .format(bytes_read=sizeof_fmt(self.comp_size),
+                            total_bytes=sizeof_fmt(self.total_backup_size))
+                )
 
-            bytes_secs = delta_bytes / delta_time.total_seconds()
-            self.compressing_speed_label.setText(_('{bytes_sec}/s'
-                ).format(bytes_sec=sizeof_fmt(bytes_secs)))
+                delta_bytes = self.comp_size - self.last_comp_bytes
+                delta_time = datetime.utcnow() - self.last_comp
+                if delta_time.total_seconds() == 0:
+                    delta_time = timedelta.resolution
 
-            self.last_comp_bytes = self.comp_size
-            self.last_comp = datetime.utcnow()
+                bytes_secs = delta_bytes / delta_time.total_seconds()
+                self.compressing_speed_label.setText(_('{bytes_sec}/s'
+                    ).format(bytes_sec=sizeof_fmt(bytes_secs)))
+
+                self.last_comp_bytes = self.comp_size
+                self.last_comp = datetime.utcnow()
 
             backup_next_file()
 
