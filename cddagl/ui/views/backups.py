@@ -1248,7 +1248,7 @@ class BackupsTab(QTabWidget):
                                     session = self.game_dir
 
                                 path_items = info.filename.split('/')
-                                target_length = 3 if session == self.game_dir else 4
+                                target_length = 3
 
                                 if len(path_items) == target_length:
                                     save_file = path_items[-1]
