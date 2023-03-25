@@ -576,7 +576,7 @@ class LauncherUpdateDialog(QDialog):
 
                 current_dir = Path(exe_path).parent
                 old_exe_dir = Path(current_dir / 'old_launcher')
-                Path(old_exe_dir / 'Launcher.exe').unlink(missing_ok=True)
+                Path(old_exe_dir / Path(exe_path).name).unlink(missing_ok=True)
                 Path(old_exe_dir).mkdir(parents=True, exist_ok=True)
 
                 move(exe_path, old_exe_dir)
