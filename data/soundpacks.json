@@ -33,7 +33,6 @@
         "viewname": "CDDA-Soundpack",
         "name": "CDDA-Soundpack",
         "url": "https://github.com/budg3/CDDA-Soundpack/archive/master.zip",
-        "size": 48214543,
         "homepage": "https://github.com/budg3/CDDA-Soundpack"
     },
     {
@@ -71,13 +70,5 @@
         "url": "https://github.com/damalsk/damalsksoundpack/archive/v0.2.zip",
         "size": 164342384,
         "homepage": "https://github.com/damalsk/damalsksoundpack"
-    },
-    {
-        "type": "direct_download",
-        "viewname": "Otopack",
-        "name": "Otopack",
-        "url": "https://github.com/Kenan2000/Otopack-Mods-Updates/archive/master.zip",
-        "size": 139984997,
-        "homepage": "https://github.com/Kenan2000/Otopack-Mods-Updates"
     }
 ]
