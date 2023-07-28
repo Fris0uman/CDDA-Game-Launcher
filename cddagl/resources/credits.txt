@@ -1,2 +1,3 @@
 Launcher Icon By Aunt Su, edited by acepleiades from the Cdda tileset repo https://github.com/I-am-Erk/CDDA-Tilesets
 https://github.com/I-am-Erk/CDDA-Tilesets/blob/master/gfx/UltimateCataclysm/pngs_normal_32x32/items/aunt_su_guns/mininuke_launcher.png
+This sprite is released under CC-BY-SA http://creativecommons.org/licenses/by-sa/3.0/
