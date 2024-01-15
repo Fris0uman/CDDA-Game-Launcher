@@ -71,7 +71,7 @@ def init_logging():
     if local_app_data is None or not os.path.isdir(local_app_data):
         local_app_data = ''
 
-    logging_dir = os.path.join(local_app_data, 'Kitten CDDA Launcher')
+    logging_dir = os.path.join(local_app_data, 'CDDA Game Launcher')
     if not os.path.isdir(logging_dir):
         os.makedirs(logging_dir)
 
