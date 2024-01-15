@@ -1,7 +1,7 @@
 ﻿#define MyAppName "Kitten CDDA Launcher"
 #define MyAppVersion FileRead(FileOpen("cddagl\VERSION"))
 #define MyAppPublisher "Rémy Roy"
-#define MyAppURL "https://github.com/remyroy/CDDA-Game-Launcher"
+#define MyAppURL "https://github.com/Fris0uman/CDDA-Game-Launcher"
 #define MyExecutable "Launcher.bat"
 #define MyIcon "cddagl\resources\launcher.ico"
 

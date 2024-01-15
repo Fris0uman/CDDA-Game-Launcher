@@ -211,7 +211,7 @@ You should [contact the game developpers](https://cataclysmdda.org/#ive-found-a-
 [TBD]
 ### The launcher keeps crashing when I start it. What can I do?
 
-You might need to delete your configs file to work around this issue. That filename is `configs.db` and it is located in `%LOCALAPPDATA%\Kitten CDDA Launcher\`. Some users have reported and encountered unrelated starting issues. In some cases, running a debug version of the launcher to get more logs might help to locate the issue. [Creating an issue about this](https://github.com/Fris0uman/CDDA-Game-Launcher/issues) is probably the way to go.
+You might need to delete your configs file to work around this issue. That filename is `configs.db` and it is located in `%LOCALAPPDATA%\CDDA Game Launcher\`. Some users have reported and encountered unrelated starting issues. In some cases, running a debug version of the launcher to get more logs might help to locate the issue. [Creating an issue about this](https://github.com/Fris0uman/CDDA-Game-Launcher/issues) is probably the way to go.
 
 ### I just installed the game and it already has a big list of mods. Is there something wrong?
 
