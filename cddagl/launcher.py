@@ -71,7 +71,7 @@ def init_logging():
     if local_app_data is None or not os.path.isdir(local_app_data):
         local_app_data = ''
 
-    logging_dir = os.path.join(local_app_data, 'CDDA Game Launcher')
+    logging_dir = os.path.join(local_app_data, 'Kitten CDDA Launcher')
     if not os.path.isdir(logging_dir):
         os.makedirs(logging_dir)
 
@@ -87,7 +87,7 @@ def init_logging():
     handler = logging.StreamHandler()
     logger.addHandler(handler)
 
-    logger.info(_('CDDA Game Launcher started: {version}').format(version=version))
+    logger.info(_('Kitten CDDA Launcher started: {version}').format(version=version))
 
 
 def handle_exception(extype, value, tb):
@@ -116,7 +116,7 @@ def start_ui(locale, single_instance):
     main_app.single_instance = single_instance
     main_app.app_locale = locale
 
-    main_win = TabbedWindow('CDDA Game Launcher')
+    main_win = TabbedWindow('Kitten CDDA Launcher')
     main_win.show()
 
     main_app.main_win = main_win

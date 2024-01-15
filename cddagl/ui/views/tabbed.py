@@ -74,7 +74,7 @@ class TabbedWindow(QMainWindow):
         self.faq_action.setText(_('&Frequently asked questions (FAQ)'))
         self.game_issue_action.setText(_('&Game issue'))
         self.update_action.setText(_('&Check for update'))
-        self.about_action.setText(_('&About CDDA Game Launcher'))
+        self.about_action.setText(_('&About Kitten CDDA Launcher'))
 
         if self.about_dialog is not None:
             self.about_dialog.set_text()
@@ -123,7 +123,7 @@ class TabbedWindow(QMainWindow):
         self.update_action = update_action
         self.help_menu.addAction(update_action)
 
-        about_action = QAction(_('&About CDDA Game Launcher'), self,
+        about_action = QAction(_('&About Kitten CDDA Launcher'), self,
             triggered=self.show_about_dialog)
         self.about_action = about_action
         self.help_menu.addAction(about_action)
@@ -266,7 +266,7 @@ class TabbedWindow(QMainWindow):
 
             no_launcher_version_check_checkbox = QCheckBox()
             no_launcher_version_check_checkbox.setText(_('Do not check '
-                'for new version of the CDDA Game Launcher on launch'))
+                'for new version of the Kitten CDDA Launcher on launch'))
             check_state = (Qt.Checked if config_true(get_config_value(
                 'prevent_version_check_launch', 'False'))
                 else Qt.Unchecked)
@@ -316,7 +316,7 @@ class TabbedWindow(QMainWindow):
         if self.in_manual_update_check:
             up_to_date_msgbox = QMessageBox()
             up_to_date_msgbox.setWindowTitle(_('Up to date'))
-            up_to_date_msgbox.setText(_('The CDDA Game Launcher is up to date.'
+            up_to_date_msgbox.setText(_('The Kitten CDDA Launcher is up to date.'
                 ))
             up_to_date_msgbox.setIcon(QMessageBox.Information)
 
@@ -512,7 +512,7 @@ class LauncherUpdateDialog(QDialog):
 
         self.setLayout(layout)
         self.setMinimumSize(300, 0)
-        self.setWindowTitle(_('CDDA Game Launcher self-update'))
+        self.setWindowTitle(_('Kitten CDDA Launcher self-update'))
 
     def showEvent(self, event):
         if not self.shown:

@@ -52,7 +52,7 @@ def get_config_path():
     if local_app_data is None or not os.path.isdir(local_app_data):
         local_app_data = ''
 
-    config_dir = os.path.join(local_app_data, 'CDDA Game Launcher')
+    config_dir = os.path.join(local_app_data, 'Kitten CDDA Launcher')
 
     if not os.path.isdir(config_dir):
         os.makedirs(config_dir)

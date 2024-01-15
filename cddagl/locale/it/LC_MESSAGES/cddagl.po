@@ -75,7 +75,7 @@ msgid "Yi"
 msgstr "Yi"
 
 #: cddagl/launcher.py:111
-msgid "CDDA Game Launcher started: {version}"
+msgid "Kitten CDDA Launcher started: {version}"
 msgstr "Launcher automatico per CDDA avviato. Versione: {version}"
 
 #: cddagl/ui/views/backups.py:188
@@ -357,8 +357,8 @@ msgid "Archive files {formats}"
 msgstr "Files {formats}"
 
 #: cddagl/ui/views/dialogs.py:172
-msgid "About CDDA Game Launcher"
-msgstr "About CDDA Game Launcher"
+msgid "About Kitten CDDA Launcher"
+msgstr "About Kitten CDDA Launcher"
 
 #: cddagl/ui/views/dialogs.py:173 cddagl/ui/views/main.py:429
 #: cddagl/ui/views/main.py:2094
@@ -367,7 +367,7 @@ msgstr "OK"
 
 #: cddagl/ui/views/dialogs.py:238
 msgid ""
-"The CDDA Game Launcher just crashed. An unhandled exception was raised. Here"
+"The Kitten CDDA Launcher just crashed. An unhandled exception was raised. Here"
 " are the details."
 msgstr "Il launcher CDDA è andato in crash. Dettagli:"
 
@@ -814,7 +814,7 @@ msgid "Use the launcher directory as the game directory"
 msgstr "Usare la cartella del launcher anche per CDDA"
 
 #: cddagl/ui/views/settings.py:169 cddagl/ui/views/tabbed.py:243
-msgid "Do not check for new version of the CDDA Game Launcher on launch"
+msgid "Do not check for new version of the Kitten CDDA Launcher on launch"
 msgstr "Non cercare nuove versioni del programma all'avvio"
 
 #: cddagl/ui/views/settings.py:171
@@ -969,8 +969,8 @@ msgid "&Check for update"
 msgstr "&Cerca update"
 
 #: cddagl/ui/views/tabbed.py:75 cddagl/ui/views/tabbed.py:112
-msgid "&About CDDA Game Launcher"
-msgstr "&About CDDA Game Launcher"
+msgid "&About Kitten CDDA Launcher"
+msgstr "&About Kitten CDDA Launcher"
 
 #: cddagl/ui/views/tabbed.py:254
 msgid "Launcher update"
@@ -997,7 +997,7 @@ msgid "Up to date"
 msgstr "Aggiornato"
 
 #: cddagl/ui/views/tabbed.py:294
-msgid "The CDDA Game Launcher is up to date."
+msgid "The Kitten CDDA Launcher is up to date."
 msgstr "Il programma di installazione CDDA è aggiornato"
 
 #: cddagl/ui/views/tabbed.py:401 cddagl/ui/views/tabbed.py:419
@@ -1037,5 +1037,5 @@ msgid "Speed:"
 msgstr "Velocità:"
 
 #: cddagl/ui/views/tabbed.py:515
-msgid "CDDA Game Launcher self-update"
+msgid "Kitten CDDA Launcher self-update"
 msgstr "Aggiornamenti CDDA automatici"
