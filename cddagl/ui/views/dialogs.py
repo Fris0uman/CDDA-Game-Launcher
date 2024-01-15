@@ -173,7 +173,7 @@ class FaqDialog(QDialog):
         self.setWindowTitle(_('Frequently asked questions (FAQ)'))
         self.ok_button.setText(_('OK'))
 
-        m = _('<h2>CDDA Game Launcher Frequently asked questions (FAQ)</h2>')
+        m = _('<h2>Kitten CDDA Launcher Frequently asked questions (FAQ)</h2>')
 
         html_faq = markdown2.markdown(_('''
 ### Where is my previous version?
@@ -211,7 +211,7 @@ You should [contact the game developpers](https://cataclysmdda.org/#ive-found-a-
 [TBD]
 ### The launcher keeps crashing when I start it. What can I do?
 
-You might need to delete your configs file to work around this issue. That filename is `configs.db` and it is located in `%LOCALAPPDATA%\CDDA Game Launcher\`. Some users have reported and encountered unrelated starting issues. In some cases, running a debug version of the launcher to get more logs might help to locate the issue. [Creating an issue about this](https://github.com/Fris0uman/CDDA-Game-Launcher/issues) is probably the way to go.
+You might need to delete your configs file to work around this issue. That filename is `configs.db` and it is located in `%LOCALAPPDATA%\Kitten CDDA Launcher\`. Some users have reported and encountered unrelated starting issues. In some cases, running a debug version of the launcher to get more logs might help to locate the issue. [Creating an issue about this](https://github.com/Fris0uman/CDDA-Game-Launcher/issues) is probably the way to go.
 
 ### I just installed the game and it already has a big list of mods. Is there something wrong?
 
@@ -257,9 +257,9 @@ class AboutDialog(QDialog):
         self.set_text()
 
     def set_text(self):
-        self.setWindowTitle(_('About CDDA Game Launcher'))
+        self.setWindowTitle(_('About Kitten CDDA Launcher'))
         self.ok_button.setText(_('OK'))
-        m = _('<p>CDDA Game Launcher version {version}</p>').format(version=version)
+        m = _('<p>Kitten CDDA Launcher version {version}</p>').format(version=version)
         m += _('<p>Get the latest release'
                ' <a href="https://github.com/Fris0uman/CDDA-Game-Launcher/releases">on GitHub</a>.'
                '</p>')
@@ -268,7 +268,7 @@ class AboutDialog(QDialog):
                '</p>')
         m += _('<p>Thanks to Rémy Roy for the <a href="https://github.com/remyroy/CDDA-Game-Launcher/">original implementation</a>' )
         m += _('<p>Thanks to the following people for their efforts in'
-               ' translating the CDDA Game Launcher</p>'
+               ' translating the Kitten CDDA Launcher</p>'
                '<ul>'
                '<li>Russian: Daniel from <a href="http://cataclysmdda.ru/">cataclysmdda.ru</a>'
                ' and Night_Pryanik'
@@ -310,7 +310,7 @@ class ExceptionWindow(QWidget):
         layout = QGridLayout()
 
         information_label = QLabel()
-        information_label.setText(_('The CDDA Game Launcher just crashed. An '
+        information_label.setText(_('The Kitten CDDA Launcher just crashed. An '
             'unhandled exception was raised. Here are the details.'))
         layout.addWidget(information_label, 0, 0)
         self.information_label = information_label
@@ -323,7 +323,7 @@ class ExceptionWindow(QWidget):
         text_content.setReadOnly(True)
         text_content.setOpenExternalLinks(True)
         text_content.setHtml(_('''
-<p>CDDA Game Launcher version: {version}</p>
+<p>Kitten CDDA Launcher version: {version}</p>
 <p>OS: {os} ({bitness})</p>
 <p>Type: {extype}</p>
 <p>Value: {value}</p>

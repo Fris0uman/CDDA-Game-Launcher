@@ -710,7 +710,7 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
             self.set_dir_state_icon(dir_state)
             self.version_value_label.setText(
                 _('Unknown version - Reason:') + ' ' +
-                _('CDDA Game Launcher files cannot be inside Game directory!')
+                _('Kitten CDDA Launcher files cannot be inside Game directory!')
             )
         elif os.path.isfile(directory):
             dir_state = 'critical'

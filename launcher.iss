@@ -1,4 +1,4 @@
-﻿#define MyAppName "CDDA Game Launcher"
+﻿#define MyAppName "Kitten CDDA Launcher"
 #define MyAppVersion FileRead(FileOpen("cddagl\VERSION"))
 #define MyAppPublisher "Rémy Roy"
 #define MyAppURL "https://github.com/remyroy/CDDA-Game-Launcher"

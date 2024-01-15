@@ -441,8 +441,8 @@ setup(
     version=get_version(),
     description=('A Cataclysm: Dark Days Ahead launcher with additional features'),
     author='Rémy Roy',
-    author_email='remyroy@remyroy.com',
-    url='https://github.com/remyroy/CDDA-Game-Launcher',
+    author_email='Fris0uman@protonmail.com',
+    url='https://github.com/Fris0uman/CDDA-Game-Launcher',
     packages=['cddagl'],
     package_data={'cddagl': ['VERSION']},
     cmdclass={

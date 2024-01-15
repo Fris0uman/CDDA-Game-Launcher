@@ -86,7 +86,7 @@ msgid "Yi"
 msgstr "Y"
 
 #: cddagl/launcher.py:111
-msgid "CDDA Game Launcher started: {version}"
+msgid "Kitten CDDA Launcher started: {version}"
 msgstr "Версия игрового установщика CDDA {version}"
 
 #: cddagl/ui/views/backups.py:188
@@ -401,7 +401,7 @@ msgid "I will try again"
 msgstr "Я попробую снова"
 
 #: cddagl/ui/views/dialogs.py:172
-msgid "About CDDA Game Launcher"
+msgid "About Kitten CDDA Launcher"
 msgstr "О Установщике CDDA"
 
 #: cddagl/ui/views/dialogs.py:173 cddagl/ui/views/main.py:429
@@ -410,28 +410,28 @@ msgid "OK"
 msgstr "ОК"
 
 #: cddagl/ui/views/dialogs.py:174
-msgid "<p>CDDA Game Launcher version {version}</p>"
+msgid "<p>Kitten CDDA Launcher version {version}</p>"
 msgstr "<p>Версия игрового установщика CDDA {version}</p>"
 
 #: cddagl/ui/views/dialogs.py:175
 msgid ""
-"<p>Get the latest release <a href=\"https://github.com/remyroy/CDDA-Game-"
+"<p>Get the latest release <a href=\"https://github.com/Fris0uman/CDDA-Game-"
 "Launcher/releases\">on GitHub</a>.</p>"
 msgstr ""
-"<p>Скачайте новую версию <a href=\"https://github.com/remyroy/CDDA-Game-"
+"<p>Скачайте новую версию <a href=\"https://github.com/Fris0uman/CDDA-Game-"
 "Launcher/releases\">на GitHub</a>.</p>"
 
 #: cddagl/ui/views/dialogs.py:178
 msgid ""
-"<p>Please report any issue <a href=\"https://github.com/remyroy/CDDA-Game-"
+"<p>Please report any issue <a href=\"https://github.com/Fris0uman/CDDA-Game-"
 "Launcher/issues/new\">on GitHub</a>.</p>"
 msgstr ""
-"<p>Сообщите нам о проблемах <a href=\"https://github.com/remyroy/CDDA-Game-"
+"<p>Сообщите нам о проблемах <a href=\"https://github.com/Fris0uman/CDDA-Game-"
 "Launcher/issues/new\">на GitHub</a>.</p>"
 
 #: cddagl/ui/views/dialogs.py:185
 msgid ""
-"<p>If you like the CDDA Game Launcher, you can buy me a beer "
+"<p>If you like the Kitten CDDA Launcher, you can buy me a beer "
 "by:</p><p>donating bitcoins to <a "
 "href=\"{bitcoin_link}\">{bitcoin_text}</a></p><p><img src=\"btc-qr.png\" "
 "/></p><p>or by donating ethers to <a "
@@ -484,14 +484,14 @@ msgstr ""
 
 #: cddagl/ui/views/dialogs.py:238
 msgid ""
-"The CDDA Game Launcher just crashed. An unhandled exception was raised. Here"
+"The Kitten CDDA Launcher just crashed. An unhandled exception was raised. Here"
 " are the details."
 msgstr "Лаунчер только что завершился с ошибкой. Подробности ниже."
 
 #: cddagl/ui/views/dialogs.py:250
 msgid ""
 "\n"
-"<p>CDDA Game Launcher version: {version}</p>\n"
+"<p>Kitten CDDA Launcher version: {version}</p>\n"
 "<p>OS: {os} ({bitness})</p>\n"
 "<p>Type: {extype}</p>\n"
 "<p>Value: {value}</p>\n"
@@ -659,7 +659,7 @@ msgid "Unknown version - Reason:"
 msgstr "Неизвестная версия - Причина:"
 
 #: cddagl/ui/views/main.py:614
-msgid "CDDA Game Launcher files cannot be inside Game directory!"
+msgid "Kitten CDDA Launcher files cannot be inside Game directory!"
 msgstr "Файл Игрового Установщика CDDA не может быть в директорию Игры!"
 
 #: cddagl/ui/views/main.py:621
@@ -1222,7 +1222,7 @@ msgstr ""
 "Использовать директорию, где расположен установщик, как директорию игры"
 
 #: cddagl/ui/views/settings.py:169 cddagl/ui/views/tabbed.py:243
-msgid "Do not check for new version of the CDDA Game Launcher on launch"
+msgid "Do not check for new version of the Kitten CDDA Launcher on launch"
 msgstr "Не проверять наличие новой версии установщика при запуске"
 
 #: cddagl/ui/views/settings.py:171
@@ -1393,7 +1393,7 @@ msgid "&Check for update"
 msgstr "&Проверить обновления лаунчера"
 
 #: cddagl/ui/views/tabbed.py:75 cddagl/ui/views/tabbed.py:112
-msgid "&About CDDA Game Launcher"
+msgid "&About Kitten CDDA Launcher"
 msgstr "О установщике"
 
 #: cddagl/ui/views/tabbed.py:254
@@ -1421,7 +1421,7 @@ msgid "Up to date"
 msgstr "Актуальная версия"
 
 #: cddagl/ui/views/tabbed.py:294
-msgid "The CDDA Game Launcher is up to date."
+msgid "The Kitten CDDA Launcher is up to date."
 msgstr "Обновлений не найдено."
 
 #: cddagl/ui/views/tabbed.py:401 cddagl/ui/views/tabbed.py:419
@@ -1461,5 +1461,5 @@ msgid "Speed:"
 msgstr "Скорость:"
 
 #: cddagl/ui/views/tabbed.py:515
-msgid "CDDA Game Launcher self-update"
+msgid "Kitten CDDA Launcher self-update"
 msgstr "Самостоятельное обновление лаунчера"

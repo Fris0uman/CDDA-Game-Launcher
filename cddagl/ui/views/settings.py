@@ -165,7 +165,7 @@ class LauncherSettingsGroupBox(QGroupBox):
         self.allow_mul_insts_checkbox.setText(_('Allow multiple instances of '
             'the launcher to be started'))
         self.no_launcher_version_check_checkbox.setText(_('Do not check '
-            'for new version of the CDDA Game Launcher on launch'))
+            'for new version of the Kitten CDDA Launcher on launch'))
         self.reverse_sort_changelog_checkbox.setText(_('Reverse sort '
             'changelog'))
         self.setTitle(_('Launcher'))

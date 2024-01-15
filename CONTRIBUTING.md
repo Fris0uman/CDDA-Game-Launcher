@@ -25,7 +25,7 @@ requests](#pull-requests), but please respect the following restrictions:
 <a name="translations"></a>
 ## Translations
 
-CDDA Game Launcher translations are hosted in Transifex. Transifex is a service
+Kitten CDDA Launcher translations are hosted in Transifex. Transifex is a service
 with a straightforward web interface to let contributors help with untranslated text.
 
 Anyone is welcome to create or improve translations directly from

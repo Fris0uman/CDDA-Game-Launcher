@@ -292,14 +292,14 @@ msgid "Archive files {formats}"
 msgstr "アーカイブファイル {formats}"
 
 #: cddagl/ui/views/dialogs.py:172
-msgid "About CDDA Game Launcher"
+msgid "About Kitten CDDA Launcher"
 msgstr "About CDDA Game について"
 
 #: cddagl/ui/views/dialogs.py:238
 msgid ""
-"The CDDA Game Launcher just crashed. An unhandled exception was raised. Here"
+"The Kitten CDDA Launcher just crashed. An unhandled exception was raised. Here"
 " are the details."
-msgstr "不明な例外処理が発生し、The CDDA Game Launcher は動作を停止しました。詳細はこちら。"
+msgstr "不明な例外処理が発生し、The Kitten CDDA Launcher は動作を停止しました。詳細はこちら。"
 
 #: cddagl/ui/views/dialogs.py:288
 msgid "Exit"
@@ -791,7 +791,7 @@ msgid "Use the launcher directory as the game directory"
 msgstr "ランチャーが存在するディレクトリをゲームティレクトリとする"
 
 #: cddagl/ui/views/settings.py:169 cddagl/ui/views/tabbed.py:243
-msgid "Do not check for new version of the CDDA Game Launcher on launch"
+msgid "Do not check for new version of the Kitten CDDA Launcher on launch"
 msgstr "起動時に新しいバージョンをチェックしない"
 
 #: cddagl/ui/views/settings.py:171
@@ -950,8 +950,8 @@ msgid "&Check for update"
 msgstr "アップデート確認"
 
 #: cddagl/ui/views/tabbed.py:75 cddagl/ui/views/tabbed.py:112
-msgid "&About CDDA Game Launcher"
-msgstr "&CDDA Game Launcher について"
+msgid "&About Kitten CDDA Launcher"
+msgstr "&Kitten CDDA Launcher について"
 
 #: cddagl/ui/views/tabbed.py:254
 msgid "Launcher update"
@@ -976,8 +976,8 @@ msgid "Up to date"
 msgstr "最新版"
 
 #: cddagl/ui/views/tabbed.py:294
-msgid "The CDDA Game Launcher is up to date."
-msgstr "お使いの CDDA Game Launcher は最新版です。"
+msgid "The Kitten CDDA Launcher is up to date."
+msgstr "お使いの Kitten CDDA Launcher は最新版です。"
 
 #: cddagl/ui/views/tabbed.py:401 cddagl/ui/views/tabbed.py:419
 msgid "Main"
@@ -1016,5 +1016,5 @@ msgid "Speed:"
 msgstr "速度:"
 
 #: cddagl/ui/views/tabbed.py:515
-msgid "CDDA Game Launcher self-update"
-msgstr "CDDA Game Launcher セルフアップデート"
+msgid "Kitten CDDA Launcher self-update"
+msgstr "Kitten CDDA Launcher セルフアップデート"

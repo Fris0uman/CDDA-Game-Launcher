@@ -2,7 +2,7 @@
 
 > This guide is **outdated**. A updated version should soon be added to replace this one.
 
-CDDA Game Launcher is developed using Python. In order to run or build the launcher, you will need to download a recent version of Python and install all the requirements.
+Kitten CDDA Launcher is developed using Python. In order to run or build the launcher, you will need to download a recent version of Python and install all the requirements.
 
 ## Requirements
 
@@ -33,7 +33,7 @@ The resulting launcher installer should be in the `dist\innosetup` directory.
         * By default, Python 3.7 is installed in `%LOCALAPPDATA%\Programs\Python\Python37-32`. To setup your PATH if you used the default path during installation, type `set PATH=%PATH%;%LOCALAPPDATA%\Programs\Python\Python37-32;%LOCALAPPDATA%\Programs\Python\Python37-32\Scripts` in your command line window and press `↵ Enter`.
 3. Install most requirements by typing the following `pip` command in your command line window: `pip install SQLAlchemy alembic PyQt5 PyInstaller html5lib cssselect arrow rarfile Babel pypiwin32 pywinutils Markdown Werkzeug` and press `↵ Enter`.
 4. Download and install the lxml and the pylzma packages from [Christoph Gohlke's Unofficial Windows Binaries](http://www.lfd.uci.edu/~gohlke/pythonlibs/). `cp37` means CPython 3.7 and `win32` means 32-bit and in Christoph Gohlke's packages naming convention. The package names you are looking for should be similar to `lxml-4.5.0-cp37-cp37m-win32.whl` and `pylzma-0.5.0-cp37-cp37m-win32.whl`. To install `.whl` packages from Christoph Gohlke's Unofficial Windows Binaries page, you can use pip. In your command line window, type: `pip install [path to .whl]` and press `↵ Enter`.
-5. Download the CDDA Game Launcher source code. If you have git installed, you can type the following command in your command line window: `git clone https://github.com/remyroy/CDDA-Game-Launcher.git`. You can also download the source code from [https://github.com/remyroy/CDDA-Game-Launcher/archive/master.zip](https://github.com/remyroy/CDDA-Game-Launcher/archive/master.zip). Make sure to extract the zip file somewhere before trying to run the code.
+5. Download the Kitten CDDA Launcher source code. If you have git installed, you can type the following command in your command line window: `git clone https://github.com/Fris0uman/CDDA-Game-Launcher.git`. You can also download the source code from [https://github.com/Fris0uman/CDDA-Game-Launcher/archive/master.zip](https://github.com/Fris0uman/CDDA-Game-Launcher/archive/master.zip). Make sure to extract the zip file somewhere before trying to run the code.
 6. In your command line window, change directory to the source code directory. Type `cd [path to source code]` and press `↵ Enter`.
 7. See if you can run the launcher by typing the following command in your command line window: `python -m cddagl` and press `↵ Enter`. If you have everything installed correctly, you should see the launcher running.
 8. Download and install [Inno Setup](http://www.jrsoftware.org/isinfo.php). You should use the default installation path to have `Compil32.exe` in `C:\Program Files (x86)\Inno Setup 6\`. If you do not use the default installation path, you will have to use the `--compiler=[path to Compil32.exe]` option with the `create_installer` command.
