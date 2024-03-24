@@ -32,7 +32,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtGui import QRegularExpressionValidator
 from babel.dates import format_datetime
-from pywintypes import error as PyWinError
+from cddagl.platform import pywintypes_error as PyWinError
 
 import cddagl.constants as cons
 from cddagl.constants import get_cddagl_path, get_cdda_uld_path
@@ -46,7 +46,7 @@ from cddagl.sql.functions import (
     get_config_value, set_config_value, new_version, get_build_from_sha256,
     new_build, config_true
 )
-from cddagl.win32 import (
+from cddagl.platform import (
     find_process_with_file_handle, activate_window, process_id_from_path, wait_for_pid,
     get_documents_directory
 )

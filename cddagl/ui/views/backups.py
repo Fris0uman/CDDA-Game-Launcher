@@ -22,7 +22,7 @@ import cddagl.constants as cons
 from cddagl.functions import sizeof_fmt, safe_filename, alphanum_key, delete_path, safe_humanize
 from cddagl.i18n import proxy_gettext as _
 from cddagl.sql.functions import get_config_value, set_config_value, config_true
-from cddagl.win32 import find_process_with_file_handle
+from cddagl.platform import find_process_with_file_handle
 
 logger = logging.getLogger('cddagl')
 
