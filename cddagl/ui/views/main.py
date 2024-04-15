@@ -3076,11 +3076,13 @@ class UpdateGroupBox(QGroupBox):
         if selected_branch == self.experimental_radio_button:
             self.find_build_warning_label.show()
 
-    def switch_build_type(self):
+    def build_type_unavailable(self):
         if self.msvc_radio_button.isChecked():
-           self.build_type_clicked(self.msvc_radio_button)
-        elif self.other_radio_button.isChecked():
+            self.other_radio_button.setChecked(True)
             self.build_type_clicked(self.other_radio_button)
+        elif self.other_radio_button.isChecked():
+            self.msvc_radio_button.setChecked(True)
+            self.build_type_clicked(self.msvc_radio_button)
 
     def lb_http_finished(self):
         main_window = self.get_main_window()
@@ -3240,24 +3242,23 @@ class UpdateGroupBox(QGroupBox):
 
             combo_model = self.builds_combo.model()
             default_set = False
-            unavailabe_count = 0
             for x in range(combo_model.rowCount()):
                 if combo_model.item(x).data(Qt.UserRole)['url'] is None:
                     combo_model.item(x).setEnabled(False)
                     combo_model.item(x).setText(combo_model.item(x).text() +
                         _(' - build unavailable'))
-                    unavailabe_count += 1
                 elif not default_set:
                     default_set = True
                     self.builds_combo.setCurrentIndex(x)
                     combo_model.item(x).setText(combo_model.item(x).text() +
                         _(' - latest build available'))
-            if unavailabe_count == combo_model.rowCount():
-                if self.tried_build_types_count < 2:
-                    self.switch_build_type()
+            if not default_set:
+                if self.tried_build_types_count < 1:
                     self.tried_build_types_count += 1
+                    self.build_type_unavailable()
                 else:
                     self.update_button.setEnabled(False)
+                    self.update_button.setText(_('No builds available currently'))
 
             if not game_dir_group_box.game_started:
                 self.builds_combo.setEnabled(True)
