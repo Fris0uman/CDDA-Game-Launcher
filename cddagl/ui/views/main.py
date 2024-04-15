@@ -1340,27 +1340,6 @@ class UpdateGroupBox(QGroupBox):
 
         layout_row = layout_row + 1
 
-        build_type_label = QLabel()
-        layout.addWidget(build_type_label, layout_row, 0, Qt.AlignRight)
-        self.build_type_label = build_type_label
-
-        build_type_button_group = QButtonGroup()
-        self.build_type_button_group = build_type_button_group
-
-        msvc_radio_button = QRadioButton()
-        layout.addWidget(msvc_radio_button, layout_row, 1)
-        self.msvc_radio_button = msvc_radio_button
-        build_type_button_group.addButton(msvc_radio_button)
-
-        build_type_button_group.buttonClicked.connect(self.build_type_clicked)
-
-        other_radio_button = QRadioButton()
-        layout.addWidget(other_radio_button, layout_row, 2)
-        self.other_radio_button = other_radio_button
-        build_type_button_group.addButton(other_radio_button)
-
-        layout_row = layout_row + 1
-
         available_builds_label = QLabel()
         layout.addWidget(available_builds_label, layout_row, 0, Qt.AlignRight)
         self.available_builds_label = available_builds_label
@@ -1433,7 +1412,6 @@ class UpdateGroupBox(QGroupBox):
         update_button.clicked.connect(self.update_game)
         layout.addWidget(update_button, layout_row, 0, 1, 5)
         self.update_button = update_button
-        self.tried_build_types_count = 0
 
         layout.setColumnStretch(1, 100)
         layout.setColumnStretch(2, 100)
@@ -1448,9 +1426,6 @@ class UpdateGroupBox(QGroupBox):
         self.platform_label.setText(_('Platform:'))
         self.x64_radio_button.setText('{so} ({bit})'.format(so=_('Windows x64'), bit=_('64-bit')))
         self.x86_radio_button.setText('{so} ({bit})'.format(so=_('Windows x86'), bit=_('32-bit')))
-        self.build_type_label.setText(_('Build type:'))
-        self.msvc_radio_button.setText('msvc')
-        self.other_radio_button.setText('other')
         self.available_builds_label.setText(_('Available builds:'))
         self.find_build_label.setText(_('Find build #:'))
         self.find_build_button.setText(_('Add to list'))
@@ -1473,7 +1448,6 @@ class UpdateGroupBox(QGroupBox):
                 self.experimental_radio_button.setChecked(True)
 
             platform = get_config_value('platform')
-            build_type = get_config_value('build_type')
 
             if platform == 'Windows x64':
                 platform = 'x64'
@@ -1486,18 +1460,10 @@ class UpdateGroupBox(QGroupBox):
                 else:
                     platform = 'x86'
 
-            if build_type is None or build_type not in ('-msvc-','-'):
-                build_type = '-msvc-'
-
             if platform == 'x64':
                 self.x64_radio_button.setChecked(True)
             elif platform == 'x86':
                 self.x86_radio_button.setChecked(True)
-
-            if build_type == '-msvc-':
-                self.msvc_radio_button.setChecked(True)
-            elif build_type == '-':
-                self.other_radio_button.setChecked(True)
 
             self.show_hide_find_build()
 
@@ -1605,7 +1571,7 @@ class UpdateGroupBox(QGroupBox):
         target_regex = re.compile(
             r'cdda-windows-' +
             re.escape(asset_graphics) + r'-' +
-            re.escape(asset_platform) + self.selected_build_type +
+            re.escape(asset_platform) + r'(-msvc-|-)' +
             r'b?(?P<build>[0-9\-]+)\.zip'
             )
 
@@ -2044,9 +2010,6 @@ class UpdateGroupBox(QGroupBox):
         self.x64_radio_button.setEnabled(False)
         self.x86_radio_button.setEnabled(False)
 
-        self.msvc_radio_button.setEnabled(False)
-        self.other_radio_button.setEnabled(False)
-
         self.previous_bc_enabled = self.builds_combo.isEnabled()
         self.builds_combo.setEnabled(False)
         self.refresh_builds_button.setEnabled(False)
@@ -2064,9 +2027,6 @@ class UpdateGroupBox(QGroupBox):
         if is_64_windows():
             self.x64_radio_button.setEnabled(True)
         self.x86_radio_button.setEnabled(True)
-
-        self.msvc_radio_button.setEnabled(True)
-        self.other_radio_button.setEnabled(True)
 
         self.refresh_builds_button.setEnabled(True)
         self.find_build_value.setEnabled(True)
@@ -3002,7 +2962,7 @@ class UpdateGroupBox(QGroupBox):
             self.download_last_bytes_read = bytes_read
             self.download_last_read = datetime.utcnow()
 
-    def start_lb_request(self, base_asset, selected_build_type):
+    def start_lb_request(self, base_asset):
         self.disable_controls(True)
         self.refresh_warning_label.hide()
         self.find_build_warning_label.hide()
@@ -3019,7 +2979,6 @@ class UpdateGroupBox(QGroupBox):
 
         url = cons.GITHUB_REST_API_URL + cons.CDDA_RELEASES
         self.base_asset = base_asset
-        self.selected_build_type = selected_build_type
 
         fetching_label = QLabel()
         fetching_label.setText(_('Fetching: {url}').format(url=url))
@@ -3075,14 +3034,6 @@ class UpdateGroupBox(QGroupBox):
         selected_branch = self.branch_button_group.checkedButton()
         if selected_branch == self.experimental_radio_button:
             self.find_build_warning_label.show()
-
-    def build_type_unavailable(self):
-        if self.msvc_radio_button.isChecked():
-            self.other_radio_button.setChecked(True)
-            self.build_type_clicked(self.other_radio_button)
-        elif self.other_radio_button.isChecked():
-            self.msvc_radio_button.setChecked(True)
-            self.build_type_clicked(self.msvc_radio_button)
 
     def lb_http_finished(self):
         main_window = self.get_main_window()
@@ -3191,7 +3142,7 @@ class UpdateGroupBox(QGroupBox):
         target_regex = re.compile(
             r'cdda-windows-' +
             re.escape(asset_graphics) + r'-' +
-            re.escape(asset_platform) + self.selected_build_type +
+            re.escape(asset_platform) + r'(-msvc|-)' +
             r'b?(?P<build>[0-9\-]+)\.zip'
             )
 
@@ -3252,13 +3203,6 @@ class UpdateGroupBox(QGroupBox):
                     self.builds_combo.setCurrentIndex(x)
                     combo_model.item(x).setText(combo_model.item(x).text() +
                         _(' - latest build available'))
-            if not default_set:
-                if self.tried_build_types_count < 1:
-                    self.tried_build_types_count += 1
-                    self.build_type_unavailable()
-                else:
-                    self.update_button.setEnabled(False)
-                    self.update_button.setText(_('No builds available currently'))
 
             if not game_dir_group_box.game_started:
                 self.builds_combo.setEnabled(True)
@@ -3323,18 +3267,10 @@ class UpdateGroupBox(QGroupBox):
 
         selected_platform = self.platform_button_group.checkedButton()
 
-        selected_build_type = self.build_type_button_group.checkedButton()
-
         if selected_platform is self.x64_radio_button:
             selected_platform = 'x64'
         elif selected_platform is self.x86_radio_button:
             selected_platform = 'x86'
-
-        if selected_build_type is self.msvc_radio_button:
-            selected_build_type = '-msvc-'
-        elif selected_build_type is self.other_radio_button:
-            selected_build_type = '-'
-
 
         if selected_branch is self.stable_radio_button:
             # Populate stable builds and stable changelog
@@ -3392,7 +3328,7 @@ class UpdateGroupBox(QGroupBox):
         elif selected_branch is self.experimental_radio_button:
             release_asset = cons.BASE_ASSETS['Tiles'][selected_platform]
 
-            self.start_lb_request( release_asset, selected_build_type )
+            self.start_lb_request( release_asset )
             self.refresh_changelog()
 
     def refresh_changelog(self):
@@ -3503,16 +3439,6 @@ class UpdateGroupBox(QGroupBox):
             config_value = 'x86'
 
         set_config_value('platform', config_value)
-
-        self.refresh_builds()
-
-    def build_type_clicked(self, button):
-        if button is self.msvc_radio_button:
-            config_value = '-msvc-'
-        elif button is self.other_radio_button:
-            config_value = '-'
-
-        set_config_value('build_type', config_value)
 
         self.refresh_builds()
 
