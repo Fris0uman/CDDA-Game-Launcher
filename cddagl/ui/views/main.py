@@ -1719,9 +1719,9 @@ class UpdateGroupBox(QGroupBox):
                 backups_tab = main_tab.get_backups_tab()
 
                 backups_tab.prune_auto_backups()
-
-                name = '{auto}_{name}'.format(auto=_('auto'),
-                    name=_('before_update'))
+                current_build = main_tab.game_dir_group_box.current_build
+                name = '{auto}_{name}_{build}v'.format(auto=_('auto'),
+                    name=_('before_update'), build=current_build)
 
                 backups_tab.after_backup = self.update_game_process
                 backups_tab.backup_saves(name)
