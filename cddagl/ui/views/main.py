@@ -3262,6 +3262,29 @@ class UpdateGroupBox(QGroupBox):
             if self.refresh_warning_label.isVisible():
                 self.find_build_warning_label.show()
 
+    def get_stable_tags(self):
+        url = cons.GITHUB_REST_API_URL + cons.CDDA_STABLE_TAGS
+        tag_regex = re.compile(r'(refs/tags/cdda-)(0.[A-Z]-)([0-9\-]+)')
+
+        try:
+            tags_data = requests.get(url).json()
+        except:
+            tags_data = []
+        stable_refs = list(filter(lambda d: tag_regex.match(d['ref']),tags_data))
+        stable_tags = []
+        stable_letter = ""
+        # Reverse order to deal with the most recent first
+        for entry in reversed(stable_refs):
+            # Extract the actual tag
+            tag = re.sub(r'refs/tags/', '', entry['ref'])
+            # Get the stable version: 0.H, 0.I etc
+            tmp_letter = re.compile(r'0.[A-Z]').search(tag).group(0)
+            if tmp_letter != stable_letter:  # Only get the first unique stable you find
+                stable_letter = tmp_letter
+                stable_tags.append(tag)
+
+        return stable_tags
+
     def refresh_builds(self):
         selected_branch = self.branch_button_group.checkedButton()
 
@@ -3278,6 +3301,34 @@ class UpdateGroupBox(QGroupBox):
             # Add stable builds
 
             builds = []
+
+            tmp_changelog = ""
+            build_regex = re.compile(r'cdda-windows-tiles'+r'(-x64|-x32)'+r'(-msvc-|-)'+r'([0-9\-]+)\.zip')
+            stable_tags = self.get_stable_tags()
+
+            last_idx = len(stable_tags) - 1
+            for idx, tag in enumerate(stable_tags):
+                url = cons.GITHUB_REST_API_URL + cons.CDDA_RELEASE_BY_TAG(tag)
+                try:
+                    release = requests.get(url).json()
+                except:
+                    continue
+
+                stable_name = re.compile(r'0.[A-Z]').search(release['tag_name']).group(0)
+                if idx == last_idx:
+                    stable_name += ' release candidate'
+                # TODO: Figure out how to put a nicer changelog, especially for real stable releases
+                tmp_changelog += f'<h3>{stable_name}</h3> <p><a href="https://github.com/CleverRaven/Cataclysm-DDA/blob/master/data/changelog.txt">Changelog</a></p>'
+
+                stable_assets = list(filter(lambda d: build_regex.match(d['name']), release['assets']))
+                # We simply get the first valid build
+                build = {
+                    'url': stable_assets[0]['browser_download_url'],
+                    'name': stable_name,
+                    'number': tag,
+                    'date': arrow.get(stable_assets[0]['created_at']).datetime
+                }
+                builds.append(build)
 
             for stable_version in cons.STABLE_ASSETS:
                 version_details = cons.STABLE_ASSETS[stable_version]
@@ -3322,7 +3373,7 @@ class UpdateGroupBox(QGroupBox):
 
             # Populate stable changelog
 
-            self.changelog_content.setHtml(cons.STABLE_CHANGELOG)
+            self.changelog_content.setHtml(tmp_changelog + cons.STABLE_CHANGELOG)
 
 
         elif selected_branch is self.experimental_radio_button:
@@ -3777,8 +3828,8 @@ class ProgressCopyTree(QTimer):
                             self.copying_size_label = copying_size_label
 
                             progress_bar = QProgressBar()
-                            self.scale_factor = max(0,int(self.total_copy_size.bit_length()) - 31) 
-                            progress_bar.setRange(0, self.total_copy_size >> self.scale_factor) 
+                            self.scale_factor = max(0,int(self.total_copy_size.bit_length()) - 31)
+                            progress_bar.setRange(0, self.total_copy_size >> self.scale_factor)
                             progress_bar.setValue(0)
                             self.status_bar.addWidget(progress_bar)
                             self.progress_bar = progress_bar
@@ -3834,7 +3885,7 @@ class ProgressCopyTree(QTimer):
                     self.destination_file.write(buf)
 
                     self.copied_size += buf_len
-                    self.progress_bar.setValue(self.copied_size >> self.scale_factor) 
+                    self.progress_bar.setValue(self.copied_size >> self.scale_factor)
 
                     self.copy_speed_count += 1
 
