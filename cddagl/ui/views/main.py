@@ -38,7 +38,7 @@ import cddagl.constants as cons
 from cddagl.constants import get_cddagl_path, get_cdda_uld_path
 from cddagl import __version__ as version
 from cddagl.functions import (
-    tryint, move_path, is_64_windows, sizeof_fmt, delete_path,
+    tryint, move_path, sizeof_fmt, delete_path,
     clean_qt_path, unique, log_exception, ensure_slash, safe_humanize
 )
 from cddagl.i18n import proxy_ngettext as ngettext, proxy_gettext as _
@@ -1316,30 +1316,6 @@ class UpdateGroupBox(QGroupBox):
 
         layout_row = layout_row + 1
 
-        platform_label = QLabel()
-        layout.addWidget(platform_label, layout_row, 0, Qt.AlignRight)
-        self.platform_label = platform_label
-
-        platform_button_group = QButtonGroup()
-        self.platform_button_group = platform_button_group
-
-        x64_radio_button = QRadioButton()
-        layout.addWidget(x64_radio_button, layout_row, 1)
-        self.x64_radio_button = x64_radio_button
-        platform_button_group.addButton(x64_radio_button)
-
-        platform_button_group.buttonClicked.connect(self.platform_clicked)
-
-        if not is_64_windows():
-            x64_radio_button.setEnabled(False)
-
-        x86_radio_button = QRadioButton()
-        layout.addWidget(x86_radio_button, layout_row, 2)
-        self.x86_radio_button = x86_radio_button
-        platform_button_group.addButton(x86_radio_button)
-
-        layout_row = layout_row + 1
-
         available_builds_label = QLabel()
         layout.addWidget(available_builds_label, layout_row, 0, Qt.AlignRight)
         self.available_builds_label = available_builds_label
@@ -1423,9 +1399,6 @@ class UpdateGroupBox(QGroupBox):
         self.branch_label.setText(_('Branch:'))
         self.stable_radio_button.setText(_('Stable'))
         self.experimental_radio_button.setText(_('Experimental'))
-        self.platform_label.setText(_('Platform:'))
-        self.x64_radio_button.setText('{so} ({bit})'.format(so=_('Windows x64'), bit=_('64-bit')))
-        self.x86_radio_button.setText('{so} ({bit})'.format(so=_('Windows x86'), bit=_('32-bit')))
         self.available_builds_label.setText(_('Available builds:'))
         self.find_build_label.setText(_('Find build #:'))
         self.find_build_button.setText(_('Add to list'))
@@ -1446,24 +1419,6 @@ class UpdateGroupBox(QGroupBox):
                 self.stable_radio_button.setChecked(True)
             elif branch == cons.CONFIG_BRANCH_EXPERIMENTAL:
                 self.experimental_radio_button.setChecked(True)
-
-            platform = get_config_value('platform')
-
-            if platform == 'Windows x64':
-                platform = 'x64'
-            elif platform == 'Windows x86':
-                platform = 'x86'
-
-            if platform is None or platform not in ('x64', 'x86'):
-                if is_64_windows():
-                    platform = 'x64'
-                else:
-                    platform = 'x86'
-
-            if platform == 'x64':
-                self.x64_radio_button.setChecked(True)
-            elif platform == 'x86':
-                self.x86_radio_button.setChecked(True)
 
             self.show_hide_find_build()
 
@@ -1565,13 +1520,10 @@ class UpdateGroupBox(QGroupBox):
 
         builds = self.builds
 
-        asset_platform = self.base_asset['Platform']
-        asset_graphics = self.base_asset['Graphics']
-
         target_regex = re.compile(
             r'cdda-windows-' +
-            re.escape(asset_graphics) + r'-' +
-            re.escape(asset_platform) + r'(-msvc-|-)' +
+            r'tiles' + r'-' +
+            r'x64' + r'(-msvc-|-)' +
             r'b?(?P<build>[0-9\-]+)\.zip'
             )
 
@@ -2007,9 +1959,6 @@ class UpdateGroupBox(QGroupBox):
         self.stable_radio_button.setEnabled(False)
         self.experimental_radio_button.setEnabled(False)
 
-        self.x64_radio_button.setEnabled(False)
-        self.x86_radio_button.setEnabled(False)
-
         self.previous_bc_enabled = self.builds_combo.isEnabled()
         self.builds_combo.setEnabled(False)
         self.refresh_builds_button.setEnabled(False)
@@ -2023,10 +1972,6 @@ class UpdateGroupBox(QGroupBox):
     def enable_controls(self, builds_combo=False):
         self.stable_radio_button.setEnabled(True)
         self.experimental_radio_button.setEnabled(True)
-
-        if is_64_windows():
-            self.x64_radio_button.setEnabled(True)
-        self.x86_radio_button.setEnabled(True)
 
         self.refresh_builds_button.setEnabled(True)
         self.find_build_value.setEnabled(True)
@@ -2962,7 +2907,7 @@ class UpdateGroupBox(QGroupBox):
             self.download_last_bytes_read = bytes_read
             self.download_last_read = datetime.utcnow()
 
-    def start_lb_request(self, base_asset):
+    def start_lb_request(self):
         self.disable_controls(True)
         self.refresh_warning_label.hide()
         self.find_build_warning_label.hide()
@@ -2978,7 +2923,6 @@ class UpdateGroupBox(QGroupBox):
         self.builds_combo.addItem(_('Fetching remote builds'))
 
         url = cons.GITHUB_REST_API_URL + cons.CDDA_RELEASES
-        self.base_asset = base_asset
 
         fetching_label = QLabel()
         fetching_label.setText(_('Fetching: {url}').format(url=url))
@@ -3136,13 +3080,10 @@ class UpdateGroupBox(QGroupBox):
 
         builds = []
 
-        asset_platform = self.base_asset['Platform']
-        asset_graphics = self.base_asset['Graphics']
-
         target_regex = re.compile(
             r'cdda-windows-' +
-            re.escape(asset_graphics) + r'-' +
-            re.escape(asset_platform) + r'(-msvc|-)' +
+            r'tiles' + r'-' +
+            r'x64' + r'(-msvc|-)' +
             r'b?(?P<build>[0-9\-]+)\.zip'
             )
 
@@ -3288,13 +3229,6 @@ class UpdateGroupBox(QGroupBox):
     def refresh_builds(self):
         selected_branch = self.branch_button_group.checkedButton()
 
-        selected_platform = self.platform_button_group.checkedButton()
-
-        if selected_platform is self.x64_radio_button:
-            selected_platform = 'x64'
-        elif selected_platform is self.x86_radio_button:
-            selected_platform = 'x86'
-
         if selected_branch is self.stable_radio_button:
             # Populate stable builds and stable changelog
 
@@ -3303,7 +3237,7 @@ class UpdateGroupBox(QGroupBox):
             builds = []
 
             tmp_changelog = ""
-            build_regex = re.compile(r'cdda-windows-tiles'+r'(-x64|-x32)'+r'(-msvc-|-)'+r'([0-9\-]+)\.zip')
+            build_regex = re.compile(r'cdda-windows-tiles'+r'(-x64)'+r'(-msvc-|-)'+r'([0-9\-]+)\.zip')
             stable_tags = self.get_stable_tags()
 
             last_idx = len(stable_tags) - 1
@@ -3334,7 +3268,7 @@ class UpdateGroupBox(QGroupBox):
                 version_details = cons.STABLE_ASSETS[stable_version]
 
                 build = {
-                    'url': version_details['Tiles'][selected_platform],
+                    'url': version_details['Tiles']['x64'],
                     'name': version_details['name'],
                     'number': version_details['number'],
                     'date': arrow.get(version_details['released_on']).datetime
@@ -3377,9 +3311,7 @@ class UpdateGroupBox(QGroupBox):
 
 
         elif selected_branch is self.experimental_radio_button:
-            release_asset = cons.BASE_ASSETS['Tiles'][selected_platform]
-
-            self.start_lb_request( release_asset )
+            self.start_lb_request()
             self.refresh_changelog()
 
     def refresh_changelog(self):
@@ -3481,16 +3413,6 @@ class UpdateGroupBox(QGroupBox):
         self.show_hide_find_build()
 
         # Change available builds and changelog
-        self.refresh_builds()
-
-    def platform_clicked(self, button):
-        if button is self.x64_radio_button:
-            config_value = 'x64'
-        elif button is self.x86_radio_button:
-            config_value = 'x86'
-
-        set_config_value('platform', config_value)
-
         self.refresh_builds()
 
 class changelog_entry():

@@ -39,19 +39,6 @@ FAKE_USER_AGENT = (b'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
 
 TEMP_PREFIX = 'cddagl'
 
-BASE_ASSETS = {
-    'Tiles': {
-        'x64': {
-            'Platform': 'x64',
-            'Graphics': 'tiles'
-        },
-        'x86': {
-            'Platform': 'x32',
-            'Graphics': 'tiles'
-        }
-    }
-}
-
 STABLE_ASSETS = {
     '0.G': {
         'name': '0.G Gaiman',
