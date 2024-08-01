@@ -3263,7 +3263,7 @@ class UpdateGroupBox(QGroupBox):
                 self.find_build_warning_label.show()
 
     def get_stable_tags(self):
-        url = cons.GITHUB_REST_API_URL + cons.CDDA_STABLE_TAGS
+        url = cons.GITHUB_REST_API_URL + cons.CDDA_RELEASE_TAGS
         tag_regex = re.compile(r'(refs/tags/cdda-)(0.[A-Z]-)([0-9\-]+)')
 
         try:
