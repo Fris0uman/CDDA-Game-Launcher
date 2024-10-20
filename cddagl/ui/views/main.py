@@ -3204,14 +3204,21 @@ class UpdateGroupBox(QGroupBox):
                 self.find_build_warning_label.show()
 
     def get_stable_tags(self):
+        status_bar = self.get_main_window().statusBar()
+
         url = cons.GITHUB_REST_API_URL + cons.CDDA_RELEASE_TAGS
         tag_regex = re.compile(r'(refs/tags/cdda-)(0.[A-Z]-)([0-9\-]+)')
 
         try:
             tags_data = requests.get(url).json()
-        except:
-            tags_data = []
-        stable_refs = list(filter(lambda d: tag_regex.match(d['ref']),tags_data))
+        except requests.exceptions.RequestException as error:
+            msg = f'Could not find stable tags when requesting {url}. Error: {error}'
+            if status_bar.busy == 0:
+                status_bar.showMessage(msg)
+            logger.warning(msg)
+            return []  # We failed to get the tags we can stop here
+
+        stable_refs = list(filter(lambda d: tag_regex.match(d['ref']), tags_data))
         stable_tags = []
         stable_letter = ""
         # Reverse order to deal with the most recent first
@@ -3228,6 +3235,7 @@ class UpdateGroupBox(QGroupBox):
 
     def refresh_builds(self):
         selected_branch = self.branch_button_group.checkedButton()
+        status_bar = self.get_main_window().statusBar()
 
         if selected_branch is self.stable_radio_button:
             # Populate stable builds and stable changelog
@@ -3245,7 +3253,11 @@ class UpdateGroupBox(QGroupBox):
                 url = cons.GITHUB_REST_API_URL + cons.CDDA_RELEASE_BY_TAG(tag)
                 try:
                     release = requests.get(url).json()
-                except:
+                except requests.exceptions.RequestException as error:
+                    msg = f'Could not find stable release when requesting {url}. Error: {error}'
+                    if status_bar.busy == 0:
+                        status_bar.showMessage(msg)
+                    logger.warning(msg)
                     continue
 
                 stable_name = re.compile(r'0.[A-Z]').search(release['tag_name']).group(0)
@@ -3256,13 +3268,14 @@ class UpdateGroupBox(QGroupBox):
 
                 stable_assets = list(filter(lambda d: build_regex.match(d['name']), release['assets']))
                 # We simply get the first valid build
-                build = {
-                    'url': stable_assets[0]['browser_download_url'],
-                    'name': stable_name,
-                    'number': tag,
-                    'date': arrow.get(stable_assets[0]['created_at']).datetime
-                }
-                builds.append(build)
+                if stable_assets:
+                    build = {
+                        'url': stable_assets[0]['browser_download_url'],
+                        'name': stable_name,
+                        'number': tag,
+                        'date': arrow.get(stable_assets[0]['created_at']).datetime
+                    }
+                    builds.append(build)
 
             for stable_version in cons.STABLE_ASSETS:
                 version_details = cons.STABLE_ASSETS[stable_version]
