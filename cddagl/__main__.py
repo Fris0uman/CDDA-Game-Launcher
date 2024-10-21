@@ -1,13 +1,5 @@
-def fix_pywin32_loading():
-    try:
-        import pywintypes
-    except ImportError:
-        import sys
-        sys.path.append(r'win32')
-        sys.path.append(r'win32\lib')
-        import pywin32_bootstrap
-
-fix_pywin32_loading()
+from cddagl.platform import prelaunch_platform_fix
+prelaunch_platform_fix()
 
 import cddagl.launcher
 cddagl.launcher.run_cddagl()
