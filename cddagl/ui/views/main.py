@@ -3268,7 +3268,10 @@ class UpdateGroupBox(QGroupBox):
                     stable_name += ' release candidate'
                     tmp_changelog += f'<h3>{stable_name}</h3> <p><a href="https://github.com/CleverRaven/Cataclysm-DDA/blob/master/data/changelog.txt">Changelog</a></p>'
                 else:
-                    tmp_changelog += f'<h3>{stable_name} {release["name"]}</h3>' + '<p>' + release['body'] + '</p>'
+                    tmp_changelog += f'<h3>{stable_name} {release["name"]}</h3> ' \
+                                     f'<p><a href="https://github.com/CleverRaven/Cataclysm-DDA/blob/master' \
+                                     f'/data/changelog.txt">Changelog</a></p>' \
+                                     + '<p>' + release['body'].replace("\n", "<br />\n") + '</p>'
 
                 stable_assets = list(filter(lambda d: build_regex.match(d['name']), release['assets']))
                 # We simply get the first valid build
