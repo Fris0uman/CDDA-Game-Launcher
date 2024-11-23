@@ -3207,7 +3207,7 @@ class UpdateGroupBox(QGroupBox):
         status_bar = self.get_main_window().statusBar()
 
         url = cons.GITHUB_REST_API_URL + cons.CDDA_RELEASE_TAGS
-        tag_regex = re.compile(r'(refs/tags/cdda-)(0.[A-Z]-)([0-9\-]+)')
+        tag_regex = re.compile(r'(refs/tags/)(cdda-|)(0\.[A-Z]-)([0-9\-]+|[a-zA-Z]+|)')
 
         try:
             tags_data = requests.get(url).json()
@@ -3249,8 +3249,7 @@ class UpdateGroupBox(QGroupBox):
             build_regex = re.compile(r'(cdda-windows-with-graphics|cdda-windows-tiles)'+r'(-x64)'+r'(-msvc-|-)'+r'([0-9\-]+)\.zip')
             stable_tags = self.get_stable_tags()
 
-            last_idx = len(stable_tags) - 1
-            for idx, tag in enumerate(stable_tags):
+            for tag in stable_tags:
                 url = cons.GITHUB_REST_API_URL + cons.CDDA_RELEASE_BY_TAG(tag)
                 try:
                     release = requests.get(url).json()
@@ -3262,10 +3261,14 @@ class UpdateGroupBox(QGroupBox):
                     continue
 
                 stable_name = re.compile(r'0.[A-Z]').search(release['tag_name']).group(0)
-                if idx == last_idx:
+                # Skip hardcoded releases
+                if stable_name in cons.STABLE_ASSETS:
+                    continue
+                if release['prerelease']:
                     stable_name += ' release candidate'
-                # TODO: Figure out how to put a nicer changelog, especially for real stable releases
-                tmp_changelog += f'<h3>{stable_name}</h3> <p><a href="https://github.com/CleverRaven/Cataclysm-DDA/blob/master/data/changelog.txt">Changelog</a></p>'
+                    tmp_changelog += f'<h3>{stable_name}</h3> <p><a href="https://github.com/CleverRaven/Cataclysm-DDA/blob/master/data/changelog.txt">Changelog</a></p>'
+                else:
+                    tmp_changelog += f'<h3>{stable_name} {release["name"]}</h3>' + '<p>' + release['body'] + '</p>'
 
                 stable_assets = list(filter(lambda d: build_regex.match(d['name']), release['assets']))
                 # We simply get the first valid build
