@@ -17,7 +17,7 @@ from cddagl import __version__ as version
 from cddagl.constants import get_resource_path
 from cddagl.functions import clean_qt_path, bitness
 from cddagl.i18n import proxy_gettext as _
-from cddagl.win32 import get_downloads_directory
+from cddagl.platform import get_downloads_directory
 
 import markdown2
 
