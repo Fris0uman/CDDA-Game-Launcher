@@ -3218,6 +3218,21 @@ class UpdateGroupBox(QGroupBox):
             logger.warning(msg)
             return []  # We failed to get the tags we can stop here
 
+        # Validate tags_data
+        if not isinstance(tags_data, list):  # Is it a list
+            msg = f'Failed to retrieve stable tags, tags_data is not a list.'
+            if status_bar.busy == 0:
+                status_bar.showMessage(msg)
+            logger.warning(msg)
+            return []
+        for item in tags_data:
+            if not isinstance(item, dict):  # Is it a list of dict
+                msg = f'Failed to retrieve stable tags, tags_data is not a list of dictionary.'
+                if status_bar.busy == 0:
+                    status_bar.showMessage(msg)
+                logger.warning(msg)
+                return []
+
         stable_refs = list(filter(lambda d: tag_regex.match(d['ref']), tags_data))
         stable_tags = []
         stable_letter = ""
