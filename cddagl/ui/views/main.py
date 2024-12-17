@@ -3219,8 +3219,8 @@ class UpdateGroupBox(QGroupBox):
             return []  # We failed to get the tags we can stop here
 
         # Validate tags_data
-        if not isinstance(tags_data, list):  # Is it a list
-            msg = f'Failed to retrieve stable tags, tags_data is not a list.'
+        if not isinstance(tags_data, list) or not tags_data:  # Is it a list
+            msg = f'Failed to retrieve stable tags, tags_data is not a list or is empty.'
             if status_bar.busy == 0:
                 status_bar.showMessage(msg)
             logger.warning(msg)
