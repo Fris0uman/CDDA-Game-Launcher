@@ -3365,6 +3365,10 @@ class UpdateGroupBox(QGroupBox):
             return
         changelog_html = StringIO()
 
+        changelog_html.write('<style>'
+                             'a:link {  color: blue;  background-color: transparent;  text-decoration: none;}'
+                             '</style>')
+
         changelog_sorted = dict()
 
         for entry in changelog_data["items"]:
