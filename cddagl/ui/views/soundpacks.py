@@ -12,9 +12,9 @@ from os import scandir
 from urllib.parse import urljoin, urlencode
 
 import rarfile
-from PyQt5.QtCore import Qt, QTimer, QUrl, QFileInfo, QStringListModel
-from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest
-from PyQt5.QtWidgets import (
+from PySide6.QtCore import Qt, QTimer, QUrl, QFileInfo, QStringListModel
+from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest
+from PySide6.QtWidgets import (
     QWidget, QGridLayout, QGroupBox, QVBoxLayout, QLabel, QLineEdit, QPushButton,
     QProgressBar, QTextBrowser, QTabWidget, QMessageBox, QHBoxLayout,
     QListView, QAbstractItemView, QTextEdit
@@ -135,7 +135,7 @@ class SoundpacksTab(QTabWidget):
         details_gb_layout = QGridLayout()
 
         viewname_label = QLabel()
-        details_gb_layout.addWidget(viewname_label, 0, 0, Qt.AlignRight)
+        details_gb_layout.addWidget(viewname_label, 0, 0, Qt.AlignmentFlag.AlignRight)
         self.viewname_label = viewname_label
 
         viewname_le = QLineEdit()
@@ -144,7 +144,7 @@ class SoundpacksTab(QTabWidget):
         self.viewname_le = viewname_le
 
         name_label = QLabel()
-        details_gb_layout.addWidget(name_label, 1, 0, Qt.AlignRight)
+        details_gb_layout.addWidget(name_label, 1, 0, Qt.AlignmentFlag.AlignRight)
         self.name_label = name_label
 
         name_le = QLineEdit()
@@ -153,7 +153,7 @@ class SoundpacksTab(QTabWidget):
         self.name_le = name_le
 
         path_label = QLabel()
-        details_gb_layout.addWidget(path_label, 2, 0, Qt.AlignRight)
+        details_gb_layout.addWidget(path_label, 2, 0, Qt.AlignmentFlag.AlignRight)
         self.path_label = path_label
 
         path_le = QLineEdit()
@@ -162,7 +162,7 @@ class SoundpacksTab(QTabWidget):
         self.path_le = path_le
 
         size_label = QLabel()
-        details_gb_layout.addWidget(size_label, 3, 0, Qt.AlignRight)
+        details_gb_layout.addWidget(size_label, 3, 0, Qt.AlignmentFlag.AlignRight)
         self.size_label = size_label
 
         size_le = QLineEdit()
@@ -171,7 +171,7 @@ class SoundpacksTab(QTabWidget):
         self.size_le = size_le
 
         homepage_label = QLabel()
-        details_gb_layout.addWidget(homepage_label, 4, 0, Qt.AlignRight)
+        details_gb_layout.addWidget(homepage_label, 4, 0, Qt.AlignmentFlag.AlignRight)
         self.homepage_label = homepage_label
 
         homepage_tb = QTextBrowser()
@@ -179,7 +179,7 @@ class SoundpacksTab(QTabWidget):
         homepage_tb.setOpenExternalLinks(True)
         homepage_tb.setMaximumHeight(23)
         homepage_tb.setLineWrapMode(QTextEdit.NoWrap)
-        homepage_tb.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        homepage_tb.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         details_gb_layout.addWidget(homepage_tb, 4, 1)
         self.homepage_tb = homepage_tb
 

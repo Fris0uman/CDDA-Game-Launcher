@@ -21,16 +21,16 @@ from pathlib import Path
 from urllib.parse import urljoin
 
 import arrow
-from PyQt5.QtCore import (
-    Qt, QTimer, QUrl, QFileInfo, pyqtSignal, QStringListModel, QThread, QRegularExpression
+from PySide6.QtCore import (
+    Qt, QTimer, QUrl, QFileInfo, Signal, QStringListModel, QThread, QRegularExpression
 )
-from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest
-from PyQt5.QtWidgets import (
+from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest
+from PySide6.QtWidgets import (
     QApplication, QWidget, QGridLayout, QGroupBox, QVBoxLayout, QLabel, QLineEdit,
     QPushButton, QFileDialog, QToolButton, QProgressBar, QButtonGroup, QRadioButton,
     QComboBox, QTextBrowser, QMessageBox, QStyle, QHBoxLayout, QSizePolicy
 )
-from PyQt5.QtGui import QRegularExpressionValidator
+from PySide6.QtGui import QRegularExpressionValidator
 from babel.dates import format_datetime
 from pywintypes import error as PyWinError
 
@@ -129,11 +129,11 @@ class GameDirGroupBox(QGroupBox):
         layout = QGridLayout()
 
         dir_label = QLabel()
-        layout.addWidget(dir_label, 0, 0, Qt.AlignRight)
+        layout.addWidget(dir_label, 0, 0, Qt.AlignmentFlag.AlignRight)
         self.dir_label = dir_label
 
         session_label = QLabel()
-        layout.addWidget(session_label, 1, 0, Qt.AlignRight)
+        layout.addWidget(session_label, 1, 0, Qt.AlignmentFlag.AlignRight)
         self.session_label = session_label
 
         self.layout_dir = QHBoxLayout()
@@ -185,7 +185,7 @@ class GameDirGroupBox(QGroupBox):
         self.sess_state_icon.hide()
 
         version_label = QLabel()
-        layout.addWidget(version_label, 2, 0, Qt.AlignRight)
+        layout.addWidget(version_label, 2, 0, Qt.AlignmentFlag.AlignRight)
         self.version_label = version_label
 
         version_value_label = QLineEdit()
@@ -194,7 +194,7 @@ class GameDirGroupBox(QGroupBox):
         self.version_value_label = version_value_label
 
         build_label = QLabel()
-        layout.addWidget(build_label, 3, 0, Qt.AlignRight)
+        layout.addWidget(build_label, 3, 0, Qt.AlignmentFlag.AlignRight)
         self.build_label = build_label
 
         build_value_label = QLineEdit()
@@ -204,7 +204,7 @@ class GameDirGroupBox(QGroupBox):
         self.build_value_label = build_value_label
 
         saves_label = QLabel()
-        layout.addWidget(saves_label, 4, 0, Qt.AlignRight)
+        layout.addWidget(saves_label, 4, 0, Qt.AlignmentFlag.AlignRight)
         self.saves_label = saves_label
 
         saves_value_edit = QLineEdit()
@@ -304,8 +304,8 @@ class GameDirGroupBox(QGroupBox):
     def set_dir_combo_value(self, value):
         dir_model = self.dir_combo.model()
 
-        index_list = dir_model.match(dir_model.index(0, 0), Qt.DisplayRole,
-            value, 1, Qt.MatchFixedString)
+        index_list = dir_model.match(dir_model.index(0, 0), Qt.ItemDataRole.DisplayRole,
+            value, 1, Qt.MatchFlag.MatchFixedString)
         if len(index_list) > 0:
             self.dir_combo.setCurrentIndex(index_list[0].row())
         else:
@@ -318,8 +318,8 @@ class GameDirGroupBox(QGroupBox):
     def set_sess_combo_value(self, value):
         sess_model = self.sess_combo.model()
 
-        index_list = sess_model.match(sess_model.index(0, 0), Qt.DisplayRole,
-            value, 1, Qt.MatchFixedString)
+        index_list = sess_model.match(sess_model.index(0, 0), Qt.ItemDataRole.DisplayRole,
+            value, 1, Qt.MatchFlag.MatchFixedString)
         if len(index_list) > 0:
             self.sess_combo.setCurrentIndex(index_list[0].row())
         else:
@@ -458,7 +458,7 @@ class GameDirGroupBox(QGroupBox):
             self.launch_game_button.setEnabled(False)
             return
 
-        self.get_main_window().setWindowState(Qt.WindowMinimized)
+        self.get_main_window().setWindowState(Qt.WindowState.WindowMinimized)
         exe_dir = os.path.dirname(self.exe_path)
 
         params = get_config_value('command.params', '').strip()
@@ -531,7 +531,7 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
             self.launch_game_button.setEnabled(True)
 
             class ProcessWaitThread(QThread):
-                ended = pyqtSignal()
+                ended = Signal()
 
                 def __init__(self, process):
                     super(ProcessWaitThread, self).__init__()
@@ -583,7 +583,7 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
 
         self.launch_game_button.setText(_('Launch game'))
 
-        self.get_main_window().setWindowState(Qt.WindowActive)
+        self.get_main_window().setWindowState(Qt.WindowState.WindowActive)
 
         self.update_saves()
 
@@ -958,7 +958,7 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
             self.launch_game_button.setEnabled(True)
 
             class ProcessWaitThread(QThread):
-                ended = pyqtSignal()
+                ended = Signal()
 
                 def __init__(self, pid):
                     super(ProcessWaitThread, self).__init__()
@@ -989,7 +989,7 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
 
                 self.launch_game_button.setText(_('Launch game'))
 
-                self.get_main_window().setWindowState(Qt.WindowActive)
+                self.get_main_window().setWindowState(Qt.WindowState.WindowActive)
 
                 self.update_saves()
 
@@ -1296,7 +1296,7 @@ class UpdateGroupBox(QGroupBox):
         layout_row = 0
 
         branch_label = QLabel()
-        layout.addWidget(branch_label, layout_row, 0, Qt.AlignRight)
+        layout.addWidget(branch_label, layout_row, 0, Qt.AlignmentFlag.AlignRight)
         self.branch_label = branch_label
 
         branch_button_group = QButtonGroup()
@@ -1317,7 +1317,7 @@ class UpdateGroupBox(QGroupBox):
         layout_row = layout_row + 1
 
         available_builds_label = QLabel()
-        layout.addWidget(available_builds_label, layout_row, 0, Qt.AlignRight)
+        layout.addWidget(available_builds_label, layout_row, 0, Qt.AlignmentFlag.AlignRight)
         self.available_builds_label = available_builds_label
 
         builds_combo = QComboBox()
@@ -1342,7 +1342,7 @@ class UpdateGroupBox(QGroupBox):
         layout_row = layout_row + 1
 
         find_build_label = QLabel()
-        layout.addWidget(find_build_label, layout_row, 0, Qt.AlignRight)
+        layout.addWidget(find_build_label, layout_row, 0, Qt.AlignmentFlag.AlignRight)
         self.find_build_label = find_build_label
 
         find_build_value = QLineEdit()
@@ -1591,7 +1591,7 @@ class UpdateGroupBox(QGroupBox):
             combo_model = self.builds_combo.model()
             default_set = False
             for x in range(combo_model.rowCount()):
-                if combo_model.item(x).data(Qt.UserRole)['url'] is None:
+                if combo_model.item(x).data(Qt.ItemDataRole.UserRole)['url'] is None:
                     combo_model.item(x).setEnabled(False)
                     combo_model.item(x).setText(combo_model.item(x).text() +
                         _(' - build unavailable'))
@@ -1600,7 +1600,7 @@ class UpdateGroupBox(QGroupBox):
                     combo_model.item(x).setText(combo_model.item(x).text() +
                         _(' - latest build available'))
 
-                if (combo_model.item(x).data(Qt.UserRole)['number'] == build_number and
+                if (combo_model.item(x).data(Qt.ItemDataRole.UserRole)['number'] == build_number and
                     combo_model.item(x).isEnabled()):
                     self.builds_combo.setCurrentIndex(x)
             self.find_build_count = 0
@@ -2100,9 +2100,9 @@ class UpdateGroupBox(QGroupBox):
             status_bar.showMessage(_('Testing downloaded file archive'))
 
             class TestingZipThread(QThread):
-                completed = pyqtSignal()
-                invalid = pyqtSignal()
-                not_downloaded = pyqtSignal()
+                completed = Signal()
+                invalid = Signal()
+                not_downloaded = Signal()
 
                 def __init__(self, downloaded_file):
                     super(TestingZipThread, self).__init__()
@@ -3054,7 +3054,7 @@ class UpdateGroupBox(QGroupBox):
                 QNetworkRequest.HttpReasonPhraseAttribute)
             url = self.http_reply.request().url().toString()
             msg = (
-                _('Could not find launcher latest release when requesting {url}. Error: {error}')
+                _('Could not find Game latest release when requesting {url}. Error: {error}')
                 .format(url=url, error=f'[HTTP {status_code}] ({reason})')
             )
             if status_bar.busy == 0:
@@ -3135,7 +3135,7 @@ class UpdateGroupBox(QGroupBox):
             combo_model = self.builds_combo.model()
             default_set = False
             for x in range(combo_model.rowCount()):
-                if combo_model.item(x).data(Qt.UserRole)['url'] is None:
+                if combo_model.item(x).data(Qt.ItemDataRole.UserRole)['url'] is None:
                     combo_model.item(x).setEnabled(False)
                     combo_model.item(x).setText(combo_model.item(x).text() +
                         _(' - build unavailable'))
@@ -3462,8 +3462,8 @@ class changelog_entry():
 # Recursively delete an entire directory tree while showing progress in a
 # status bar. Also display a dialog to retry the delete if there is a problem.
 class ProgressRmTree(QTimer):
-    completed = pyqtSignal()
-    aborted = pyqtSignal()
+    completed = Signal()
+    aborted = Signal()
 
     def __init__(self, src, status_bar, name):
         if not os.path.isdir(src):
@@ -3699,8 +3699,8 @@ that file or directory. You might need to end it if you want to retry.</p>'''
 # Recursively copy an entire directory tree while showing progress in a
 # status bar. Optionally skip files or directories.
 class ProgressCopyTree(QTimer):
-    completed = pyqtSignal()
-    aborted = pyqtSignal()
+    completed = Signal()
+    aborted = Signal()
 
     def __init__(self, src, dst, skips, status_bar, name):
         if not os.path.isdir(src):

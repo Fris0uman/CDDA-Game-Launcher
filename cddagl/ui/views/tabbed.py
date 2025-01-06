@@ -14,13 +14,14 @@ from pathlib import Path
 from shutil import move
 
 import markdown2
-from PyQt5.QtCore import Qt, QUrl, pyqtSignal, QByteArray, QThread
-from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest
-from PyQt5.QtWidgets import (
+from PySide6.QtCore import Qt, QUrl, Signal, QByteArray, QThread
+from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest
+from PySide6.QtWidgets import (
     QGridLayout, QMainWindow, QLabel, QLineEdit, QPushButton, QProgressBar,
-    QAction, QDialog, QTabWidget, QCheckBox, QMessageBox, QMenu
+    QDialog, QTabWidget, QCheckBox, QMessageBox, QMenu
 )
-from PyQt5.QtGui import QDesktopServices
+from PySide6.QtGui import QAction
+from PySide6.QtGui import QDesktopServices
 from pywintypes import error as PyWinError
 
 import cddagl.constants as cons
@@ -133,16 +134,16 @@ class TabbedWindow(QMainWindow):
 
     def show_faq_dialog(self):
         if self.faq_dialog is None:
-            faq_dialog = FaqDialog(self, Qt.WindowTitleHint |
-                Qt.WindowCloseButtonHint)
+            faq_dialog = FaqDialog(self, Qt.WindowType.WindowTitleHint |
+                Qt.WindowType.WindowCloseButtonHint)
             self.faq_dialog = faq_dialog
 
         self.faq_dialog.exec()
 
     def show_about_dialog(self):
         if self.about_dialog is None:
-            about_dialog = AboutDialog(self, Qt.WindowTitleHint |
-                Qt.WindowCloseButtonHint)
+            about_dialog = AboutDialog(self, Qt.WindowType.WindowTitleHint |
+                Qt.WindowType.WindowCloseButtonHint)
             self.about_dialog = about_dialog
 
         self.about_dialog.exec()
@@ -267,9 +268,9 @@ class TabbedWindow(QMainWindow):
             no_launcher_version_check_checkbox = QCheckBox()
             no_launcher_version_check_checkbox.setText(_('Do not check '
                 'for new version of the Kitten CDDA Launcher on launch'))
-            check_state = (Qt.Checked if config_true(get_config_value(
+            check_state = (Qt.CheckState.Checked if config_true(get_config_value(
                 'prevent_version_check_launch', 'False'))
-                else Qt.Unchecked)
+                else Qt.CheckState.Unchecked)
             no_launcher_version_check_checkbox.stateChanged.connect(
                 self.nlvcc_changed)
             no_launcher_version_check_checkbox.setCheckState(
@@ -291,7 +292,7 @@ class TabbedWindow(QMainWindow):
             launcher_update_msgbox.setIcon(QMessageBox.Question)
 
             if launcher_update_msgbox.exec() == 0:
-                flags = Qt.WindowTitleHint | Qt.WindowCloseButtonHint
+                flags = Qt.WindowType.WindowTitleHint | Qt.WindowType.WindowCloseButtonHint
 
                 launcher_update_dialog = (LauncherUpdateDialog(executable_url,
                     version_text, self, flags))
@@ -329,7 +330,7 @@ class TabbedWindow(QMainWindow):
 
     def init_named_pipe(self):
         class PipeReadWaitThread(QThread):
-            read = pyqtSignal(bytes)
+            read = Signal(bytes)
 
             def __init__(self):
                 super(PipeReadWaitThread, self).__init__()
@@ -465,7 +466,7 @@ class LauncherUpdateDialog(QDialog):
 
         progress_label = QLabel()
         progress_label.setText(_('Progress:'))
-        layout.addWidget(progress_label, 0, 0, Qt.AlignRight)
+        layout.addWidget(progress_label, 0, 0, Qt.AlignmentFlag.AlignRight)
         self.progress_label = progress_label
 
         progress_bar = QProgressBar()
@@ -474,7 +475,7 @@ class LauncherUpdateDialog(QDialog):
 
         url_label = QLabel()
         url_label.setText(_('Url:'))
-        layout.addWidget(url_label, 1, 0, Qt.AlignRight)
+        layout.addWidget(url_label, 1, 0, Qt.AlignmentFlag.AlignRight)
         self.url_label = url_label
 
         url_lineedit = QLineEdit()
@@ -485,7 +486,7 @@ class LauncherUpdateDialog(QDialog):
 
         size_label = QLabel()
         size_label.setText(_('Size:'))
-        layout.addWidget(size_label, 2, 0, Qt.AlignRight)
+        layout.addWidget(size_label, 2, 0, Qt.AlignmentFlag.AlignRight)
         self.size_label = size_label
 
         size_value_label = QLabel()
@@ -494,7 +495,7 @@ class LauncherUpdateDialog(QDialog):
 
         speed_label = QLabel()
         speed_label.setText(_('Speed:'))
-        layout.addWidget(speed_label, 3, 0, Qt.AlignRight)
+        layout.addWidget(speed_label, 3, 0, Qt.AlignmentFlag.AlignRight)
         self.speed_label = speed_label
 
         speed_value_label = QLabel()

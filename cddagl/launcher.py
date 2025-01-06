@@ -5,8 +5,8 @@ import traceback
 from io import StringIO
 from logging.handlers import RotatingFileHandler
 
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QApplication
+from PySide6.QtGui import QIcon
+from PySide6.QtWidgets import QApplication
 from babel.core import Locale
 
 ### to avoid import errors when not setting PYTHONPATH
