@@ -6,8 +6,8 @@ import traceback
 from io import StringIO
 from urllib.parse import urlencode
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import (
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import (
     QWidget, QGridLayout, QLabel, QLineEdit, QPushButton, QFileDialog, QToolButton,
     QDialog, QTextBrowser, QMessageBox, QHBoxLayout, QTextEdit
 )
@@ -53,7 +53,7 @@ class BrowserDownloadDialog(QDialog):
         url_tb.setOpenExternalLinks(True)
         url_tb.setMaximumHeight(23)
         url_tb.setLineWrapMode(QTextEdit.NoWrap)
-        url_tb.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        url_tb.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         layout.addWidget(url_tb, 2, 0, 1, 2)
         self.url_tb = url_tb
 
@@ -100,7 +100,7 @@ class BrowserDownloadDialog(QDialog):
         buttons_layout.addWidget(do_not_install_button)
         self.do_not_install_button = do_not_install_button
 
-        layout.addWidget(buttons_container, 6, 0, 1, 2, Qt.AlignRight)
+        layout.addWidget(buttons_container, 6, 0, 1, 2, Qt.AlignmentFlag.AlignRight)
         self.buttons_container = buttons_container
         self.buttons_layout = buttons_layout
 
@@ -159,7 +159,7 @@ class FaqDialog(QDialog):
 
         ok_button = QPushButton()
         ok_button.clicked.connect(self.done)
-        layout.addWidget(ok_button, 1, 0, Qt.AlignRight)
+        layout.addWidget(ok_button, 1, 0, Qt.AlignmentFlag.AlignRight)
         self.ok_button = ok_button
 
         layout.setRowStretch(0, 100)
@@ -246,7 +246,7 @@ class AboutDialog(QDialog):
 
         ok_button = QPushButton()
         ok_button.clicked.connect(self.done)
-        layout.addWidget(ok_button, 1, 0, Qt.AlignRight)
+        layout.addWidget(ok_button, 1, 0, Qt.AlignmentFlag.AlignRight)
         self.ok_button = ok_button
 
         layout.setRowStretch(0, 100)
@@ -362,7 +362,7 @@ class ExceptionWindow(QWidget):
         exit_button = QPushButton()
         exit_button.setText(_('Exit'))
         exit_button.clicked.connect(lambda: self.app.exit(-100))
-        layout.addWidget(exit_button, 3, 0, Qt.AlignRight)
+        layout.addWidget(exit_button, 3, 0, Qt.AlignmentFlag.AlignRight)
         self.exit_button = exit_button
 
         self.setLayout(layout)

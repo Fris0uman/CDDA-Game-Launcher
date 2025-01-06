@@ -9,8 +9,8 @@ from datetime import datetime, timedelta
 from os import scandir
 
 import arrow
-from PyQt5.QtCore import Qt, QTimer, pyqtSignal, QThread, QItemSelectionModel, QItemSelection
-from PyQt5.QtWidgets import (
+from PySide6.QtCore import Qt, QTimer, Signal, QThread, QItemSelectionModel, QItemSelection
+from PySide6.QtWidgets import (
     QApplication, QWidget, QGridLayout, QGroupBox, QLabel, QLineEdit, QPushButton,
     QProgressBar, QTabWidget, QCheckBox, QMessageBox, QStyle, QHBoxLayout, QSpinBox,
     QAbstractItemView, QSizePolicy, QTableWidget, QTableWidgetItem
@@ -91,8 +91,8 @@ class BackupsTab(QTabWidget):
         self.delete_button = delete_button
 
         do_not_backup_previous_cb = QCheckBox()
-        check_state = (Qt.Checked if config_true(get_config_value(
-            'do_not_backup_previous', 'False')) else Qt.Unchecked)
+        check_state = (Qt.CheckState.Checked if config_true(get_config_value(
+            'do_not_backup_previous', 'False')) else Qt.CheckState.Unchecked)
         do_not_backup_previous_cb.setCheckState(check_state)
         do_not_backup_previous_cb.stateChanged.connect(self.dnbp_changed)
         current_backups_gb_layout.addWidget(do_not_backup_previous_cb, 2, 0, 1,
@@ -107,7 +107,7 @@ class BackupsTab(QTabWidget):
         self.manual_backups_layout = manual_backups_layout
 
         name_label = QLabel()
-        manual_backups_layout.addWidget(name_label, 0, 0, Qt.AlignRight)
+        manual_backups_layout.addWidget(name_label, 0, 0, Qt.AlignmentFlag.AlignRight)
         self.name_label = name_label
 
         name_le = QLineEdit()
@@ -128,16 +128,16 @@ class BackupsTab(QTabWidget):
         self.automatic_backups_gb = automatic_backups_gb
 
         backup_on_launch_cb = QCheckBox()
-        check_state = (Qt.Checked if config_true(get_config_value(
-            'backup_on_launch', 'False')) else Qt.Unchecked)
+        check_state = (Qt.CheckState.Checked if config_true(get_config_value(
+            'backup_on_launch', 'False')) else Qt.CheckState.Unchecked)
         backup_on_launch_cb.setCheckState(check_state)
         backup_on_launch_cb.stateChanged.connect(self.bol_changed)
         automatic_backups_layout.addWidget(backup_on_launch_cb, 0, 0)
         self.backup_on_launch_cb = backup_on_launch_cb
 
         backup_on_end_cb = QCheckBox()
-        check_state = (Qt.Checked if config_true(get_config_value(
-            'backup_on_end', 'False')) else Qt.Unchecked)
+        check_state = (Qt.CheckState.Checked if config_true(get_config_value(
+            'backup_on_end', 'False')) else Qt.CheckState.Unchecked)
         backup_on_end_cb.setCheckState(check_state)
         backup_on_end_cb.stateChanged.connect(self.boe_changed)
         automatic_backups_layout.addWidget(backup_on_end_cb, 1, 0)
@@ -156,8 +156,8 @@ class BackupsTab(QTabWidget):
         self.backup_on_end_warning_label = backup_on_end_warning_label
 
         backup_before_update_cb = QCheckBox()
-        check_state = (Qt.Checked if config_true(get_config_value(
-            'backup_before_update', 'False')) else Qt.Unchecked)
+        check_state = (Qt.CheckState.Checked if config_true(get_config_value(
+            'backup_before_update', 'False')) else Qt.CheckState.Unchecked)
         backup_before_update_cb.setCheckState(check_state)
         backup_before_update_cb.stateChanged.connect(self.bbu_changed)
         automatic_backups_layout.addWidget(backup_before_update_cb, 2, 0)
@@ -273,13 +273,13 @@ class BackupsTab(QTabWidget):
         set_config_value('max_auto_backups', value)
 
     def dnbp_changed(self, state):
-        set_config_value('do_not_backup_previous', str(state != Qt.Unchecked))
+        set_config_value('do_not_backup_previous', str(state != Qt.CheckState.Unchecked))
 
     def bol_changed(self, state):
-        set_config_value('backup_on_launch', str(state != Qt.Unchecked))
+        set_config_value('backup_on_launch', str(state != Qt.CheckState.Unchecked))
 
     def boe_changed(self, state):
-        checked = state != Qt.Unchecked
+        checked = state != Qt.CheckState.Unchecked
 
         set_config_value('backup_on_end', str(checked))
 
@@ -292,11 +292,11 @@ class BackupsTab(QTabWidget):
             self.backup_on_end_warning_label.show()
     
     def bbu_changed(self, state):
-        set_config_value('backup_before_update', str(state != Qt.Unchecked))
+        set_config_value('backup_before_update', str(state != Qt.CheckState.Unchecked))
 
     def restore_button_clicked(self):
         class WaitingThread(QThread):
-            completed = pyqtSignal()
+            completed = Signal()
 
             def __init__(self, wthread):
                 super(WaitingThread, self).__init__()
@@ -544,7 +544,7 @@ class BackupsTab(QTabWidget):
         self.restore_button.setText(_('Cancel restore backup'))
 
         class ExtractingThread(QThread):
-            completed = pyqtSignal()
+            completed = Signal()
 
             def __init__(self, zfile, element, dir):
                 super(ExtractingThread, self).__init__()
@@ -706,7 +706,7 @@ class BackupsTab(QTabWidget):
 
         elif self.manual_backup and self.backup_compressing:
             class WaitingThread(QThread):
-                completed = pyqtSignal()
+                completed = Signal()
 
                 def __init__(self, wthread):
                     super(WaitingThread, self).__init__()
@@ -999,7 +999,7 @@ class BackupsTab(QTabWidget):
     def backup_saves_step2(self):
 
         class CompressThread(QThread):
-            completed = pyqtSignal()
+            completed = Signal()
 
             def __init__(self, zfile, filename, arcname):
                 super(CompressThread, self).__init__()
@@ -1273,7 +1273,7 @@ class BackupsTab(QTabWidget):
                     row_index = self.backups_table.rowCount()
                     self.backups_table.insertRow(row_index)
 
-                    flags = (Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+                    flags = (Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
 
                     if uncompressed_size == 0:
                         compression_ratio = 0
@@ -1327,7 +1327,7 @@ class BackupsTab(QTabWidget):
                     selection_model.setCurrentIndex(first_index,
                         QItemSelectionModel.Select)
 
-                self.backups_table.sortItems(1, Qt.DescendingOrder)
+                self.backups_table.sortItems(1, Qt.SortOrder.DescendingOrder)
                 self.backups_table.horizontalHeader().setSortIndicatorShown(
                     True)
 

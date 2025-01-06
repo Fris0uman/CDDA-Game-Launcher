@@ -1,6 +1,6 @@
 SQLAlchemy
 alembic
-PyQt5
+PySide6
 arrow
 rarfile
 Babel
