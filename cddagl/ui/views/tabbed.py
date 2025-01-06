@@ -21,7 +21,7 @@ from PyQt5.QtWidgets import (
     QAction, QDialog, QTabWidget, QCheckBox, QMessageBox, QMenu
 )
 from PyQt5.QtGui import QDesktopServices
-from pywintypes import error as PyWinError
+from cddagl.platform import pywintypes_error as PyWinError
 
 import cddagl.constants as cons
 from cddagl import __version__ as version
@@ -33,7 +33,7 @@ from cddagl.ui.views.dialogs import AboutDialog, FaqDialog
 from cddagl.ui.views.main import MainTab
 from cddagl.ui.views.settings import SettingsTab
 from cddagl.ui.views.soundpacks import SoundpacksTab
-from cddagl.win32 import SimpleNamedPipe
+from cddagl.platform import SimpleNamedPipe
 
 logger = logging.getLogger('cddagl')
 

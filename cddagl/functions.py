@@ -4,8 +4,8 @@ import re
 import traceback
 from io import StringIO
 
-import winutils
-from pywintypes import com_error
+from cddagl.platform import winutils
+from cddagl.platform import pywintypes_com_error
 
 import cddagl
 from cddagl.i18n import proxy_gettext as _
@@ -108,7 +108,7 @@ def delete_path(path):
 
     try:
         return winutils.delete(path, flags)
-    except com_error:
+    except pywintypes_com_error:
         return False
 
 def move_path(srcpath, dstpath):
@@ -134,7 +134,7 @@ def move_path(srcpath, dstpath):
 
     try:
         return winutils.move(srcpath, dstpath, flags)
-    except com_error:
+    except pywintypes_com_error:
         return False
 
 def safe_humanize(arrow_date, other=None, locale='en_us', only_distance=False, granularity='auto'):
