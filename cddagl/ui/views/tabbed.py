@@ -30,7 +30,7 @@ from cddagl.functions import sizeof_fmt, delete_path
 from cddagl.i18n import proxy_gettext as _
 from cddagl.sql.functions import get_config_value, set_config_value, config_true
 from cddagl.ui.views.backups import BackupsTab
-from cddagl.ui.views.dialogs import AboutDialog, FaqDialog
+from cddagl.ui.views.dialogs import AboutDialog, FaqDialog, LicenceDialog
 from cddagl.ui.views.main import MainTab
 from cddagl.ui.views.settings import SettingsTab
 from cddagl.ui.views.soundpacks import SoundpacksTab
@@ -56,6 +56,7 @@ class TabbedWindow(QMainWindow):
 
         self.faq_dialog = None
         self.about_dialog = None
+        self.about_license = None
 
         geometry = get_config_value('window_geometry')
         if geometry is not None:
@@ -76,9 +77,12 @@ class TabbedWindow(QMainWindow):
         self.game_issue_action.setText(_('&Game issue'))
         self.update_action.setText(_('&Check for update'))
         self.about_action.setText(_('&About Kitten CDDA Launcher'))
+        self.license_action.setText(_('&About Package Licenses'))
 
         if self.about_dialog is not None:
             self.about_dialog.set_text()
+        if self.about_license is not None:
+            self.about_license.set_text()
         self.central_widget.set_text()
 
     def create_status_bar(self):
@@ -129,6 +133,11 @@ class TabbedWindow(QMainWindow):
         self.about_action = about_action
         self.help_menu.addAction(about_action)
 
+        license_action = QAction(_('&About Package Licenses'), self,
+            triggered=self.show_license_dialog)
+        self.license_action = license_action
+        self.help_menu.addAction(license_action)
+
     def open_game_issue_url(self):
         QDesktopServices.openUrl(QUrl(cons.GAME_ISSUE_URL))
 
@@ -147,6 +156,14 @@ class TabbedWindow(QMainWindow):
             self.about_dialog = about_dialog
 
         self.about_dialog.exec()
+
+    def show_license_dialog(self):
+        if self.about_license is None:
+            about_license = LicenceDialog(self, Qt.WindowType.WindowTitleHint |
+                Qt.WindowType.WindowCloseButtonHint)
+            self.about_license = about_license
+
+        self.about_license.exec()
 
     def check_new_launcher_version(self):
         self.lv_html = BytesIO()
