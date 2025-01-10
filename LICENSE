@@ -19,3 +19,19 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+
+
+Packages used in this project have their own licenses:
+
+- Pyside is released under LGPL v3: https://github.com/pyside/pyside-setup/blob/dev/LICENSES/LGPL-3.0-only.txt
+- Werkzeug is released under the 3-Clause BSD license: https://github.com/pallets/werkzeug/blob/main/LICENSE.txt
+- Babel is released under the 3-Clause BSD license: https://github.com/python-babel/babel/blob/master/LICENSE
+- Pylzma is release under the LGPL v2.1 license: https://github.com/fancycode/pylzma/blob/master/LICENSE
+- Rarfile is released under the ISC license: https://github.com/markokr/rarfile/blob/master/LICENSE
+- Requests is released under the Apache 2.0 license: https://github.com/psf/requests/blob/main/LICENSE
+- Arrow is released under the Apache 2.0 license: https://github.com/arrow-py/arrow/blob/master/LICENSE
+- SQLAlchemy is relased under the MIT license: https://github.com/sqlalchemy/sqlalchemy/blob/main/LICENSE
+- Alembic is relased under the MIT license: https://github.com/sqlalchemy/alembic/blob/main/LICENSE
+- Pywinutils is relased under the MIT license: https://github.com/frmdstryr/pywinutils
+- Markdown2 is relased under the MIT license: https://github.com/trentm/python-markdown2/blob/master/LICENSE.txt
