@@ -401,7 +401,7 @@ class LicenceDialog(QDialog):
         self.ok_button.setText(_('OK'))
         m = _('<p>Kitten CDDA Launcher uses a number of packages under different licenses:</p>')
 
-        m += _('<h3>Pyside6 is released under the LGPL license: </h3>')
+        m += _('<h3>Pyside6 and Qt are licensed under the LGPL license: </h3>')
         m += " <h3 style='text-align: center;'>GNU LESSER GENERAL PUBLIC LICENSE</h3>"\
             "<p style='text-align: center;'>Version 3, 29 June 2007</p> <p>Copyright © 2007 Free Software Foundation, "\
             "Inc.  &lt;<a href='https://fsf.org/'>https://fsf.org/</a>&gt;</p><p>  Everyone is permitted to copy and "\
@@ -483,7 +483,7 @@ class LicenceDialog(QDialog):
             "Public License shall apply, that proxy's public statement of acceptance of any version is permanent "\
             "authorization for you to choose that version for the Library.</p> "
 
-        m += _('<h3>SQLAlchemy, alembic, pywinutils, and markdown2 are released under the MIT license</h3>')
+        m += _('<h3>SQLAlchemy, alembic, pywinutils, and markdown2 are licensed under the MIT license</h3>')
         m += "<h3 style='text-align: center;'>The MIT License (MIT)</h3> <p>Permission is hereby granted, " \
              "free of charge, to any person obtaining a copy of this software and associated documentation files (the " \
              "“Software”), to deal in the Software without restriction, including without limitation the rights to " \
@@ -497,7 +497,7 @@ class LicenceDialog(QDialog):
              "CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR " \
              "OTHER DEALINGS IN THE SOFTWARE.</p> "
 
-        m += _('<h3>Requests and arrow are released under the Apache 2.0 license: </h3>')
+        m += _('<h3>Requests and arrow are licensed under the Apache 2.0 license: </h3>')
         m += "<h3 style='text-align: center;'>Apache License</h3>   <p style='text-align: center;'> Version 2.0, "\
                "January 2004</p>   <p style='text-align: center;'>http://www.apache.org/licenses/</p> <p>TERMS AND "\
                "CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION</p> <p>1. Definitions.</p> <p>'License' shall mean "\
@@ -608,7 +608,7 @@ class LicenceDialog(QDialog):
                "WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the "\
                "specific language governing permissions and limitations under the License.</p> "\
 
-        m += _('<h3>Werkzeug and babel are released under the 3-Clause BSD license: </h3>')
+        m += _('<h3>Werkzeug and babel are licensed under the 3-Clause BSD license: </h3>')
         m += "<p>Babel</p> <p>Copyright (c) 2013-2024 by the Babel Team, "\
                "see https://github.com/python-babel/babel/blob/master/AUTHORS for more information.</p> "\
                "<p>Werkzeug:</p> <p>Copyright 2007 Pallets</p> <h3 style='text-align: center;'>The 3-Clause BSD "\
@@ -629,7 +629,7 @@ class LicenceDialog(QDialog):
                "OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY "\
                "OF SUCH DAMAGE.</p>"
 
-        m += _('<h3>Pylzma is release under the LGPL v2.1 license: </h3>')
+        m += _('<h3>Pylzma is licensed under the LGPL v2.1 license: </h3>')
         m += "<h3 style='text-align: center;'>GNU LESSER GENERAL PUBLIC LICENSE</h3> <p style='text-align: " \
              "center;'>Version 2.1, February 1999</p> <p>Copyright (C) 1991, 1999 Free Software Foundation, " \
              "Inc.  59 Temple Place, Suite 330, Boston, MA02111-1307USA  Everyone is permitted to copy and distribute " \
@@ -902,7 +902,7 @@ class LicenceDialog(QDialog):
              "library `Frob' (a library for tweaking knobs) written by James Random Hacker.</p> <p><signature of Ty " \
              "Coon>, 1 April 1990 Ty Coon, President of Vice</p> <p>That's all there is to it!</p> "
 
-        m += _('<h3>Rarfile is released under the ISC license: </h3>')
+        m += _('<h3>Rarfile is licensed under the ISC license: </h3>')
         m += "<h3 style='text-align: center;'>ISC License <p>Copyright (c) 2005-2024 Marko Kreen</h3>" \
              "<markokr@gmail.com></p> <p>Permission to use, copy, modify, and/or distribute this software for any " \
              "purpose with or without fee is hereby granted, provided that the above copyright notice and this " \
