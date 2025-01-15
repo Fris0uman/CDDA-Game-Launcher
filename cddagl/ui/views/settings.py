@@ -214,13 +214,13 @@ class LauncherSettingsGroupBox(QGroupBox):
 
     def nlvcc_changed(self, state):
         set_config_value('prevent_version_check_launch',
-            str(state != Qt.CheckState.Unchecked))
+            str(state != Qt.CheckState.Unchecked.value))
 
     def rsc_changed(self, state):
-        set_config_value('reverse_sort_changelog', str(state != Qt.CheckState.Unchecked))
+        set_config_value('reverse_sort_changelog', str(state != Qt.CheckState.Unchecked.value))
 
     def klo_changed(self, state):
-        checked = state != Qt.CheckState.Unchecked
+        checked = state != Qt.CheckState.Unchecked.value
 
         set_config_value('keep_launcher_open', str(checked))
 
@@ -239,7 +239,7 @@ class LauncherSettingsGroupBox(QGroupBox):
             self.command_line_parameters_edit.text())
 
     def ami_changed(self, state):
-        checked = state != Qt.CheckState.Unchecked
+        checked = state != Qt.CheckState.Unchecked.value
         set_config_value('allow_multiple_instances', str(checked))
 
     def disable_controls(self):
@@ -385,18 +385,18 @@ class UpdateSettingsGroupBox(QGroupBox):
         self.arb_timer.setInterval(value * 1000 * 60)
 
     def arbc_changed(self, state):
-        set_config_value('auto_refresh_builds', str(state != Qt.CheckState.Unchecked))
-        if state != Qt.CheckState.Unchecked:
+        set_config_value('auto_refresh_builds', str(state != Qt.CheckState.Unchecked.value))
+        if state != Qt.CheckState.Unchecked.value:
             self.arb_timer.start()
         else:
             self.arb_timer.stop()
 
     def psmc_changed(self, state):
-        set_config_value('prevent_save_move', str(state != Qt.CheckState.Unchecked))
+        set_config_value('prevent_save_move', str(state != Qt.CheckState.Unchecked.value))
         game_dir_group_box = self.get_main_tab().game_dir_group_box
         saves_warning_label = game_dir_group_box.saves_warning_label
 
-        if state != Qt.CheckState.Unchecked:
+        if state != Qt.CheckState.Unchecked.value:
             saves_warning_label.hide()
         else:
             if game_dir_group_box.saves_size > cons.SAVES_WARNING_SIZE:
@@ -405,13 +405,13 @@ class UpdateSettingsGroupBox(QGroupBox):
                 saves_warning_label.hide()
 
     def rpvc_changed(self, state):
-        set_config_value('remove_previous_version', str(state != Qt.CheckState.Unchecked))
+        set_config_value('remove_previous_version', str(state != Qt.CheckState.Unchecked.value))
 
     def prfc_changed(self, state):
-        set_config_value('permanently_delete_files', str(state != Qt.CheckState.Unchecked))
+        set_config_value('permanently_delete_files', str(state != Qt.CheckState.Unchecked.value))
 
     def kacc_changed(self, state):
-        set_config_value('keep_archive_copy', str(state != Qt.CheckState.Unchecked))
+        set_config_value('keep_archive_copy', str(state != Qt.CheckState.Unchecked.value))
 
     def set_ka_directory(self):
         options = QFileDialog.Option.DontResolveSymlinks | QFileDialog.Option.ShowDirsOnly
