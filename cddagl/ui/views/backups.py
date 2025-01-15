@@ -288,13 +288,10 @@ class BackupsTab(QTabWidget):
         class WaitingThread(QThread):
             completed = Signal()
 
-            def __init__(self, wthread):
-                super(WaitingThread, self).__init__()
+            def __init__(self, wthread, parent):
+                super(WaitingThread, self).__init__(parent)
 
                 self.wthread = wthread
-
-            def __del__(self):
-                self.wait()
 
             def run(self):
                 self.wthread.wait()
@@ -325,8 +322,9 @@ class BackupsTab(QTabWidget):
                     delete_path(self.backup_path)
                     self.compress_thread = None
 
-                waiting_thread = WaitingThread(self.compress_thread)
+                waiting_thread = WaitingThread(self.compress_thread, self)
                 waiting_thread.completed.connect(completed)
+                waiting_thread.finished.connect(waiting_thread.deleteLater)
                 self.waiting_thread = waiting_thread
 
                 waiting_thread.start()
@@ -358,8 +356,9 @@ class BackupsTab(QTabWidget):
                     self.finish_restore_backup()
                     self.extracting_thread = None
 
-                waiting_thread = WaitingThread(self.extracting_thread)
+                waiting_thread = WaitingThread(self.extracting_thread, self)
                 waiting_thread.completed.connect(completed)
+                waiting_thread.finished.connect(waiting_thread.deleteLater)
                 self.waiting_thread = waiting_thread
 
                 waiting_thread.start()
@@ -526,15 +525,12 @@ class BackupsTab(QTabWidget):
         class ExtractingThread(QThread):
             completed = Signal()
 
-            def __init__(self, zfile, element, dir):
-                super(ExtractingThread, self).__init__()
+            def __init__(self, zfile, element, dir, parent):
+                super(ExtractingThread, self).__init__(parent)
 
                 self.zfile = zfile
                 self.element = element
                 self.dir = dir
-
-            def __del__(self):
-                self.wait()
 
             def run(self):
                 self.zfile.extract(self.element, self.dir)
@@ -548,8 +544,10 @@ class BackupsTab(QTabWidget):
                         _('Extracting {filename}').format(filename=extracting_element.filename))
                     self.next_extract_file = extracting_element
 
-                    extracting_thread = ExtractingThread(self.extracting_zipfile, extracting_element, self.extract_dir)
+                    extracting_thread = ExtractingThread(self.extracting_zipfile, extracting_element,
+                                                         self.extract_dir, self)
                     extracting_thread.completed.connect(completed_extract)
+                    extracting_thread.finished.connect(extracting_thread.deleteLater)
                     self.extracting_thread = extracting_thread
 
                     extracting_thread.start()
@@ -679,13 +677,11 @@ class BackupsTab(QTabWidget):
             class WaitingThread(QThread):
                 completed = Signal()
 
-                def __init__(self, wthread):
-                    super(WaitingThread, self).__init__()
+                def __init__(self, wthread, parent):
+                    super(WaitingThread, self).__init__(parent)
 
                     self.wthread = wthread
 
-                def __del__(self):
-                    self.wait()
 
                 def run(self):
                     self.wthread.wait()
@@ -700,8 +696,9 @@ class BackupsTab(QTabWidget):
                     delete_path(self.backup_path)
                     self.compress_thread = None
 
-                waiting_thread = WaitingThread(self.compress_thread)
+                waiting_thread = WaitingThread(self.compress_thread, self)
                 waiting_thread.completed.connect(completed)
+                waiting_thread.finished.connect(waiting_thread.deleteLater)
                 self.waiting_thread = waiting_thread
 
                 waiting_thread.start()
@@ -957,15 +954,12 @@ class BackupsTab(QTabWidget):
         class CompressThread(QThread):
             completed = Signal()
 
-            def __init__(self, zfile, filename, arcname):
-                super(CompressThread, self).__init__()
+            def __init__(self, zfile, filename, arcname, parent):
+                super(CompressThread, self).__init__(parent)
 
                 self.zfile = zfile
                 self.filename = filename
                 self.arcname = arcname
-
-            def __del__(self):
-                self.wait()
 
             def run(self):
                 self.zfile.write(self.filename, self.arcname)
@@ -980,8 +974,9 @@ class BackupsTab(QTabWidget):
 
                     self.compressing_label.setText(_('Compressing {filename}').format(filename=relpath))
 
-                    compress_thread = CompressThread(self.backup_file, next_file, relpath)
+                    compress_thread = CompressThread(self.backup_file, next_file, relpath, self)
                     compress_thread.completed.connect(completed_compress)
+                    compress_thread.finished.connect(compress_thread.deleteLater)
                     self.compress_thread = compress_thread
 
                     compress_thread.start()
