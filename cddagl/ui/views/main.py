@@ -533,13 +533,10 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
             class ProcessWaitThread(QThread):
                 ended = Signal()
 
-                def __init__(self, process):
-                    super(ProcessWaitThread, self).__init__()
+                def __init__(self, process, parent):
+                    super(ProcessWaitThread, self).__init__(parent)
 
                     self.process = process
-
-                def __del__(self):
-                    self.wait()
 
                 def run(self):
                     self.process.wait()
@@ -548,8 +545,9 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
             def process_ended():
                 self.game_ended()
 
-            process_wait_thread = ProcessWaitThread(self.game_process)
+            process_wait_thread = ProcessWaitThread(self.game_process, self)
             process_wait_thread.ended.connect(process_ended)
+            process_wait_thread.finished.connect(process_wait_thread.deleteLater)
             process_wait_thread.start()
 
             self.process_wait_thread = process_wait_thread
@@ -960,13 +958,10 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
             class ProcessWaitThread(QThread):
                 ended = Signal()
 
-                def __init__(self, pid):
-                    super(ProcessWaitThread, self).__init__()
+                def __init__(self, pid, parent):
+                    super(ProcessWaitThread, self).__init__(parent)
 
                     self.pid = pid
-
-                def __del__(self):
-                    self.wait()
 
                 def run(self):
                     wait_for_pid(self.pid)
@@ -1001,8 +996,9 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
 
                     backups_tab.backup_saves(name)
 
-            process_wait_thread = ProcessWaitThread(self.game_process_id)
+            process_wait_thread = ProcessWaitThread(self.game_process_id, self)
             process_wait_thread.ended.connect(process_ended)
+            process_wait_thread.finished.connect(process_wait_thread.deleteLater)
             process_wait_thread.start()
 
             self.process_wait_thread = process_wait_thread
@@ -2104,13 +2100,10 @@ class UpdateGroupBox(QGroupBox):
                 invalid = Signal()
                 not_downloaded = Signal()
 
-                def __init__(self, downloaded_file):
-                    super(TestingZipThread, self).__init__()
+                def __init__(self, downloaded_file, parent):
+                    super(TestingZipThread, self).__init__(parent)
 
                     self.downloaded_file = downloaded_file
-
-                def __del__(self):
-                    self.wait()
 
                 def run(self):
                     try:
@@ -2150,10 +2143,11 @@ class UpdateGroupBox(QGroupBox):
                 delete_path(download_dir)
                 self.finish_updating()
 
-            test_thread = TestingZipThread(self.downloaded_file)
+            test_thread = TestingZipThread(self.downloaded_file, self)
             test_thread.completed.connect(completed_test)
             test_thread.invalid.connect(invalid)
             test_thread.not_downloaded.connect(not_downloaded)
+            test_thread.finished.connect(test_thread.deleteLater)
             test_thread.start()
 
             self.test_thread = test_thread
