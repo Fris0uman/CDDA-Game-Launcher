@@ -52,7 +52,7 @@ class BrowserDownloadDialog(QDialog):
         url_tb.setReadOnly(True)
         url_tb.setOpenExternalLinks(True)
         url_tb.setMaximumHeight(23)
-        url_tb.setLineWrapMode(QTextEdit.NoWrap)
+        url_tb.setLineWrapMode(QTextEdit.LineWrapMode.NoWrap)
         url_tb.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         layout.addWidget(url_tb, 2, 0, 1, 2)
         self.url_tb = url_tb
@@ -109,7 +109,7 @@ class BrowserDownloadDialog(QDialog):
         self.setWindowTitle(_('Browser download'))
 
     def set_download_path(self):
-        options = QFileDialog.DontResolveSymlinks
+        options = QFileDialog.Option.DontResolveSymlinks
         selected_file, selected_filter = QFileDialog.getOpenFileName(self,
             _('Downloaded archive'), self.download_path_le.text(),
             _('Archive files {formats}').format(formats='(*.zip *.rar *.7z)'),
@@ -131,8 +131,8 @@ class BrowserDownloadDialog(QDialog):
 
             filenotfound_msgbox.setText(text)
             filenotfound_msgbox.addButton(_('I will try again'),
-                QMessageBox.AcceptRole)
-            filenotfound_msgbox.setIcon(QMessageBox.Warning)
+                QMessageBox.ButtonRole.AcceptRole)
+            filenotfound_msgbox.setIcon(QMessageBox.Icon.Warning)
             filenotfound_msgbox.exec()
 
             return
