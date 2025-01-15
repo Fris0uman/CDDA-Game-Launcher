@@ -35,7 +35,7 @@ from babel.dates import format_datetime
 from pywintypes import error as PyWinError
 
 import cddagl.constants as cons
-from cddagl.constants import get_cddagl_path, get_cdda_uld_path
+from cddagl.constants import get_cddagl_path
 from cddagl import __version__ as version
 from cddagl.functions import (
     tryint, move_path, sizeof_fmt, delete_path,

@@ -9,7 +9,7 @@ from PySide6.QtWidgets import (
 from babel.core import Locale
 
 import cddagl.constants as cons
-from cddagl.constants import get_locale_path, get_cdda_uld_path
+from cddagl.constants import get_locale_path
 from cddagl.functions import clean_qt_path
 from cddagl.i18n import load_gettext_locale, get_available_locales, proxy_gettext as _
 from cddagl.sql.functions import get_config_value, set_config_value, config_true
