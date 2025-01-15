@@ -145,7 +145,7 @@ class GameDirGroupBox(QGroupBox):
         self.dir_combo = QComboBox()
         self.layout_dir.addWidget(self.dir_combo)
         self.dir_combo.setEditable(True)
-        self.dir_combo.setInsertPolicy(QComboBox.InsertAtTop)
+        self.dir_combo.setInsertPolicy(QComboBox.InsertPolicy.InsertAtTop)
         self.dir_combo.currentIndexChanged.connect(self.dc_index_changed)
         self.dir_combo.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
         game_directories = json.loads(get_config_value('game_directories', '[]'))
@@ -166,7 +166,7 @@ class GameDirGroupBox(QGroupBox):
         self.sess_combo = QComboBox()
         self.layout_sess.addWidget(self.sess_combo)
         self.sess_combo.setEditable(True)
-        self.sess_combo.setInsertPolicy(QComboBox.InsertAtTop)
+        self.sess_combo.setInsertPolicy(QComboBox.InsertPolicy.InsertAtTop)
         self.sess_combo.currentIndexChanged.connect(self.sess_index_changed)
         self.sess_combo.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
         session_directories = json.loads(get_config_value('session_directories', '[]'))
@@ -214,7 +214,7 @@ class GameDirGroupBox(QGroupBox):
         self.saves_value_edit = saves_value_edit
 
         saves_warning_label = QLabel()
-        icon = QApplication.style().standardIcon(QStyle.SP_MessageBoxWarning)
+        icon = QApplication.style().standardIcon(QStyle.StandardPixmap.SP_MessageBoxWarning)
         saves_warning_label.setPixmap(icon.pixmap(16, 16))
         saves_warning_label.hide()
         layout.addWidget(saves_warning_label, 4, 2)
@@ -263,11 +263,11 @@ class GameDirGroupBox(QGroupBox):
     def set_dir_state_icon(self, state):
         style = QApplication.style()
         if state == 'critical':
-            icon = style.standardIcon(QStyle.SP_MessageBoxCritical).pixmap(16, 16)
+            icon = style.standardIcon(QStyle.StandardPixmap.SP_MessageBoxCritical).pixmap(16, 16)
         elif state == 'warning':
-            icon = style.standardIcon(QStyle.SP_MessageBoxWarning).pixmap(16, 16)
+            icon = style.standardIcon(QStyle.StandardPixmap.SP_MessageBoxWarning).pixmap(16, 16)
         elif state == 'ok':
-            icon = style.standardIcon(QStyle.SP_DialogApplyButton).pixmap(16, 16)
+            icon = style.standardIcon(QStyle.StandardPixmap.SP_DialogApplyButton).pixmap(16, 16)
         elif state == 'hide':
             self.dir_state_icon.hide()
             return
@@ -496,8 +496,8 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
     error=html.escape(e.strerror))
 
             error_msgbox.setText(text)
-            error_msgbox.addButton(_('OK'), QMessageBox.YesRole)
-            error_msgbox.setIcon(QMessageBox.Critical)
+            error_msgbox.addButton(_('OK'), QMessageBox.ButtonRole.YesRole)
+            error_msgbox.setIcon(QMessageBox.Icon.Critical)
 
             error_msgbox.exec()
             return
@@ -632,7 +632,7 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
         backups_tab.clear_backups()
 
     def set_game_directory(self):
-        options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
+        options = QFileDialog.Option.DontResolveSymlinks | QFileDialog.Option.ShowDirsOnly
         directory = QFileDialog.getExistingDirectory(self,
                 _('Game directory'), self.dir_combo.currentText(),
                 options=options)
@@ -640,7 +640,7 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
             self.set_dir_combo_value(clean_qt_path(directory))
 
     def set_session_directory(self):
-        options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
+        options = QFileDialog.Option.DontResolveSymlinks | QFileDialog.Option.ShowDirsOnly
         directory = QFileDialog.getExistingDirectory(self,
                 _('Session directory'), self.sess_combo.currentText(),
                 options=options)
@@ -1328,7 +1328,7 @@ class UpdateGroupBox(QGroupBox):
         self.builds_combo = builds_combo
 
         refresh_warning_label = QLabel()
-        icon = QApplication.style().standardIcon(QStyle.SP_MessageBoxWarning)
+        icon = QApplication.style().standardIcon(QStyle.StandardPixmap.SP_MessageBoxWarning)
         refresh_warning_label.setPixmap(icon.pixmap(16, 16))
         refresh_warning_label.hide()
         layout.addWidget(refresh_warning_label, layout_row, 3)
@@ -1353,7 +1353,7 @@ class UpdateGroupBox(QGroupBox):
         self.find_build_value = find_build_value
 
         find_build_warning_label = QLabel()
-        icon = QApplication.style().standardIcon(QStyle.SP_MessageBoxWarning)
+        icon = QApplication.style().standardIcon(QStyle.StandardPixmap.SP_MessageBoxWarning)
         find_build_warning_label.setPixmap(icon.pixmap(16, 16))
         find_build_warning_label.hide()
         layout.addWidget(find_build_warning_label, layout_row, 3)
@@ -1655,10 +1655,10 @@ class UpdateGroupBox(QGroupBox):
                         'subdirectory to proceed?'))
                     new_subdirectory_msgbox.addButton(_('Create the {name} subdirectory and '
                         'proceed').format(name=subdir_name),
-                        QMessageBox.YesRole)
+                        QMessageBox.ButtonRole.YesRole)
                     new_subdirectory_msgbox.addButton(_('I will choose or create a different '
-                        'directory'), QMessageBox.NoRole)
-                    new_subdirectory_msgbox.setIcon(QMessageBox.Question)
+                        'directory'), QMessageBox.ButtonRole.NoRole)
+                    new_subdirectory_msgbox.setIcon(QMessageBox.Icon.Question)
 
                     if new_subdirectory_msgbox.exec() == 1:
                         return
@@ -1838,10 +1838,10 @@ class UpdateGroupBox(QGroupBox):
             confirm_msgbox.setInformativeText(_('Are you sure you want to '
                 'update your game?'))
             confirm_msgbox.addButton(_('Update the game again'),
-                QMessageBox.YesRole)
+                QMessageBox.ButtonRole.YesRole)
             confirm_msgbox.addButton(_('I do not need to update the '
-                'game again'), QMessageBox.NoRole)
-            confirm_msgbox.setIcon(QMessageBox.Question)
+                'game again'), QMessageBox.ButtonRole.NoRole)
+            confirm_msgbox.setIcon(QMessageBox.Icon.Question)
 
             if confirm_msgbox.exec() == 1:
                 self.updating = False
@@ -2390,8 +2390,8 @@ class UpdateGroupBox(QGroupBox):
                         ).format(error=html.escape(e.strerror))
 
                     error_msgbox.setText(text)
-                    error_msgbox.addButton(_('OK'), QMessageBox.YesRole)
-                    error_msgbox.setIcon(QMessageBox.Critical)
+                    error_msgbox.addButton(_('OK'), QMessageBox.ButtonRole.YesRole)
+                    error_msgbox.setIcon(QMessageBox.Icon.Critical)
 
                     error_msgbox.exec()
 
@@ -3379,7 +3379,7 @@ class UpdateGroupBox(QGroupBox):
             try:
                 new_body = entry['body'].split('####')
             except:
-                print("Can't parse body")
+                print(f"Can't parse body: {entry['html_url']}")
 
             new_date = entry['closed_at'][0:10]
             new_entry = changelog_entry(title =entry['title'],
@@ -3580,10 +3580,10 @@ that file or directory. You might need to end it if you want to retry.</p>'''
                                 'retry removing this directory?'))
                             retry_msgbox.addButton(
                                 _('Retry removing the directory'),
-                                QMessageBox.YesRole)
+                                QMessageBox.ButtonRole.YesRole)
                             retry_msgbox.addButton(_('Cancel the operation'),
-                                QMessageBox.NoRole)
-                            retry_msgbox.setIcon(QMessageBox.Critical)
+                                QMessageBox.ButtonRole.NoRole)
+                            retry_msgbox.setIcon(QMessageBox.Icon.Critical)
 
                             if retry_msgbox.exec() == 1:
                                 self.deleting = False
@@ -3642,10 +3642,10 @@ that file or directory. You might need to end it if you want to retry.</p>'''
                             'retry removing this directory?'))
                         retry_msgbox.addButton(
                             _('Retry removing the directory'),
-                            QMessageBox.YesRole)
+                            QMessageBox.ButtonRole.YesRole)
                         retry_msgbox.addButton(_('Cancel the operation'),
-                            QMessageBox.NoRole)
-                        retry_msgbox.setIcon(QMessageBox.Critical)
+                            QMessageBox.ButtonRole.NoRole)
+                        retry_msgbox.setIcon(QMessageBox.Icon.Critical)
 
                         if retry_msgbox.exec() == 1:
                             self.deleting = False

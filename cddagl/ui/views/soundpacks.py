@@ -75,7 +75,7 @@ class SoundpacksTab(QTabWidget):
 
         installed_lv = QListView()
         installed_lv.clicked.connect(self.installed_clicked)
-        installed_lv.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        installed_lv.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         installed_gb_layout.addWidget(installed_lv)
         self.installed_lv = installed_lv
 
@@ -109,7 +109,7 @@ class SoundpacksTab(QTabWidget):
 
         repository_lv = QListView()
         repository_lv.clicked.connect(self.repository_clicked)
-        repository_lv.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        repository_lv.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         repository_gb_layout.addWidget(repository_lv)
         self.repository_lv = repository_lv
 
@@ -178,7 +178,7 @@ class SoundpacksTab(QTabWidget):
         homepage_tb.setReadOnly(True)
         homepage_tb.setOpenExternalLinks(True)
         homepage_tb.setMaximumHeight(23)
-        homepage_tb.setLineWrapMode(QTextEdit.NoWrap)
+        homepage_tb.setLineWrapMode(QTextEdit.LineWrapMode.NoWrap)
         homepage_tb.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         details_gb_layout.addWidget(homepage_tb, 4, 1)
         self.homepage_tb = homepage_tb
@@ -327,10 +327,10 @@ class SoundpacksTab(QTabWidget):
                         'to install the {view} soundpack?').format(
                             view=selected_info['viewname']))
                     confirm_msgbox.addButton(_('Install the soundpack'),
-                        QMessageBox.YesRole)
+                        QMessageBox.ButtonRole.YesRole)
                     confirm_msgbox.addButton(_('Do not install again'),
-                        QMessageBox.NoRole)
-                    confirm_msgbox.setIcon(QMessageBox.Warning)
+                        QMessageBox.ButtonRole.NoRole)
+                    confirm_msgbox.setIcon(QMessageBox.Icon.Warning)
 
                     if confirm_msgbox.exec() == 1:
                         return
@@ -903,15 +903,12 @@ class SoundpacksTab(QTabWidget):
 
         confirm_msgbox = QMessageBox()
         confirm_msgbox.setWindowTitle(_('Delete soundpack'))
-        confirm_msgbox.setText(_('This will delete the soundpack directory. It '
-            'cannot be undone.'))
+        confirm_msgbox.setText(_('This will delete the soundpack directory. It cannot be undone.'))
         confirm_msgbox.setInformativeText(_('Are you sure you want to '
             'delete the {view} soundpack?').format(view=selected_info['VIEW']))
-        confirm_msgbox.addButton(_('Delete the soundpack'),
-            QMessageBox.YesRole)
-        confirm_msgbox.addButton(_('I want to keep the soundpack'),
-            QMessageBox.NoRole)
-        confirm_msgbox.setIcon(QMessageBox.Warning)
+        confirm_msgbox.addButton(_('Delete the soundpack'), QMessageBox.ButtonRole.YesRole)
+        confirm_msgbox.addButton(_('I want to keep the soundpack'), QMessageBox.ButtonRole.NoRole)
+        confirm_msgbox.setIcon(QMessageBox.Icon.Warning)
 
         if confirm_msgbox.exec() == 0:
             main_window = self.get_main_window()

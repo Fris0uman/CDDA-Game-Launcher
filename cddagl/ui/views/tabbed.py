@@ -301,12 +301,12 @@ class TabbedWindow(QMainWindow):
                 version=version))
             launcher_update_msgbox.setInformativeText(release_html)
             launcher_update_msgbox.addButton(_('Update the launcher'),
-                QMessageBox.YesRole)
+                QMessageBox.ButtonRole.YesRole)
             launcher_update_msgbox.addButton(_('Not right now'),
-                QMessageBox.NoRole)
+                QMessageBox.ButtonRole.NoRole)
             launcher_update_msgbox.setCheckBox(
                 no_launcher_version_check_checkbox)
-            launcher_update_msgbox.setIcon(QMessageBox.Question)
+            launcher_update_msgbox.setIcon(QMessageBox.Icon.Question)
 
             if launcher_update_msgbox.exec() == 0:
                 flags = Qt.WindowType.WindowTitleHint | Qt.WindowType.WindowCloseButtonHint
@@ -336,7 +336,7 @@ class TabbedWindow(QMainWindow):
             up_to_date_msgbox.setWindowTitle(_('Up to date'))
             up_to_date_msgbox.setText(_('The Kitten CDDA Launcher is up to date.'
                 ))
-            up_to_date_msgbox.setIcon(QMessageBox.Information)
+            up_to_date_msgbox.setIcon(QMessageBox.Icon.Information)
 
             up_to_date_msgbox.exec()
 

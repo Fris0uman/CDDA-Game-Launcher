@@ -90,7 +90,7 @@ class LauncherSettingsGroupBox(QGroupBox):
         current_locale = get_config_value('locale', None)
 
         locale_combo = QComboBox()
-        locale_combo.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+        locale_combo.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
         locale_combo.addItem(_('System language or best match ({locale})'
             ).format(locale=get_ui_locale()), None)
         selected_index = 0
@@ -414,7 +414,7 @@ class UpdateSettingsGroupBox(QGroupBox):
         set_config_value('keep_archive_copy', str(state != Qt.CheckState.Unchecked))
 
     def set_ka_directory(self):
-        options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
+        options = QFileDialog.Option.DontResolveSymlinks | QFileDialog.Option.ShowDirsOnly
         directory = QFileDialog.getExistingDirectory(self,
                 _('Archive directory'), self.keep_archive_directory_line.text(),
                 options=options)
