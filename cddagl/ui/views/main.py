@@ -1452,7 +1452,7 @@ class UpdateGroupBox(QGroupBox):
 
     def find_build_finished(self):
         redirect = self.api_reply.attribute(
-            QNetworkRequest.RedirectionTargetAttribute)
+            QNetworkRequest.Attribute.RedirectionTargetAttribute)
         if redirect is not None:
             redirected_url = urljoin(
                 self.api_reply.request().url().toString(),
@@ -1488,7 +1488,7 @@ class UpdateGroupBox(QGroupBox):
         status_bar = main_window.statusBar()
 
         status_code = self.api_reply.attribute(
-            QNetworkRequest.HttpStatusCodeAttribute)
+            QNetworkRequest.Attribute.HttpStatusCodeAttribute)
         if status_code != 200:
             self.api_response_content = None
 
@@ -2047,7 +2047,7 @@ class UpdateGroupBox(QGroupBox):
             delete_path(download_dir)
         else:
             redirect = self.download_http_reply.attribute(
-                QNetworkRequest.RedirectionTargetAttribute)
+                QNetworkRequest.Attribute.RedirectionTargetAttribute)
             if redirect is not None:
                 redirected_url = urljoin(
                     self.download_http_reply.request().url().toString(),
@@ -2981,7 +2981,7 @@ class UpdateGroupBox(QGroupBox):
         status_bar.removeWidget(self.fetching_progress_bar)
 
         redirect = self.http_reply.attribute(
-            QNetworkRequest.RedirectionTargetAttribute)
+            QNetworkRequest.Attribute.RedirectionTargetAttribute)
         if redirect is not None:
             redirected_url = urljoin(
                 self.http_reply.request().url().toString(),
@@ -3042,10 +3042,10 @@ class UpdateGroupBox(QGroupBox):
             self.warn_rate_limit(requests_remaining, reset_dt)
 
         status_code = self.http_reply.attribute(
-            QNetworkRequest.HttpStatusCodeAttribute)
+            QNetworkRequest.Attribute.HttpStatusCodeAttribute)
         if status_code != 200:
             reason = self.http_reply.attribute(
-                QNetworkRequest.HttpReasonPhraseAttribute)
+                QNetworkRequest.Attribute.HttpReasonPhraseAttribute)
             url = self.http_reply.request().url().toString()
             msg = (
                 _('Could not find Game latest release when requesting {url}. Error: {error}')
