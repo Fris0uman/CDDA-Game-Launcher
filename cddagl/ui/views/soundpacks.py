@@ -113,11 +113,6 @@ class SoundpacksTab(QTabWidget):
         repository_gb_layout.addWidget(repository_lv)
         self.repository_lv = repository_lv
 
-        suggest_new_label = QLabel()
-        suggest_new_label.setOpenExternalLinks(True)
-        repository_gb_layout.addWidget(suggest_new_label)
-        self.suggest_new_label = suggest_new_label
-
         install_new_button = QPushButton()
         install_new_button.clicked.connect(self.install_new)
         install_new_button.setEnabled(False)
@@ -196,18 +191,6 @@ class SoundpacksTab(QTabWidget):
         self.disable_existing_button.setText(_('Disable'))
         self.delete_existing_button.setText(_('Delete'))
         self.repository_gb.setTitle(_('Repository'))
-        suggest_url = cons.NEW_ISSUE_URL + '?' + urlencode({
-            'title': _('Add this new soundpack to the repository'),
-            'body': _('''* Name: [Enter the name of the soundpack]
-* Url: [Enter the Url where we can find the soundpack]
-* Author: [Enter the name of the author]
-* Homepage: [Enter the Url of the author website or where the soundpack was published]
-* Soundpack not found in version: {version}
-''').format(version=version)
-        })
-        self.suggest_new_label.setText(
-            _('<a href="{url}">Suggest a new soundpack '
-            'on GitHub</a>').format(url=suggest_url))
         self.install_new_button.setText(_('Install this soundpack'))
         self.details_gb.setTitle(_('Details'))
         self.viewname_label.setText(_('View name:'))
