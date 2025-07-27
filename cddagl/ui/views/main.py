@@ -3215,21 +3215,25 @@ class UpdateGroupBox(QGroupBox):
                 self.find_build_warning_label.show()
 
     def get_stable_tags(self):
+        # Init vars
         status_bar = self.get_main_window().statusBar()
-
-        config_dir = get_config_dir()
-        tags_path = os.path.join(config_dir, 'stable_release_tags')
-        tags_cache = shelve.open(tags_path)
         etag = ''
         stable_tags = []
-        if 'etag' in tags_cache:
-            etag = tags_cache['etag']
-        request_header = {'If-None-Match': etag}
-
-
         url = cons.GITHUB_REST_API_URL + cons.CDDA_RELEASE_TAGS
         tag_regex = re.compile(r'(refs/tags/)(cdda-|)(0\.[A-Z]-)([0-9\-]+|[a-zA-Z]+|)')
 
+        # Get path to stable tags cache in the config directory in appdata
+        config_dir = get_config_dir()
+        tags_path = os.path.join(config_dir, 'stable_release_tags')
+        # Open the cache
+        tags_cache = shelve.open(tags_path)
+        # Check if we already have cached an ETag
+        if 'etag' in tags_cache:
+            etag = tags_cache['etag']
+        # Header to request to not send the list if the etag hasn't changed
+        request_header = {'If-None-Match': etag}
+
+        # Make request for the tags
         try:
             tag_request_response = requests.get(url, headers=request_header)
         except requests.exceptions.RequestException as error:
@@ -3239,44 +3243,37 @@ class UpdateGroupBox(QGroupBox):
             logger.warning(msg)
             return []  # We failed to get the tags we can stop here
 
+        # Code 304 if the ETag hasn't changed
         if tag_request_response.status_code == 304 and 'tags' in tags_cache:
             stable_tags = tags_cache['tags']
-        elif tag_request_response.status_code == 200:
-            tags_cache['etag'] = tag_request_response.headers['etag']
-            tags_data = tag_request_response.json()
-            # Validate tags_data
-            if not isinstance(tags_data, list) or not tags_data:  # Is it a list
-                msg = f'Failed to retrieve stable tags, tags_data is not a list or is empty.'
-                if status_bar.busy == 0:
-                    status_bar.showMessage(msg)
-                logger.warning(msg)
-                return []
-            for item in tags_data:
-                if not isinstance(item, dict):  # Is it a list of dict
-                    msg = f'Failed to retrieve stable tags, tags_data is not a list of dictionary.'
-                    if status_bar.busy == 0:
-                        status_bar.showMessage(msg)
-                    logger.warning(msg)
-                    return []
+        elif tag_request_response.status_code == 200: # Code 200 if ETag has changed and we got the list correctly
+            tags_cache['etag'] = tag_request_response.headers['etag'] # Update cached ETag
+            tags_data = tag_request_response.json() # Parse the json
 
-                stable_refs = list(filter(lambda d: tag_regex.match(d['ref']), tags_data))
-                stable_tags = []
-                stable_letter = ""
-                # Reverse order to deal with the most recent first
-                for entry in reversed(stable_refs):
-                    # Extract the actual tag
-                    tag = re.sub(r'refs/tags/', '', entry['ref'])
-                    # Get the stable version: 0.H, 0.I etc
-                    tmp_letter = re.compile(r'0.[A-Z]').search(tag).group(0)
-                    if tmp_letter != stable_letter:  # Only get the first unique stable you find
-                        stable_letter = tmp_letter
-                        stable_tags.append(tag)
+            # Get only the entries we care about
+            stable_refs = list(filter(lambda d: tag_regex.match(d['ref']), tags_data))
+            stable_letter = ""
+            # Reverse order to deal with the most recent first
+            for entry in reversed(stable_refs):
+                # Extract the actual tag
+                tag = re.sub(r'refs/tags/', '', entry['ref'])
+                # Get the stable version: 0.H, 0.I etc
+                tmp_letter = re.compile(r'0.[A-Z]').search(tag).group(0)
+                if tmp_letter != stable_letter:  # Only get the first unique stable you find
+                    stable_letter = tmp_letter
+                    stable_tags.append(tag)
 
                 # Sort tags to get candidate release in between final releases
                 # ["0.I","0.H","0.F","0.E","cdda-0.I","cdda-0.H"] becomes ['0.I','cdda-0.I','0.H','cdda-0.H','0.F','0.E']
                 ver = re.compile('(0[.][A-Z])')
                 stable_tags = sorted(stable_tags, key=lambda s: re.split(ver, s, maxsplit=1)[1][-1], reverse=True)
                 tags_cache['tags'] = stable_tags
+            else:
+                msg = f'Something went wrong when retrieving stable tags'
+                if status_bar.busy == 0:
+                    status_bar.showMessage(msg)
+                logger.warning(msg)
+                return []
 
         tags_cache.close()
         return stable_tags
