@@ -3275,8 +3275,7 @@ class UpdateGroupBox(QGroupBox):
             builds = []
 
             tmp_changelog = ""
-            # TODO: Remove cdda-windows-with-graphics and msvc search once they completly desapear
-            build_regex = re.compile(r'(cdda-windows-with-graphics|cdda-windows-tiles)'+r'(-x64)'+r'(-msvc-|-)'+r'([0-9\-]+)\.zip')
+            build_regex = re.compile(r'(cdda-windows-with-graphics-x64-)'+r'([0-9\-]+)\.zip')
             stable_tags = self.get_stable_tags()
 
             for tag in stable_tags:
