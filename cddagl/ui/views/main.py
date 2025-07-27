@@ -3256,6 +3256,11 @@ class UpdateGroupBox(QGroupBox):
                 stable_letter = tmp_letter
                 stable_tags.append(tag)
 
+        # Sort tags to get candidate release in between final releases
+        # ["0.I","0.H","0.F","0.E","cdda-0.I","cdda-0.H"] becomes ['0.I','cdda-0.I','0.H','cdda-0.H','0.F','0.E']
+        ver = re.compile('(0[.][A-Z])')
+        stable_tags = sorted(stable_tags, key=lambda s: re.split(ver, s, maxsplit=1)[1][-1], reverse=True)
+
         return stable_tags
 
     def refresh_builds(self):
@@ -3270,8 +3275,7 @@ class UpdateGroupBox(QGroupBox):
             builds = []
 
             tmp_changelog = ""
-            # TODO: Remove cdda-windows-with-graphics and msvc search once they completly desapear
-            build_regex = re.compile(r'(cdda-windows-with-graphics|cdda-windows-tiles)'+r'(-x64)'+r'(-msvc-|-)'+r'([0-9\-]+)\.zip')
+            build_regex = re.compile(r'(cdda-windows-with-graphics-x64-)'+r'([0-9\-]+)\.zip')
             stable_tags = self.get_stable_tags()
 
             for tag in stable_tags:
@@ -3291,7 +3295,7 @@ class UpdateGroupBox(QGroupBox):
                     continue
                 if release['prerelease']:
                     stable_name += ' release candidate'
-                    tmp_changelog += f'<h3>{stable_name}</h3> <p><a href="https://github.com/CleverRaven/Cataclysm-DDA/blob/master/data/changelog.txt">Changelog</a></p>'
+                    tmp_changelog += f'<h3>{stable_name}</h3> <p><a href="https://raw.githubusercontent.com/CleverRaven/Cataclysm-DDA/refs/tags/{tag}/data/changelog.txt">{stable_name} Changelog</a></p>'
                 else:
                     tmp_changelog += f'<h3>{stable_name} {release["name"]}</h3> ' \
                                      f'<p><a href="https://github.com/CleverRaven/Cataclysm-DDA/blob/master' \
