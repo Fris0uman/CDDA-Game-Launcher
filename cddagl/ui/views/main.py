@@ -3079,7 +3079,8 @@ class UpdateGroupBox(QGroupBox):
             self.lb_html = None
             return
 
-        self.lb_html.seek(0)
+        if self.lb_html:
+            self.lb_html.seek(0)
         try:
             releases = json.loads(TextIOWrapper(self.lb_html, encoding='utf8'
                 ).read())
