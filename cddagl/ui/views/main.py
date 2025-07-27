@@ -3291,7 +3291,7 @@ class UpdateGroupBox(QGroupBox):
                     continue
                 if release['prerelease']:
                     stable_name += ' release candidate'
-                    tmp_changelog += f'<h3>{stable_name}</h3> <p><a href="https://github.com/CleverRaven/Cataclysm-DDA/blob/master/data/changelog.txt">Changelog</a></p>'
+                    tmp_changelog += f'<h3>{stable_name}</h3> <p><a href="https://raw.githubusercontent.com/CleverRaven/Cataclysm-DDA/refs/tags/{tag}/data/changelog.txt">{stable_name} Changelog</a></p>'
                 else:
                     tmp_changelog += f'<h3>{stable_name} {release["name"]}</h3> ' \
                                      f'<p><a href="https://github.com/CleverRaven/Cataclysm-DDA/blob/master' \
