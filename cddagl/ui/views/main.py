@@ -24,7 +24,7 @@ import arrow
 from PySide6.QtCore import (
     Qt, QTimer, QUrl, QFileInfo, Signal, QStringListModel, QThread, QRegularExpression
 )
-from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest
+from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 from PySide6.QtWidgets import (
     QApplication, QWidget, QGridLayout, QGroupBox, QVBoxLayout, QLabel, QLineEdit,
     QPushButton, QFileDialog, QToolButton, QProgressBar, QButtonGroup, QRadioButton,
@@ -1452,7 +1452,7 @@ class UpdateGroupBox(QGroupBox):
 
     def find_build_finished(self):
         redirect = self.api_reply.attribute(
-            QNetworkRequest.RedirectionTargetAttribute)
+            QNetworkRequest.Attribute.RedirectionTargetAttribute)
         if redirect is not None:
             redirected_url = urljoin(
                 self.api_reply.request().url().toString(),
@@ -1488,7 +1488,7 @@ class UpdateGroupBox(QGroupBox):
         status_bar = main_window.statusBar()
 
         status_code = self.api_reply.attribute(
-            QNetworkRequest.HttpStatusCodeAttribute)
+            QNetworkRequest.Attribute.HttpStatusCodeAttribute)
         if status_code != 200:
             self.api_response_content = None
 
@@ -2047,7 +2047,7 @@ class UpdateGroupBox(QGroupBox):
             delete_path(download_dir)
         else:
             redirect = self.download_http_reply.attribute(
-                QNetworkRequest.RedirectionTargetAttribute)
+                QNetworkRequest.Attribute.RedirectionTargetAttribute)
             if redirect is not None:
                 redirected_url = urljoin(
                     self.download_http_reply.request().url().toString(),
@@ -2938,9 +2938,24 @@ class UpdateGroupBox(QGroupBox):
         request.setRawHeader(b'Accept', cons.GITHUB_API_VERSION)
 
         self.http_reply = self.qnam.get(request)
-        self.http_reply.finished.connect(self.lb_http_finished)
-        self.http_reply.readyRead.connect(self.lb_http_ready_read)
-        self.http_reply.downloadProgress.connect(self.lb_dl_progress)
+        if type(self.http_reply) is QNetworkReply:
+            self.http_reply.finished.connect(self.lb_http_finished)
+            self.http_reply.readyRead.connect(self.lb_http_ready_read)
+            self.http_reply.downloadProgress.connect(self.lb_dl_progress)
+        else:
+            self.enable_controls()
+            self.http_reply = None
+
+            main_window = self.get_main_window()
+
+            status_bar = main_window.statusBar()
+            status_bar.removeWidget(self.fetching_label)
+            status_bar.removeWidget(self.fetching_progress_bar)
+            status_bar.busy -= 1
+
+            self.builds_combo.clear()
+            self.builds_combo.addItem(_('Failed to fetch builds'))
+            return
 
     @property
     def app_locale(self):
@@ -2981,7 +2996,7 @@ class UpdateGroupBox(QGroupBox):
         status_bar.removeWidget(self.fetching_progress_bar)
 
         redirect = self.http_reply.attribute(
-            QNetworkRequest.RedirectionTargetAttribute)
+            QNetworkRequest.Attribute.RedirectionTargetAttribute)
         if redirect is not None:
             redirected_url = urljoin(
                 self.http_reply.request().url().toString(),
@@ -3042,10 +3057,10 @@ class UpdateGroupBox(QGroupBox):
             self.warn_rate_limit(requests_remaining, reset_dt)
 
         status_code = self.http_reply.attribute(
-            QNetworkRequest.HttpStatusCodeAttribute)
+            QNetworkRequest.Attribute.HttpStatusCodeAttribute)
         if status_code != 200:
             reason = self.http_reply.attribute(
-                QNetworkRequest.HttpReasonPhraseAttribute)
+                QNetworkRequest.Attribute.HttpReasonPhraseAttribute)
             url = self.http_reply.request().url().toString()
             msg = (
                 _('Could not find Game latest release when requesting {url}. Error: {error}')
@@ -3064,7 +3079,8 @@ class UpdateGroupBox(QGroupBox):
             self.lb_html = None
             return
 
-        self.lb_html.seek(0)
+        if self.lb_html:
+            self.lb_html.seek(0)
         try:
             releases = json.loads(TextIOWrapper(self.lb_html, encoding='utf8'
                 ).read())
@@ -3365,28 +3381,31 @@ class UpdateGroupBox(QGroupBox):
 
         changelog_sorted = dict()
 
-        for entry in changelog_data["items"]:
-            if entry["state"] == "open":
-                continue
+        if "items" in changelog_data:
+            for entry in changelog_data["items"]:
+                if entry["state"] == "open":
+                    continue
 
-            new_body = ""
-            try:
-                new_body = entry['body'].split('####')
-            except:
-                print(f"Can't parse body: {entry['html_url']}")
+                new_body = ""
+                try:
+                    new_body = entry['body'].split('####')
+                except:
+                    print(f"Can't parse body: {entry['html_url']}")
 
-            new_date = entry['closed_at'][0:10]
-            new_entry = changelog_entry(title =entry['title'],
-                                        body = new_body,
-                                        node_id =entry['node_id'],
-                                        number=entry['number'],
-                                        html_url=entry['html_url']
-                                        )
+                new_date = entry['closed_at'][0:10]
+                new_entry = changelog_entry(title =entry['title'],
+                                            body = new_body,
+                                            node_id =entry['node_id'],
+                                            number=entry['number'],
+                                            html_url=entry['html_url']
+                                            )
 
-            if new_date in changelog_sorted:
-                changelog_sorted[new_date].append(new_entry)
-            else:
-                changelog_sorted.update({new_date : [new_entry]})
+                if new_date in changelog_sorted:
+                    changelog_sorted[new_date].append(new_entry)
+                else:
+                    changelog_sorted.update({new_date : [new_entry]})
+        else:
+            self.changelog_content.setHtml('Failed to fetch changelog')
 
         dated_changelog = sorted(changelog_sorted)
         if config_true(get_config_value('reverse_sort_changelog', 'True')):

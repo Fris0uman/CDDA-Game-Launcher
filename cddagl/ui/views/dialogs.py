@@ -158,7 +158,7 @@ class FaqDialog(QDialog):
         self.text_content = text_content
 
         ok_button = QPushButton()
-        ok_button.clicked.connect(self.done)
+        ok_button.clicked.connect(self.accept)
         layout.addWidget(ok_button, 1, 0, Qt.AlignmentFlag.AlignRight)
         self.ok_button = ok_button
 
