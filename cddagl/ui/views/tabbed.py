@@ -181,7 +181,7 @@ class TabbedWindow(QMainWindow):
 
     def lv_http_finished(self):
         redirect = self.http_reply.attribute(
-            QNetworkRequest.RedirectionTargetAttribute)
+            QNetworkRequest.Attribute.RedirectionTargetAttribute)
         if redirect is not None:
             redirected_url = urljoin(
                 self.http_reply.request().url().toString(),
@@ -200,10 +200,10 @@ class TabbedWindow(QMainWindow):
             return
 
         status_code = self.http_reply.attribute(
-            QNetworkRequest.HttpStatusCodeAttribute)
+            QNetworkRequest.Attribute.HttpStatusCodeAttribute)
         if status_code != 200:
             reason = self.http_reply.attribute(
-                QNetworkRequest.HttpReasonPhraseAttribute)
+                QNetworkRequest.Attribute.HttpReasonPhraseAttribute)
             url = self.http_reply.request().url().toString()
             logger.warning(
                 _('Could not find launcher latest release when requesting {url}. Error: {error}')
@@ -564,7 +564,7 @@ class LauncherUpdateDialog(QDialog):
             delete_path(download_dir)
         else:
             redirect = self.http_reply.attribute(
-                QNetworkRequest.RedirectionTargetAttribute)
+                QNetworkRequest.Attribute.RedirectionTargetAttribute)
             if redirect is not None:
                 download_dir = os.path.dirname(self.downloaded_file)
                 delete_path(download_dir)
