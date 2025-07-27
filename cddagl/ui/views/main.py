@@ -3256,6 +3256,11 @@ class UpdateGroupBox(QGroupBox):
                 stable_letter = tmp_letter
                 stable_tags.append(tag)
 
+        # Sort tags to get candidate release in between final releases
+        # ["0.I","0.H","0.F","0.E","cdda-0.I","cdda-0.H"] becomes ['0.I','cdda-0.I','0.H','cdda-0.H','0.F','0.E']
+        ver = re.compile('(0[.][A-Z])')
+        stable_tags = sorted(stable_tags, key=lambda s: re.split(ver, s, maxsplit=1)[1][-1], reverse=True)
+
         return stable_tags
 
     def refresh_builds(self):
