@@ -46,8 +46,7 @@ def init_config(basedir):
         os.remove(get_config_path())
         command.upgrade(alembic_cfg, "head")
 
-
-def get_config_path():
+def get_config_dir():
     local_app_data = os.environ.get('LOCALAPPDATA', os.environ.get('APPDATA'))
     if local_app_data is None or not os.path.isdir(local_app_data):
         local_app_data = ''
@@ -57,6 +56,10 @@ def get_config_path():
     if not os.path.isdir(config_dir):
         os.makedirs(config_dir)
 
+    return config_dir
+
+def get_config_path():
+    config_dir = get_config_dir()
     return os.path.join(config_dir, 'configs.db')
 
 
