@@ -3224,7 +3224,7 @@ class UpdateGroupBox(QGroupBox):
 
         # Get path to stable tags cache in the config directory in appdata
         config_dir = get_config_dir()
-        tags_path = os.path.join(config_dir, 'stable_release_tags')
+        tags_path = os.path.join(config_dir, 'cdda_cache')
         # Open the cache
         tags_cache = shelve.open(tags_path)
         # Check if we already have cached an ETag
