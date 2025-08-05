@@ -113,6 +113,8 @@ def start_ui(locale, single_instance):
     main_app = QApplication(sys.argv)
     main_app.setWindowIcon(QIcon(get_resource_path('launcher.ico')))
 
+    main_app.setStyleSheet(open(get_resource_path('kitten_dark_theme.qss'),"r").read())
+
     main_app.single_instance = single_instance
     main_app.app_locale = locale
 

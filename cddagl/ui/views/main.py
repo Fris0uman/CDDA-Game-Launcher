@@ -3370,8 +3370,10 @@ class UpdateGroupBox(QGroupBox):
                 self.update_button.setText(_('Install game'))
 
             # Populate stable changelog
-
-            self.changelog_content.setHtml(tmp_changelog + cons.STABLE_CHANGELOG)
+            style_header = '<style>' \
+                           ' a:link {  color: #ff79c6;  background-color: transparent;  text-decoration: none;}' \
+                           ' </style>'
+            self.changelog_content.setHtml(style_header + tmp_changelog + cons.STABLE_CHANGELOG)
 
 
         elif selected_branch is self.experimental_radio_button:
@@ -3395,7 +3397,7 @@ class UpdateGroupBox(QGroupBox):
         changelog_html = StringIO()
 
         changelog_html.write('<style>'
-                             'a:link {  color: blue;  background-color: transparent;  text-decoration: none;}'
+                             'a:link {  color: #ff79c6;  background-color: transparent;  text-decoration: none;}'
                              '</style>')
 
         changelog_sorted = dict()
