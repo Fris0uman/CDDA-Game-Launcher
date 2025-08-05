@@ -147,6 +147,18 @@ class LauncherSettingsGroupBox(QGroupBox):
         self.reverse_sort_changelog_checkbox = (
             reverse_sort_changelog_checkbox)
 
+        dark_theme_checkbox = QCheckBox()
+        check_state = (Qt.CheckState.Checked if config_true(get_config_value(
+            'dark_theme', 'True'))
+            else Qt.CheckState.Unchecked)
+        dark_theme_checkbox.setCheckState(
+            check_state)
+        dark_theme_checkbox.stateChanged.connect(
+            self.dark_theme_changed)
+        layout.addWidget(dark_theme_checkbox, 6, 0, 1, 2)
+        self.dark_theme_checkbox = (
+            dark_theme_checkbox)
+
         self.setLayout(layout)
         self.set_text()
 
@@ -168,6 +180,7 @@ class LauncherSettingsGroupBox(QGroupBox):
             'for new version of the Kitten CDDA Launcher on launch'))
         self.reverse_sort_changelog_checkbox.setText(_('Reverse sort '
             'changelog'))
+        self.dark_theme_checkbox.setText(_('Dark Theme (require restart)'))
         self.setTitle(_('Launcher'))
 
     @property
@@ -218,6 +231,9 @@ class LauncherSettingsGroupBox(QGroupBox):
 
     def rsc_changed(self, state):
         set_config_value('reverse_sort_changelog', str(state != Qt.CheckState.Unchecked.value))
+
+    def dark_theme_changed(self, state):
+        set_config_value('dark_theme', str(state != Qt.CheckState.Unchecked.value))
 
     def klo_changed(self, state):
         checked = state != Qt.CheckState.Unchecked.value
