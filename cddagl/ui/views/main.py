@@ -3246,7 +3246,8 @@ class UpdateGroupBox(QGroupBox):
         # Code 304 if the ETag hasn't changed
         if tag_request_response.status_code == 304 and 'tags' in tags_cache:
             stable_tags = tags_cache['tags']
-        elif tag_request_response.status_code == 200: # Code 200 if ETag has changed and we got the list correctly
+            # Code 200 if ETag has changed and we got the list correctly
+        elif tag_request_response.status_code == 200 or 'tags' not in tags_cache:
             tags_cache['etag'] = tag_request_response.headers['etag'] # Update cached ETag
             tags_data = tag_request_response.json() # Parse the json
 
@@ -3268,12 +3269,12 @@ class UpdateGroupBox(QGroupBox):
                 ver = re.compile('(0[.][A-Z])')
                 stable_tags = sorted(stable_tags, key=lambda s: re.split(ver, s, maxsplit=1)[1][-1], reverse=True)
                 tags_cache['tags'] = stable_tags
-            else:
-                msg = f'Something went wrong when retrieving stable tags'
-                if status_bar.busy == 0:
-                    status_bar.showMessage(msg)
-                logger.warning(msg)
-                return []
+        else:
+            msg = f'Something went wrong when retrieving stable tags'
+            if status_bar.busy == 0:
+                status_bar.showMessage(msg)
+            logger.warning(msg)
+            return []
 
         tags_cache.close()
         return stable_tags
@@ -3304,7 +3305,12 @@ class UpdateGroupBox(QGroupBox):
                     logger.warning(msg)
                     continue
 
-                stable_name = re.compile(r'0.[A-Z]').search(release['tag_name']).group(0)
+                stable_name = None
+                if 'tag_name' in release:
+                    stable_name = re.compile(r'0.[A-Z]').search(release['tag_name']).group(0)
+                else:
+                    continue
+
                 # Skip hardcoded releases
                 if stable_name in cons.STABLE_ASSETS:
                     continue
