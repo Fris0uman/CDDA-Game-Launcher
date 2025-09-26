@@ -4,7 +4,6 @@ import json
 import logging
 import os
 import re
-import shelve
 import shutil
 import stat
 import subprocess
@@ -45,7 +44,7 @@ from cddagl.functions import (
 from cddagl.i18n import proxy_ngettext as ngettext, proxy_gettext as _
 from cddagl.sql.functions import (
     get_config_value, set_config_value, new_version, get_build_from_sha256,
-    new_build, config_true, get_config_dir
+    new_build, config_true
 )
 from cddagl.win32 import (
     find_process_with_file_handle, activate_window, process_id_from_path, wait_for_pid,
@@ -3217,25 +3216,13 @@ class UpdateGroupBox(QGroupBox):
     def get_stable_tags(self):
         # Init vars
         status_bar = self.get_main_window().statusBar()
-        etag = ''
-        stable_tags = []
         url = cons.GITHUB_REST_API_URL + cons.CDDA_RELEASE_TAGS
         tag_regex = re.compile(r'(refs/tags/)(cdda-|)(0\.[A-Z]-)([0-9\-]+|[a-zA-Z]+|)')
-
-        # Get path to stable tags cache in the config directory in appdata
-        config_dir = get_config_dir()
-        tags_path = os.path.join(config_dir, 'cdda_cache')
-        # Open the cache
-        tags_cache = shelve.open(tags_path)
-        # Check if we already have cached an ETag
-        if 'etag' in tags_cache:
-            etag = tags_cache['etag']
-        # Header to request to not send the list if the etag hasn't changed
-        request_header = {'If-None-Match': etag}
+        stable_tags = []
 
         # Make request for the tags
         try:
-            tag_request_response = requests.get(url, headers=request_header)
+            tag_request_response = requests.get(url)
         except requests.exceptions.RequestException as error:
             msg = f'Could not find stable tags when requesting {url}. Error: {error}'
             if status_bar.busy == 0:
@@ -3243,31 +3230,24 @@ class UpdateGroupBox(QGroupBox):
             logger.warning(msg)
             return []  # We failed to get the tags we can stop here
 
-        # Code 304 if the ETag hasn't changed
-        if tag_request_response.status_code == 304 and 'tags' in tags_cache:
-            stable_tags = tags_cache['tags']
-            # Code 200 if ETag has changed and we got the list correctly
-        elif tag_request_response.status_code == 200 or 'tags' not in tags_cache:
-            if 'etag' in tag_request_response.headers:
-                tags_cache['etag'] = tag_request_response.headers['etag'] # Update cached ETag
-            tags_data = tag_request_response.json() # Parse the json
+        tags_data = tag_request_response.json() # Parse the json
 
-            # Get only the entries we care about
-            stable_refs = list(filter(lambda d: tag_regex.match(d['ref']), tags_data))
-            stable_letter = ""
-            # Reverse order to deal with the most recent first
-            for entry in reversed(stable_refs):
-                # Extract the actual tag
-                tag = re.sub(r'refs/tags/', '', entry['ref'])
-                # If release candidate
-                if tag.startswith('cdda-'):
-                    # Get the stable version: 0.H, 0.I etc
-                    tmp_letter = re.compile(r'0.[A-Z]').search(tag).group(0)
-                    if tmp_letter != stable_letter:  # Only get the first unique stable candidate you find
-                        stable_letter = tmp_letter
-                        stable_tags.append(tag)
-                else:
+        # Get only the entries we care about
+        stable_refs = list(filter(lambda d: tag_regex.match(d['ref']), tags_data))
+        stable_letter = ""
+        # Reverse order to deal with the most recent first
+        for entry in reversed(stable_refs):
+            # Extract the actual tag
+            tag = re.sub(r'refs/tags/', '', entry['ref'])
+            # If release candidate
+            if tag.startswith('cdda-'):
+                # Get the stable version: 0.H, 0.I etc
+                tmp_letter = re.compile(r'0.[A-Z]').search(tag).group(0)
+                if tmp_letter != stable_letter:  # Only get the first unique stable candidate you find
+                    stable_letter = tmp_letter
                     stable_tags.append(tag)
+            else:
+                stable_tags.append(tag)
 
             # Sort tags to get candidate release in between final releases
             # ["0.I","0.H","0.F","0.E","cdda-0.I","cdda-0.H"] becomes ['0.I','cdda-0.I','0.H','cdda-0.H','0.F','0.E']
@@ -3281,16 +3261,6 @@ class UpdateGroupBox(QGroupBox):
                         found_candidate = True
                     else:
                         stable_tags.remove(tag)
-
-            tags_cache['tags'] = stable_tags
-        else:
-            msg = f'Something went wrong when retrieving stable tags'
-            if status_bar.busy == 0:
-                status_bar.showMessage(msg)
-            logger.warning(msg)
-            return []
-
-        tags_cache.close()
         return stable_tags
 
     def refresh_builds(self):
