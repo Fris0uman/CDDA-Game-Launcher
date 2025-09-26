@@ -121,7 +121,7 @@ def new_build(version, sha256, stable, number, release_date):
     game_version = (session
                     .query(GameVersion)
                     .filter_by(sha256=sha256)
-                    .options(joinedload('game_build'))
+                    .options(joinedload(GameVersion.game_build))
                     .first())
 
     if game_version is None:
@@ -148,7 +148,7 @@ def get_build_from_sha256(sha256):
     game_version = (session
                     .query(GameVersion)
                     .filter_by(sha256=sha256)
-                    .options(joinedload('game_build'))
+                    .options(joinedload(GameVersion.game_build))
                     .first())
 
     if game_version is not None and game_version.game_build is not None:
