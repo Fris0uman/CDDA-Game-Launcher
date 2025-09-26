@@ -11,8 +11,8 @@ MAX_SESSION_DIRECTORIES = 20
 GITHUB_REST_API_URL = 'https://api.github.com'
 GITHUB_API_VERSION = b'application/vnd.github.v3+json'
 
-GITHUB_XRL_REMAINING = b'X-RateLimit-Remaining'
-GITHUB_XRL_RESET = b'X-RateLimit-Reset'
+GITHUB_XRL_REMAINING = 'X-RateLimit-Remaining'
+GITHUB_XRL_RESET = 'X-RateLimit-Reset'
 
 CDDA_RELEASE_TAGS = '/repos/CleverRaven/Cataclysm-DDA/git/refs/tags'
 CDDA_RELEASES = '/repos/CleverRaven/Cataclysm-DDA/releases'

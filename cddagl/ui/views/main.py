@@ -3248,7 +3248,8 @@ class UpdateGroupBox(QGroupBox):
             stable_tags = tags_cache['tags']
             # Code 200 if ETag has changed and we got the list correctly
         elif tag_request_response.status_code == 200 or 'tags' not in tags_cache:
-            tags_cache['etag'] = tag_request_response.headers['etag'] # Update cached ETag
+            if 'etag' in tag_request_response.headers:
+                tags_cache['etag'] = tag_request_response.headers['etag'] # Update cached ETag
             tags_data = tag_request_response.json() # Parse the json
 
             # Get only the entries we care about
@@ -3258,17 +3259,30 @@ class UpdateGroupBox(QGroupBox):
             for entry in reversed(stable_refs):
                 # Extract the actual tag
                 tag = re.sub(r'refs/tags/', '', entry['ref'])
-                # Get the stable version: 0.H, 0.I etc
-                tmp_letter = re.compile(r'0.[A-Z]').search(tag).group(0)
-                if tmp_letter != stable_letter:  # Only get the first unique stable you find
-                    stable_letter = tmp_letter
+                # If release candidate
+                if tag.startswith('cdda-'):
+                    # Get the stable version: 0.H, 0.I etc
+                    tmp_letter = re.compile(r'0.[A-Z]').search(tag).group(0)
+                    if tmp_letter != stable_letter:  # Only get the first unique stable candidate you find
+                        stable_letter = tmp_letter
+                        stable_tags.append(tag)
+                else:
                     stable_tags.append(tag)
 
-                # Sort tags to get candidate release in between final releases
-                # ["0.I","0.H","0.F","0.E","cdda-0.I","cdda-0.H"] becomes ['0.I','cdda-0.I','0.H','cdda-0.H','0.F','0.E']
-                ver = re.compile('(0[.][A-Z])')
-                stable_tags = sorted(stable_tags, key=lambda s: re.split(ver, s, maxsplit=1)[1][-1], reverse=True)
-                tags_cache['tags'] = stable_tags
+            # Sort tags to get candidate release in between final releases
+            # ["0.I","0.H","0.F","0.E","cdda-0.I","cdda-0.H"] becomes ['0.I','cdda-0.I','0.H','cdda-0.H','0.F','0.E']
+            ver = re.compile('(0[.][A-Z])')
+            stable_tags = sorted(stable_tags, key=lambda s: re.split(ver, s, maxsplit=1)[1][-1], reverse=True)
+
+            found_candidate = False
+            for tag in stable_tags.copy():
+                if tag.startswith('cdda-'):
+                    if not found_candidate:
+                        found_candidate = True
+                    else:
+                        stable_tags.remove(tag)
+
+            tags_cache['tags'] = stable_tags
         else:
             msg = f'Something went wrong when retrieving stable tags'
             if status_bar.busy == 0:
