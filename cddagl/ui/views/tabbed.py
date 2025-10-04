@@ -7,7 +7,7 @@ import subprocess
 import sys
 import tempfile
 from datetime import datetime
-from distutils.version import LooseVersion
+from pkg_resources import parse_version
 from io import BytesIO, TextIOWrapper
 from urllib.parse import urljoin
 from pathlib import Path
@@ -242,7 +242,7 @@ class TabbedWindow(QMainWindow):
         version_text = latest_release['tag_name']
         if version_text.startswith('v'):
             version_text = version_text[1:]
-        latest_version = LooseVersion(version_text)
+        latest_version = parse_version(version_text)
 
         if latest_version is None:
             return
@@ -260,7 +260,7 @@ class TabbedWindow(QMainWindow):
         if executable_url is None:
             return
 
-        current_version = LooseVersion(version)
+        current_version = parse_version(version)
 
         if latest_version > current_version:
 
