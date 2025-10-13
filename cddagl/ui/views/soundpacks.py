@@ -1002,7 +1002,7 @@ class SoundpacksTab(QTabWidget):
                 QNetworkRequest.Attribute.HttpStatusCodeAttribute) == 200
             and self.http_reply.hasRawHeader('Content-Length')):
 
-            content_length = int(self.http_reply.rawHeader(b'Content-Length'))
+            content_length = int(self.http_reply.rawHeader('Content-Length'))
             self.current_repo_info['size'] = content_length
 
             selection_model = self.repository_lv.selectionModel()
