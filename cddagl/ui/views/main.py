@@ -3232,6 +3232,13 @@ class UpdateGroupBox(QGroupBox):
 
         tags_data = tag_request_response.json() # Parse the json
 
+        if not isinstance(tags_data, list):  # Check that tags_data is a list so the rest of the code can happen
+            msg = 'Failed to retrieve tags'
+            if status_bar.busy == 0:
+                status_bar.showMessage(msg)
+            logger.warning(msg)
+            return []
+
         # Get only the entries we care about
         stable_refs = list(filter(lambda d: tag_regex.match(d['ref']), tags_data))
         stable_letter = ""
