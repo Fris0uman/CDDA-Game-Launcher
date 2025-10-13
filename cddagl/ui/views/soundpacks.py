@@ -999,8 +999,8 @@ class SoundpacksTab(QTabWidget):
     def size_query_finished(self):
         if (not self.http_reply_aborted
             and self.http_reply.attribute(
-                QNetworkRequest.HttpStatusCodeAttribute) == 200
-            and self.http_reply.hasRawHeader(b'Content-Length')):
+                QNetworkRequest.Attribute.HttpStatusCodeAttribute) == 200
+            and self.http_reply.hasRawHeader('Content-Length')):
 
             content_length = int(self.http_reply.rawHeader(b'Content-Length'))
             self.current_repo_info['size'] = content_length
