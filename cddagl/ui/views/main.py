@@ -1407,10 +1407,8 @@ class UpdateGroupBox(QGroupBox):
         if not self.shown:
             branch = get_config_value(cons.CONFIG_BRANCH_KEY)
 
-            if branch is None or branch not in (cons.CONFIG_BRANCH_STABLE,
-                cons.CONFIG_BRANCH_EXPERIMENTAL):
+            if branch is None or branch not in (cons.CONFIG_BRANCH_STABLE, cons.CONFIG_BRANCH_EXPERIMENTAL):
                 branch = cons.CONFIG_BRANCH_EXPERIMENTAL
-
             if branch == cons.CONFIG_BRANCH_STABLE:
                 self.stable_radio_button.setChecked(True)
             elif branch == cons.CONFIG_BRANCH_EXPERIMENTAL:
@@ -3230,7 +3228,14 @@ class UpdateGroupBox(QGroupBox):
             logger.warning(msg)
             return []  # We failed to get the tags we can stop here
 
-        tags_data = tag_request_response.json() # Parse the json
+        try:
+            tags_data = tag_request_response.json()  # Parse the json
+        except requests.exceptions.JSONDecodeError as error:
+            msg = f'Request to {url} did not return valid json. Error: {error}'
+            if status_bar.busy == 0:
+                status_bar.showMessage(msg)
+            logger.warning(msg)
+            return []
 
         if not isinstance(tags_data, list):  # Check that tags_data is a list so the rest of the code can happen
             msg = 'Failed to retrieve tags'
