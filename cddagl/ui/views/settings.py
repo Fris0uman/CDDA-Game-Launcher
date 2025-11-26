@@ -74,7 +74,7 @@ class LauncherSettingsGroupBox(QGroupBox):
         check_state = (Qt.CheckState.Checked if config_true(get_config_value(
             'keep_launcher_open', 'False')) else Qt.CheckState.Unchecked)
         keep_launcher_open_checkbox.setCheckState(check_state)
-        keep_launcher_open_checkbox.stateChanged.connect(self.klo_changed)
+        keep_launcher_open_checkbox.checkStateChanged.connect(self.klo_changed)
         layout.addWidget(keep_launcher_open_checkbox, 1, 0, 1, 2)
         self.keep_launcher_open_checkbox = keep_launcher_open_checkbox
 
@@ -119,7 +119,7 @@ class LauncherSettingsGroupBox(QGroupBox):
         check_state = (Qt.CheckState.Checked if config_true(get_config_value(
             'allow_multiple_instances', 'False')) else Qt.CheckState.Unchecked)
         allow_mul_insts_checkbox.setCheckState(check_state)
-        allow_mul_insts_checkbox.stateChanged.connect(self.ami_changed)
+        allow_mul_insts_checkbox.checkStateChanged.connect(self.ami_changed)
         layout.addWidget(allow_mul_insts_checkbox, 3, 0, 1, 2)
         self.allow_mul_insts_checkbox = allow_mul_insts_checkbox
 
@@ -129,7 +129,7 @@ class LauncherSettingsGroupBox(QGroupBox):
             else Qt.CheckState.Unchecked)
         no_launcher_version_check_checkbox.setCheckState(
             check_state)
-        no_launcher_version_check_checkbox.stateChanged.connect(
+        no_launcher_version_check_checkbox.checkStateChanged.connect(
             self.nlvcc_changed)
         layout.addWidget(no_launcher_version_check_checkbox, 4, 0, 1, 2)
         self.no_launcher_version_check_checkbox = (
@@ -141,7 +141,7 @@ class LauncherSettingsGroupBox(QGroupBox):
             else Qt.CheckState.Unchecked)
         reverse_sort_changelog_checkbox.setCheckState(
             check_state)
-        reverse_sort_changelog_checkbox.stateChanged.connect(
+        reverse_sort_changelog_checkbox.checkStateChanged.connect(
             self.rsc_changed)
         layout.addWidget(reverse_sort_changelog_checkbox, 5, 0, 1, 2)
         self.reverse_sort_changelog_checkbox = (
@@ -153,7 +153,7 @@ class LauncherSettingsGroupBox(QGroupBox):
             else Qt.CheckState.Unchecked)
         dark_theme_checkbox.setCheckState(
             check_state)
-        dark_theme_checkbox.stateChanged.connect(
+        dark_theme_checkbox.checkStateChanged.connect(
             self.dark_theme_changed)
         layout.addWidget(dark_theme_checkbox, 6, 0, 1, 2)
         self.dark_theme_checkbox = (
@@ -275,7 +275,7 @@ class UpdateSettingsGroupBox(QGroupBox):
         check_state = (Qt.CheckState.Checked if config_true(get_config_value(
             'prevent_save_move', 'False')) else Qt.CheckState.Unchecked)
         prevent_save_move_checkbox.setCheckState(check_state)
-        prevent_save_move_checkbox.stateChanged.connect(self.psmc_changed)
+        prevent_save_move_checkbox.checkStateChanged.connect(self.psmc_changed)
         layout.addWidget(prevent_save_move_checkbox, 0, 0, 1, 3)
         self.prevent_save_move_checkbox = prevent_save_move_checkbox
 
@@ -283,7 +283,7 @@ class UpdateSettingsGroupBox(QGroupBox):
         check_state = (Qt.CheckState.Checked if config_true(get_config_value(
             'keep_archive_copy', 'False')) else Qt.CheckState.Unchecked)
         keep_archive_copy_checkbox.setCheckState(check_state)
-        keep_archive_copy_checkbox.stateChanged.connect(self.kacc_changed)
+        keep_archive_copy_checkbox.checkStateChanged.connect(self.kacc_changed)
         layout.addWidget(keep_archive_copy_checkbox, 1, 0)
         self.keep_archive_copy_checkbox = keep_archive_copy_checkbox
 
@@ -318,7 +318,7 @@ class UpdateSettingsGroupBox(QGroupBox):
         check_state = (Qt.CheckState.Checked if config_true(get_config_value(
             'auto_refresh_builds', 'False')) else Qt.CheckState.Unchecked)
         auto_refresh_builds_checkbox.setCheckState(check_state)
-        auto_refresh_builds_checkbox.stateChanged.connect(self.arbc_changed)
+        auto_refresh_builds_checkbox.checkStateChanged.connect(self.arbc_changed)
         arb_layout.addWidget(auto_refresh_builds_checkbox)
         self.auto_refresh_builds_checkbox = auto_refresh_builds_checkbox
 
@@ -343,7 +343,7 @@ class UpdateSettingsGroupBox(QGroupBox):
         check_state = (Qt.CheckState.Checked if config_true(get_config_value(
             'remove_previous_version', 'False')) else Qt.CheckState.Unchecked)
         remove_previous_version_checkbox.setCheckState(check_state)
-        remove_previous_version_checkbox.stateChanged.connect(self.rpvc_changed)
+        remove_previous_version_checkbox.checkStateChanged.connect(self.rpvc_changed)
         layout.addWidget(remove_previous_version_checkbox, 3, 0, 1, 3)
         self.remove_previous_version_checkbox = (
             remove_previous_version_checkbox)
@@ -352,7 +352,7 @@ class UpdateSettingsGroupBox(QGroupBox):
         check_state = (Qt.CheckState.Checked if config_true(get_config_value(
             'permanently_delete_files', 'False')) else Qt.CheckState.Unchecked)
         permanently_delete_files_checkbox.setCheckState(check_state)
-        permanently_delete_files_checkbox.stateChanged.connect(
+        permanently_delete_files_checkbox.checkStateChanged.connect(
                 self.prfc_changed)
         layout.addWidget(permanently_delete_files_checkbox, 4, 0, 1, 3)
         self.permanently_delete_files_checkbox = (

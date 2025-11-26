@@ -288,7 +288,7 @@ class TabbedWindow(QMainWindow):
             check_state = (Qt.CheckState.Checked if config_true(get_config_value(
                 'prevent_version_check_launch', 'False'))
                 else Qt.CheckState.Unchecked)
-            no_launcher_version_check_checkbox.stateChanged.connect(
+            no_launcher_version_check_checkbox.checkStateChanged.connect(
                 self.nlvcc_changed)
             no_launcher_version_check_checkbox.setCheckState(
                 check_state)

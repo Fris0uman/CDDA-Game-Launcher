@@ -90,7 +90,7 @@ class BackupsTab(QTabWidget):
         check_state = (Qt.CheckState.Checked if config_true(
             get_config_value('do_not_backup_previous', 'False')) else Qt.CheckState.Unchecked)
         do_not_backup_previous_cb.setCheckState(check_state)
-        do_not_backup_previous_cb.stateChanged.connect(self.dnbp_changed)
+        do_not_backup_previous_cb.checkStateChanged.connect(self.dnbp_changed)
         current_backups_gb_layout.addWidget(do_not_backup_previous_cb, 2, 0, 1, 3)
         self.do_not_backup_previous_cb = do_not_backup_previous_cb
 
@@ -126,7 +126,7 @@ class BackupsTab(QTabWidget):
         check_state = (Qt.CheckState.Checked if config_true(
             get_config_value('backup_on_launch', 'False')) else Qt.CheckState.Unchecked)
         backup_on_launch_cb.setCheckState(check_state)
-        backup_on_launch_cb.stateChanged.connect(self.bol_changed)
+        backup_on_launch_cb.checkStateChanged.connect(self.bol_changed)
         automatic_backups_layout.addWidget(backup_on_launch_cb, 0, 0)
         self.backup_on_launch_cb = backup_on_launch_cb
 
@@ -134,7 +134,7 @@ class BackupsTab(QTabWidget):
         check_state = (Qt.CheckState.Checked if config_true(
             get_config_value('backup_on_end', 'False')) else Qt.CheckState.Unchecked)
         backup_on_end_cb.setCheckState(check_state)
-        backup_on_end_cb.stateChanged.connect(self.boe_changed)
+        backup_on_end_cb.checkStateChanged.connect(self.boe_changed)
         automatic_backups_layout.addWidget(backup_on_end_cb, 1, 0)
         self.backup_on_end_cb = backup_on_end_cb
 
@@ -153,7 +153,7 @@ class BackupsTab(QTabWidget):
         check_state = (Qt.CheckState.Checked if config_true(
             get_config_value('backup_before_update', 'False')) else Qt.CheckState.Unchecked)
         backup_before_update_cb.setCheckState(check_state)
-        backup_before_update_cb.stateChanged.connect(self.bbu_changed)
+        backup_before_update_cb.checkStateChanged.connect(self.bbu_changed)
         automatic_backups_layout.addWidget(backup_before_update_cb, 2, 0)
         self.backup_before_update_cb = backup_before_update_cb
 
