@@ -3391,11 +3391,13 @@ class UpdateGroupBox(QGroupBox):
 
         ### Get the last 100 PR
         url = cons.CHANGELOG_URL + '100'
+
         try:
             changelog_data = requests.get(url).json()
-        except requests.ConnectionError:
-            self.changelog_content.setHtml(_('<h3>Can\'t reach changelog...</h3>'))
+        except Exception as err:
+            self.changelog_content.setHtml(_('<h3>Can\'t reach changelog...</h3>') + f"\nError: {err}")
             return
+
         changelog_html = StringIO()
 
         changelog_html.write('<style>'
