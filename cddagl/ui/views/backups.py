@@ -264,13 +264,13 @@ class BackupsTab(QTabWidget):
         set_config_value('max_auto_backups', value)
 
     def dnbp_changed(self, state):
-        set_config_value('do_not_backup_previous', str(state != Qt.CheckState.Unchecked.value))
+        set_config_value('do_not_backup_previous', str(state != Qt.CheckState.Unchecked))
 
     def bol_changed(self, state):
-          set_config_value('backup_on_launch', str(state != Qt.CheckState.Unchecked.value))
+          set_config_value('backup_on_launch', str(state != Qt.CheckState.Unchecked))
 
     def boe_changed(self, state):
-        checked = state != Qt.CheckState.Unchecked.value
+        checked = state != Qt.CheckState.Unchecked
 
         set_config_value('backup_on_end', str(checked))
 
@@ -282,7 +282,7 @@ class BackupsTab(QTabWidget):
             self.backup_on_end_warning_label.show()
 
     def bbu_changed(self, state):
-        set_config_value('backup_before_update', str(state != Qt.CheckState.Unchecked.value))
+        set_config_value('backup_before_update', str(state != Qt.CheckState.Unchecked))
 
     def restore_button_clicked(self):
         class WaitingThread(QThread):
