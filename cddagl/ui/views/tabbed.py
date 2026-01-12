@@ -3,7 +3,6 @@ import json
 import logging
 import os
 import re
-import subprocess
 import sys
 import tempfile
 from datetime import datetime
@@ -300,7 +299,7 @@ class TabbedWindow(QMainWindow):
                 'Launcher. Would you like to update?').format(
                 version=version))
             launcher_update_msgbox.setInformativeText(release_html)
-            launcher_update_msgbox.addButton(_('Update the launcher'),
+            update_button = launcher_update_msgbox.addButton(_('Update the launcher'),
                 QMessageBox.ButtonRole.YesRole)
             launcher_update_msgbox.addButton(_('Not right now'),
                 QMessageBox.ButtonRole.NoRole)
@@ -308,7 +307,8 @@ class TabbedWindow(QMainWindow):
                 no_launcher_version_check_checkbox)
             launcher_update_msgbox.setIcon(QMessageBox.Icon.Question)
 
-            if launcher_update_msgbox.exec() == 0:
+            launcher_update_msgbox.exec()
+            if launcher_update_msgbox.clickedButton() == update_button:
                 flags = Qt.WindowType.WindowTitleHint | Qt.WindowType.WindowCloseButtonHint
 
                 launcher_update_dialog = (LauncherUpdateDialog(executable_url,
@@ -599,7 +599,6 @@ class LauncherUpdateDialog(QDialog):
 
                 move(exe_path, old_exe_dir)
                 move(self.downloaded_file, exe_path)
-                subprocess.Popen([exe_path])
 
                 self.updated = True
                 self.done(0)
