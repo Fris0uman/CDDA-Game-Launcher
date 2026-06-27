@@ -1229,8 +1229,6 @@ class UpdateGroupBox(QGroupBox):
         self.api_reply = None
         self.api_response_content = None
 
-        self.find_build_count = 0
-
         layout = QGridLayout()
 
         layout_row = 0
@@ -1281,31 +1279,6 @@ class UpdateGroupBox(QGroupBox):
 
         layout_row = layout_row + 1
 
-        find_build_label = QLabel()
-        layout.addWidget(find_build_label, layout_row, 0, Qt.AlignmentFlag.AlignRight)
-        self.find_build_label = find_build_label
-
-        find_build_value = QLineEdit()
-        find_build_value.setValidator(QRegularExpressionValidator(
-            QRegularExpression(r'\d+(-\d+)*')))
-        find_build_value.returnPressed.connect(self.find_build)
-        layout.addWidget(find_build_value, layout_row, 1, 1, 2)
-        self.find_build_value = find_build_value
-
-        find_build_warning_label = QLabel()
-        icon = QApplication.style().standardIcon(QStyle.StandardPixmap.SP_MessageBoxWarning)
-        find_build_warning_label.setPixmap(icon.pixmap(16, 16))
-        find_build_warning_label.hide()
-        layout.addWidget(find_build_warning_label, layout_row, 3)
-        self.find_build_warning_label = find_build_warning_label
-
-        find_build_button = QToolButton()
-        find_build_button.clicked.connect(self.find_build)
-        layout.addWidget(find_build_button, layout_row, 4)
-        self.find_build_button = find_build_button
-
-        layout_row = layout_row + 1
-
         changelog_groupbox = QGroupBox()
         changelog_layout = QHBoxLayout()
         changelog_groupbox.setLayout(changelog_layout)
@@ -1340,8 +1313,6 @@ class UpdateGroupBox(QGroupBox):
         self.stable_radio_button.setText(_('Stable'))
         self.experimental_radio_button.setText(_('Experimental'))
         self.available_builds_label.setText(_('Available builds:'))
-        self.find_build_label.setText(_('Find build #:'))
-        self.find_build_button.setText(_('Add to list'))
         self.refresh_builds_button.setText(_('Refresh'))
         self.changelog_groupbox.setTitle(_('Changelog'))
         self.update_button.setText(_('Update game'))
@@ -1358,195 +1329,9 @@ class UpdateGroupBox(QGroupBox):
             elif branch == cons.CONFIG_BRANCH_EXPERIMENTAL:
                 self.experimental_radio_button.setChecked(True)
 
-            self.show_hide_find_build()
-
             self.refresh_builds()
 
         self.shown = True
-
-    def find_build(self):
-        build_number = self.find_build_value.text()
-        build_number = build_number.strip()
-
-        build_number = re.sub(r'[^0-9\-]', '', build_number)
-
-        if build_number == '':
-            return
-
-        if self.find_build_count == 0:
-            url = cons.GITHUB_REST_API_URL + cons.CDDA_RELEASE_BY_TAG(cons.BUILD_TAG(build_number))
-            self.find_build_count = 1
-        elif self.find_build_count == 1:
-            url = cons.GITHUB_REST_API_URL + cons.CDDA_RELEASE_BY_TAG(
-                cons.NEW_BUILD_TAG(build_number))
-            self.find_build_count = 0
-
-        self.api_response_content = BytesIO()
-
-        request = QNetworkRequest(QUrl(url))
-        request.setRawHeader(b'User-Agent',
-            b'CDDA-Game-Launcher/' + version.encode('utf8'))
-        request.setRawHeader(b'Accept', cons.GITHUB_API_VERSION)
-
-        self.api_reply = self.qnam.get(request)
-        self.api_reply.finished.connect(self.find_build_finished)
-        self.api_reply.readyRead.connect(self.find_build_ready_read)
-
-    def find_build_finished(self):
-        redirect = self.api_reply.attribute(
-            QNetworkRequest.Attribute.RedirectionTargetAttribute)
-        if redirect is not None:
-            redirected_url = urljoin(
-                self.api_reply.request().url().toString(),
-                redirect.toString())
-
-            self.api_response_content = BytesIO()
-
-            request = QNetworkRequest(QUrl(redirected_url))
-            request.setRawHeader(b'User-Agent',
-                b'CDDA-Game-Launcher/' + version.encode('utf8'))
-            request.setRawHeader(b'Accept', cons.GITHUB_API_VERSION)
-
-            self.api_reply = self.qnam.get(request)
-            self.api_reply.finished.connect(self.find_build_finished)
-            self.api_reply.readyRead.connect(self.find_build_ready_read)
-            return
-
-        requests_remaining = None
-        if self.api_reply.hasRawHeader(cons.GITHUB_XRL_REMAINING):
-            requests_remaining = self.api_reply.rawHeader(cons.GITHUB_XRL_REMAINING)
-            requests_remaining = tryint(requests_remaining)
-
-        reset_dt = None
-        if self.api_reply.hasRawHeader(cons.GITHUB_XRL_RESET):
-            reset_dt = self.api_reply.rawHeader(cons.GITHUB_XRL_RESET)
-            reset_dt = tryint(reset_dt)
-            reset_dt = arrow.get(reset_dt)
-
-        if requests_remaining is not None and requests_remaining <= 10:
-            self.warn_rate_limit(requests_remaining, reset_dt)
-
-        main_window = self.get_main_window()
-        status_bar = main_window.statusBar()
-
-        status_code = self.api_reply.attribute(
-            QNetworkRequest.Attribute.HttpStatusCodeAttribute)
-        if status_code != 200:
-            self.api_response_content = None
-
-            build_number = self.find_build_value.text()
-            build_number = build_number.strip()
-
-            if self.find_build_count == 0:
-                status_bar.showMessage(_('Build #{build} not found on GitHub'
-                    ).format(build=build_number))
-                return
-            elif self.find_build_count == 1:
-                self.find_build()
-                return
-
-        self.api_response_content.seek(0)
-        try:
-            release = json.loads(TextIOWrapper(self.api_response_content, encoding='utf8'
-                ).read())
-        except json.decoder.JSONDecodeError:
-            release = None
-        self.api_response_content = None
-
-        if release is None:
-            return
-
-        builds = self.builds
-
-        target_regex = re.compile(
-            r'cdda-windows-' +
-            r'with-graphics' + r'-' +
-            r'x64' +
-            r'b?(?P<build>[0-9\-]+)\.zip'
-            )
-
-        build_regex = re.compile(r'[Bb]uild #?(?P<build>[0-9\-]+)')
-
-        if any(x not in release for x in ('name', 'created_at')):
-            return
-
-        build_match = build_regex.search(release['name'])
-        build_number = None
-        if build_match is not None:
-            asset = None
-            if 'assets' in release:
-                asset_iter = (
-                    x for x in release['assets']
-                    if 'browser_download_url' in x
-                        and 'name' in x
-                        and target_regex.search(x['name']) is not None
-                )
-                asset = next(asset_iter, None)
-
-            build = {
-                'url': asset['browser_download_url'] if asset is not None
-                                                        else None,
-                'name': asset['name'] if asset is not None else None,
-                'number': build_match.group('build'),
-                'date': arrow.get(release['created_at']).datetime
-            }
-            build_number = build['number']
-
-            self.find_build_value.setText('')
-
-            for existing_build in builds:
-                if existing_build['number'] == build_number:
-                    status_bar.showMessage(
-                        _('Build #{build} is already in the available builds list'
-                        ).format(build=build_number))
-                    return
-
-            builds.append(build)
-
-            status_bar.showMessage(_('Build #{build} found and added to the available builds list'
-                ).format(build=build_number))
-        else:
-            return
-
-        if len(builds) > 0:
-            builds.sort(key=lambda x: (x['date'], x['number']), reverse=True)
-            self.builds = builds
-
-            self.builds_combo.clear()
-            for build in builds:
-                if build['date'] is not None:
-                    build_date = arrow.get(build['date'], 'UTC')
-                    human_delta = safe_humanize(build_date, arrow.utcnow(),
-                        locale=self.app_locale)
-                else:
-                    human_delta = _('Unknown')
-
-                self.builds_combo.addItem(
-                    '{number} ({delta})'.format(number=build['number'], delta=human_delta),
-                    userData=build
-                )
-
-            combo_model = self.builds_combo.model()
-            default_set = False
-            for x in range(combo_model.rowCount()):
-                if combo_model.item(x).data(Qt.ItemDataRole.UserRole)['url'] is None:
-                    combo_model.item(x).setEnabled(False)
-                    combo_model.item(x).setText(combo_model.item(x).text() +
-                        _(' - build unavailable'))
-                elif not default_set:
-                    default_set = True
-                    combo_model.item(x).setText(combo_model.item(x).text() +
-                        _(' - latest build available'))
-
-                if (combo_model.item(x).data(Qt.ItemDataRole.UserRole)['number'] == build_number and
-                    combo_model.item(x).isEnabled()):
-                    self.builds_combo.setCurrentIndex(x)
-            self.find_build_count = 0
-        elif self.find_build_count == 1:
-            self.find_build()
-
-    def find_build_ready_read(self):
-        self.api_response_content.write(self.api_reply.readAll())
 
     def update_game(self):
         if not self.updating:
@@ -1848,8 +1633,6 @@ class UpdateGroupBox(QGroupBox):
         self.previous_bc_enabled = self.builds_combo.isEnabled()
         self.builds_combo.setEnabled(False)
         self.refresh_builds_button.setEnabled(False)
-        self.find_build_value.setEnabled(False)
-        self.find_build_button.setEnabled(False)
 
         self.previous_ub_enabled = self.update_button.isEnabled()
         if update_button:
@@ -1860,8 +1643,6 @@ class UpdateGroupBox(QGroupBox):
         self.experimental_radio_button.setEnabled(True)
 
         self.refresh_builds_button.setEnabled(True)
-        self.find_build_value.setEnabled(True)
-        self.find_build_button.setEnabled(True)
 
         if builds_combo:
             self.builds_combo.setEnabled(True)
@@ -2791,7 +2572,6 @@ class UpdateGroupBox(QGroupBox):
     def start_lb_request(self):
         self.disable_controls(True)
         self.refresh_warning_label.hide()
-        self.find_build_warning_label.hide()
 
         main_window = self.get_main_window()
 
@@ -2869,11 +2649,8 @@ class UpdateGroupBox(QGroupBox):
 
         self.refresh_warning_label.show()
         self.refresh_warning_label.setToolTip(message)
-        self.find_build_warning_label.setToolTip(message)
 
         selected_branch = self.branch_button_group.checkedButton()
-        if selected_branch == self.experimental_radio_button:
-            self.find_build_warning_label.show()
 
     def lb_http_finished(self):
         main_window = self.get_main_window()
@@ -3080,25 +2857,6 @@ class UpdateGroupBox(QGroupBox):
     def lb_dl_progress(self, bytes_read, total_bytes):
         self.fetching_progress_bar.setMaximum(total_bytes)
         self.fetching_progress_bar.setValue(bytes_read)
-
-    def show_hide_find_build(self):
-        selected_branch = self.branch_button_group.checkedButton()
-
-        widgets = (
-            self.find_build_label,
-            self.find_build_value,
-            self.find_build_button
-            )
-
-        if selected_branch is self.stable_radio_button:
-            for widget in widgets:
-                widget.hide()
-            self.find_build_warning_label.hide()
-        elif selected_branch is self.experimental_radio_button:
-            for widget in widgets:
-                widget.show()
-            if self.refresh_warning_label.isVisible():
-                self.find_build_warning_label.show()
 
     def get_stable_tags(self):
         # Init vars
@@ -3374,10 +3132,6 @@ class UpdateGroupBox(QGroupBox):
         self.branch_changed()
 
     def branch_changed(self):
-        # Perform branch change
-
-        self.show_hide_find_build()
-
         # Change available builds and changelog
         self.refresh_builds()
 
