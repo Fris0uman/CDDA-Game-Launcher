@@ -22,15 +22,13 @@ from urllib.parse import urljoin
 
 import arrow
 from PySide6.QtCore import (
-    Qt, QTimer, QUrl, QFileInfo, Signal, QStringListModel, QThread, QRegularExpression
-)
+    Qt, QTimer, QUrl, QFileInfo, Signal, QStringListModel, QThread )
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 from PySide6.QtWidgets import (
     QApplication, QWidget, QGridLayout, QGroupBox, QVBoxLayout, QLabel, QLineEdit,
     QPushButton, QFileDialog, QToolButton, QProgressBar, QButtonGroup, QRadioButton,
     QComboBox, QTextBrowser, QMessageBox, QStyle, QHBoxLayout, QSizePolicy
 )
-from PySide6.QtGui import QRegularExpressionValidator
 from babel.dates import format_datetime
 from pywintypes import error as PyWinError
 
@@ -39,7 +37,7 @@ from cddagl.constants import get_cddagl_path
 from cddagl import __version__ as version
 from cddagl.functions import (
     tryint, move_path, sizeof_fmt, delete_path,
-    clean_qt_path, unique, log_exception, ensure_slash, safe_humanize
+    clean_qt_path, ensure_slash, safe_humanize
 )
 from cddagl.i18n import proxy_ngettext as ngettext, proxy_gettext as _
 from cddagl.sql.functions import (

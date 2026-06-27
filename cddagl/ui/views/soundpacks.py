@@ -9,7 +9,7 @@ import zipfile
 from collections import deque
 from datetime import datetime
 from os import scandir
-from urllib.parse import urljoin, urlencode
+from urllib.parse import urljoin
 
 import rarfile
 from PySide6.QtCore import Qt, QTimer, QUrl, QFileInfo, QStringListModel
@@ -22,7 +22,6 @@ from PySide6.QtWidgets import (
 from py7zlib import Archive7z, NoPasswordGivenError, FormatError
 
 import cddagl.constants as cons
-from cddagl import __version__ as version
 from cddagl.constants import get_data_path, get_cddagl_path
 from cddagl.functions import sizeof_fmt, delete_path
 from cddagl.i18n import proxy_gettext as _
