@@ -22,7 +22,8 @@ from urllib.parse import urljoin
 
 import arrow
 from PySide6.QtCore import (
-    Qt, QTimer, QUrl, QFileInfo, Signal, QStringListModel, QThread )
+    Qt, QTimer, QUrl, QFileInfo, Signal, QStringListModel, QThread)
+from PySide6.QtGui import QStandardItemModel
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 from PySide6.QtWidgets import (
     QApplication, QWidget, QGridLayout, QGroupBox, QVBoxLayout, QLabel, QLineEdit,
@@ -581,7 +582,7 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
 
             backups_tab.backup_saves(name)
 
-    def get_main_tab(self):
+    def get_main_tab(self) -> MainTab:
         return self.parentWidget()
 
     def get_main_window(self):
@@ -1692,7 +1693,7 @@ class UpdateGroupBox(QGroupBox):
 
             delete_path(previous_version_dir)
 
-    def get_main_tab(self):
+    def get_main_tab(self) -> MainTab:
         return self.parentWidget()
 
     def get_main_window(self):
@@ -2881,18 +2882,16 @@ class UpdateGroupBox(QGroupBox):
                     userData=build
                 )
 
-            combo_model = self.builds_combo.model()
+            combo_model: QStandardItemModel = self.builds_combo.model()
             default_set = False
             for x in range(combo_model.rowCount()):
                 if combo_model.item(x).data(Qt.ItemDataRole.UserRole)['url'] is None:
                     combo_model.item(x).setEnabled(False)
-                    combo_model.item(x).setText(combo_model.item(x).text() +
-                        _(' - build unavailable'))
+                    combo_model.item(x).setText(combo_model.item(x).text() + _(' - build unavailable'))
                 elif not default_set:
                     default_set = True
                     self.builds_combo.setCurrentIndex(x)
-                    combo_model.item(x).setText(combo_model.item(x).text() +
-                        _(' - latest build available'))
+                    combo_model.item(x).setText(combo_model.item(x).text() + _(' - latest build available'))
 
             if not game_dir_group_box.game_started:
                 self.builds_combo.setEnabled(True)
