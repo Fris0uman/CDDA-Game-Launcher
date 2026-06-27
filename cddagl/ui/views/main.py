@@ -94,6 +94,9 @@ class MainTab(QWidget):
     def get_soundpacks_tab(self):
         return self.parentWidget().parentWidget().soundpacks_tab
 
+    def get_backups_tab(self):
+        return self.parentWidget().parentWidget().backups_tab
+
     def disable_tab(self):
         self.game_dir_group_box.disable_controls()
         self.update_group_box.disable_controls(True)
@@ -421,7 +424,19 @@ class GameDirGroupBox(QGroupBox):
         if self.game_started:
             return self.focus_game()
 
-        self.launch_game_process()
+        if config_true(get_config_value('backup_on_launch', 'False')):
+            main_tab = self.get_main_tab()
+            backups_tab = main_tab.get_backups_tab()
+
+            backups_tab.prune_auto_backups()
+
+            name = '{auto}_{name}'.format(auto=_('auto'),
+                name=_('before_launch'))
+
+            backups_tab.after_backup = self.launch_game_process
+            backups_tab.backup_saves(name)
+        else:
+            self.launch_game_process()
 
     def launch_game_process(self):
         if self.exe_path is None or not os.path.isfile(self.exe_path):
@@ -496,9 +511,11 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
 
             soundpacks_tab = main_tab.get_soundpacks_tab()
             settings_tab = main_tab.get_settings_tab()
+            backups_tab = main_tab.get_backups_tab()
 
             soundpacks_tab.disable_tab()
             settings_tab.disable_tab()
+            backups_tab.disable_tab()
 
             self.launch_game_button.setText(_('Show current game'))
             self.launch_game_button.setEnabled(True)
@@ -543,18 +560,28 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
 
         soundpacks_tab = main_tab.get_soundpacks_tab()
         settings_tab = main_tab.get_settings_tab()
+        backups_tab = main_tab.get_backups_tab()
 
         self.enable_controls()
         update_group_box.enable_controls()
 
         soundpacks_tab.enable_tab()
         settings_tab.enable_tab()
+        backups_tab.enable_tab()
 
         self.launch_game_button.setText(_('Launch game'))
 
         self.get_main_window().setWindowState(Qt.WindowState.WindowActive)
 
         self.update_saves()
+
+        if config_true(get_config_value('backup_on_end', 'False')):
+            backups_tab.prune_auto_backups()
+
+            name = '{auto}_{name}'.format(auto=_('auto'),
+                name=_('after_end'))
+
+            backups_tab.backup_saves(name)
 
     def get_main_tab(self):
         return self.parentWidget()
@@ -570,12 +597,27 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
         directory = self.dir_combo.currentText()
         soundpacks_tab.game_dir_changed(directory)
 
+    def update_backups(self):
+        main_window = self.get_main_window()
+        central_widget = main_window.central_widget
+        backups_tab = central_widget.backups_tab
+
+        directory = self.dir_combo.currentText()
+        backups_tab.game_dir_changed(directory)
+
     def clear_soundpacks(self):
         main_window = self.get_main_window()
         central_widget = main_window.central_widget
         soundpacks_tab = central_widget.soundpacks_tab
 
         soundpacks_tab.clear_soundpacks()
+
+    def clear_backups(self):
+        main_window = self.get_main_window()
+        central_widget = main_window.central_widget
+        backups_tab = central_widget.backups_tab
+
+        backups_tab.clear_backups()
 
     def set_game_directory(self):
         options = QFileDialog.Option.DontResolveSymlinks | QFileDialog.Option.ShowDirsOnly
@@ -606,6 +648,7 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
         if self.last_session_directory != directory:
             self.update_soundpacks()
             self.update_saves()
+            self.update_backups()
 
         self.last_session_directory = directory
 
@@ -697,6 +740,7 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
                     self.update_version()
                     self.update_saves()
                     self.update_soundpacks()
+                    self.update_backups()
 
         if self.exe_path is None:
             self.launch_game_button.setEnabled(False)
@@ -709,6 +753,7 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
             self.build_value_label.setText(_('Unknown'))
             self.saves_value_edit.setText(_('Unknown'))
             self.clear_soundpacks()
+            self.clear_backups()
         else:
             self.launch_game_button.setEnabled(True)
             update_group_box.update_button.setText(_('Update game'))
@@ -876,9 +921,11 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
 
             soundpacks_tab = main_tab.get_soundpacks_tab()
             settings_tab = main_tab.get_settings_tab()
+            backups_tab = main_tab.get_backups_tab()
 
             soundpacks_tab.disable_tab()
             settings_tab.disable_tab()
+            backups_tab.disable_tab()
 
             self.launch_game_button.setText(_('Show current game'))
             self.launch_game_button.setEnabled(True)
@@ -908,12 +955,21 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
 
                 soundpacks_tab.enable_tab()
                 settings_tab.enable_tab()
+                backups_tab.enable_tab()
 
                 self.launch_game_button.setText(_('Launch game'))
 
                 self.get_main_window().setWindowState(Qt.WindowState.WindowActive)
 
                 self.update_saves()
+
+                if config_true(get_config_value('backup_on_end', 'False')):
+                    backups_tab.prune_auto_backups()
+
+                    name = '{auto}_{name}'.format(auto=_('auto'),
+                        name=_('after_end'))
+
+                    backups_tab.backup_saves(name)
 
             process_wait_thread = ProcessWaitThread(self.game_process_id, self)
             process_wait_thread.ended.connect(process_ended)
@@ -988,7 +1044,7 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
                 elif entry.is_file():
                     self.saves_size += entry.stat().st_size
 
-                    if entry.name.endswith('.zzip'):
+                    if entry.name.endswith('.sav'):
                         world_dir = os.path.dirname(entry.path)
                         if self.save_dir == os.path.dirname(world_dir):
                             self.saves_characters += 1
@@ -1360,7 +1416,18 @@ class UpdateGroupBox(QGroupBox):
                     game_dir = subdir
                     game_dir_group_box.set_dir_combo_value(subdir)
 
-            self.update_game_process()
+            if config_true(get_config_value('backup_before_update', 'False')):
+                backups_tab = main_tab.get_backups_tab()
+
+                backups_tab.prune_auto_backups()
+                current_build = main_tab.game_dir_group_box.current_build
+                name = '{auto}_{name}_{build}v'.format(auto=_('auto'),
+                    name=_('before_update'), build=current_build)
+
+                backups_tab.after_backup = self.update_game_process
+                backups_tab.backup_saves(name)
+            else:
+                self.update_game_process()
 
         else:
             # We are currently updating, try to cancel
@@ -1386,6 +1453,26 @@ class UpdateGroupBox(QGroupBox):
             elif self.clearing_previous_dir:
                 if self.progress_rmtree is not None:
                     self.progress_rmtree.stop()
+            elif self.backing_up_game:
+                self.backup_timer.stop()
+
+                main_window = self.get_main_window()
+                status_bar = main_window.statusBar()
+
+                status_bar.removeWidget(self.backup_label)
+                status_bar.removeWidget(self.backup_progress_bar)
+
+                status_bar.busy -= 1
+
+                self.restore_backup()
+
+                if game_dir_group_box.exe_path is not None:
+                    if status_bar.busy == 0:
+                        status_bar.showMessage(_('Update cancelled'))
+                else:
+                    if status_bar.busy == 0:
+                        status_bar.showMessage(_('Installation cancelled'))
+
             elif self.extracting_new_build:
                 self.extracting_timer.stop()
 
@@ -1403,6 +1490,7 @@ class UpdateGroupBox(QGroupBox):
                 delete_path(download_dir)
 
                 path = self.clean_game_dir()
+                self.restore_backup()
                 self.restore_previous_content(path)
 
                 if path is not None:
@@ -1427,6 +1515,7 @@ class UpdateGroupBox(QGroupBox):
                 status_bar.busy -= 1
 
                 path = self.clean_game_dir()
+                self.restore_backup()
                 self.restore_previous_content(path)
 
                 if path is not None:
@@ -1449,6 +1538,7 @@ class UpdateGroupBox(QGroupBox):
                 status_bar.clearMessage()
 
                 path = self.clean_game_dir()
+                self.restore_backup()
                 self.restore_previous_content(path)
 
                 if path is not None:
@@ -1511,9 +1601,11 @@ class UpdateGroupBox(QGroupBox):
 
         soundpacks_tab = main_tab.get_soundpacks_tab()
         settings_tab = main_tab.get_settings_tab()
+        backups_tab = main_tab.get_backups_tab()
 
         soundpacks_tab.disable_tab()
         settings_tab.disable_tab()
+        backups_tab.disable_tab()
 
         try:
             if not os.path.exists(game_dir):
@@ -1589,6 +1681,22 @@ class UpdateGroupBox(QGroupBox):
         for entry in os.listdir(path):
             entry_path = os.path.join(path, entry)
             shutil.move(entry_path, previous_version_dir)
+
+    def restore_backup(self):
+        game_dir = self.game_dir
+        previous_version_dir = os.path.join(game_dir, 'previous_version')
+
+        if os.path.isdir(previous_version_dir) and os.path.isdir(game_dir):
+
+            for entry in os.listdir(previous_version_dir):
+                if (entry == 'save' and
+                    config_true(get_config_value('prevent_save_move',
+                        'False'))):
+                    continue
+                entry_path = os.path.join(previous_version_dir, entry)
+                shutil.move(entry_path, game_dir)
+
+            delete_path(previous_version_dir)
 
     def get_main_tab(self):
         return self.parentWidget()
@@ -2499,12 +2607,15 @@ class UpdateGroupBox(QGroupBox):
         self.enable_controls(True)
 
         game_dir_group_box.update_soundpacks()
+        game_dir_group_box.update_backups()
 
         soundpacks_tab = main_tab.get_soundpacks_tab()
         settings_tab = main_tab.get_settings_tab()
+        backups_tab = main_tab.get_backups_tab()
 
         soundpacks_tab.enable_tab()
         settings_tab.enable_tab()
+        backups_tab.enable_tab()
 
         if game_dir_group_box.exe_path is not None:
             self.update_button.setText(_('Update game'))
