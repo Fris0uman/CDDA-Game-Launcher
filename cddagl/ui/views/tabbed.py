@@ -28,7 +28,6 @@ from cddagl import __version__ as version
 from cddagl.functions import sizeof_fmt, delete_path
 from cddagl.i18n import proxy_gettext as _
 from cddagl.sql.functions import get_config_value, set_config_value, config_true
-from cddagl.ui.views.backups import BackupsTab
 from cddagl.ui.views.dialogs import AboutDialog, FaqDialog, LicenceDialog
 from cddagl.ui.views.main import MainTab
 from cddagl.ui.views.settings import SettingsTab
@@ -397,9 +396,6 @@ class TabbedWindow(QMainWindow):
         geometry = self.saveGeometry().toBase64().data().decode('utf8')
         set_config_value('window_geometry', geometry)
 
-        backups_tab = self.central_widget.backups_tab
-        backups_tab.save_geometry()
-
     def closeEvent(self, event):
         update_group_box = self.central_widget.main_tab.update_group_box
         soundpacks_tab = self.central_widget.soundpacks_tab
@@ -432,18 +428,15 @@ class CentralWidget(QTabWidget):
         super(CentralWidget, self).__init__()
 
         self.create_main_tab()
-        self.create_backups_tab()
         self.create_soundpacks_tab()
         self.create_settings_tab()
 
     def set_text(self):
         self.setTabText(self.indexOf(self.main_tab), _('Main'))
-        self.setTabText(self.indexOf(self.backups_tab), _('Backups'))
         self.setTabText(self.indexOf(self.soundpacks_tab), _('Soundpacks'))
         self.setTabText(self.indexOf(self.settings_tab), _('Settings'))
 
         self.main_tab.set_text()
-        self.backups_tab.set_text()
         self.soundpacks_tab.set_text()
         self.settings_tab.set_text()
 
@@ -451,11 +444,6 @@ class CentralWidget(QTabWidget):
         main_tab = MainTab()
         self.addTab(main_tab, _('Main'))
         self.main_tab = main_tab
-
-    def create_backups_tab(self):
-        backups_tab = BackupsTab()
-        self.addTab(backups_tab, _('Backups'))
-        self.backups_tab = backups_tab
 
     def create_soundpacks_tab(self):
         soundpacks_tab = SoundpacksTab()
