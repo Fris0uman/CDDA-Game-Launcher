@@ -241,10 +241,12 @@ class BackupsTab(QTabWidget):
     def enable_tab(self):
         self.backups_table.setEnabled(True)
 
-        if (self.game_dir is not None and os.path.isdir(os.path.join(self.game_dir, 'save_backups'))):
+        session = get_config_value('session_directory')
+
+        if session is not None and os.path.isdir(self.get_backup_dir()):
             self.refresh_list_button.setEnabled(True)
 
-        if (self.game_dir is not None and os.path.isdir(os.path.join(self.game_dir, 'save'))):
+        if session is not None and os.path.isdir(self.get_save_dir()):
             self.backup_current_button.setEnabled(True)
 
         selection_model = self.backups_table.selectionModel()
@@ -475,7 +477,7 @@ class BackupsTab(QTabWidget):
 
         self.extracting_backup = True
 
-        self.extract_dir = self.game_dir
+        self.extract_dir = get_config_value('session_directory')
 
         status_bar.clearMessage()
         status_bar.busy += 1
