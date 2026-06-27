@@ -2936,7 +2936,7 @@ class UpdateGroupBox(QGroupBox):
         # Init vars
         status_bar = self.get_main_window().statusBar()
         url = cons.GITHUB_REST_API_URL + cons.CDDA_RELEASE_TAGS
-        tag_regex = re.compile(r'(refs/tags/)(cdda-|)(0\.[A-Z]-)([0-9\-]+|[a-zA-Z]+|)')
+        tag_regex = re.compile(r'(refs/tags/)(cdda-|)(0\.[A-Z])(-[0-9\-]+|[a-zA-Z]+|)')
         stable_tags = []
 
         # Make request for the tags
