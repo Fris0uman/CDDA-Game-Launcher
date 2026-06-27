@@ -239,16 +239,6 @@ class LauncherSettingsGroupBox(QGroupBox):
 
         set_config_value('keep_launcher_open', str(checked))
 
-        backup_on_end = (Qt.CheckState.Checked if config_true(get_config_value(
-            'backup_on_end', 'False')) else Qt.CheckState.Unchecked)
-
-        backups_tab = self.get_main_tab().get_backups_tab()
-
-        if not (backup_on_end and not checked):
-            backups_tab.backup_on_end_warning_label.hide()
-        else:
-            backups_tab.backup_on_end_warning_label.show()
-
     def clp_changed(self):
         set_config_value('command.params',
             self.command_line_parameters_edit.text())
