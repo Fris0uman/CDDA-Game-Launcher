@@ -145,7 +145,7 @@ class GameDirGroupBox(QGroupBox):
         self.dir_combo.setEditable(True)
         self.dir_combo.setInsertPolicy(QComboBox.InsertPolicy.InsertAtTop)
         self.dir_combo.currentIndexChanged.connect(self.dc_index_changed)
-        self.dir_combo.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.dir_combo.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         game_directories = json.loads(get_config_value('game_directories', '[]'))
         self.dir_combo_model = QStringListModel(game_directories, self)
         self.dir_combo.setModel(self.dir_combo_model)
@@ -158,7 +158,7 @@ class GameDirGroupBox(QGroupBox):
 
         self.dir_state_icon = QLabel()
         self.layout_dir.addWidget(self.dir_state_icon)
-        self.dir_state_icon.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        self.dir_state_icon.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
         self.dir_state_icon.hide()
 
         self.sess_combo = QComboBox()
@@ -166,7 +166,7 @@ class GameDirGroupBox(QGroupBox):
         self.sess_combo.setEditable(True)
         self.sess_combo.setInsertPolicy(QComboBox.InsertPolicy.InsertAtTop)
         self.sess_combo.currentIndexChanged.connect(self.sess_index_changed)
-        self.sess_combo.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.sess_combo.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         session_directories = json.loads(get_config_value('session_directories', '[]'))
         self.sess_combo_model = QStringListModel(session_directories, self)
         self.sess_combo.setModel(self.sess_combo_model)
@@ -179,7 +179,7 @@ class GameDirGroupBox(QGroupBox):
 
         self.sess_state_icon = QLabel()
         self.layout_sess.addWidget(self.sess_state_icon)
-        self.sess_state_icon.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        self.sess_state_icon.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
         self.sess_state_icon.hide()
 
         build_label = QLabel()
@@ -359,7 +359,7 @@ class GameDirGroupBox(QGroupBox):
                 with tempfile.TemporaryDirectory(prefix=cons.TEMP_PREFIX
                     ) as temp_move_dir:
 
-                    excluded_entries = set(['previous_version'])
+                    excluded_entries = {'previous_version'}
                     sessions = json.loads(get_config_value('session_directories', '[]'))
                     for session in sessions:
                         if os.path.dirname(session) == game_dir:
@@ -724,10 +724,6 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
             if version_type is None:
                 dir_state = 'warning'
                 self.set_dir_state_icon(dir_state)
-                self.version_value_label.setText(
-                    _('Unknown version - Reason:') + ' ' +
-                    _("Game is not installed in this directory.")
-                )
             else:
                 dir_state = 'ok'
                 self.exe_path = exe_path
@@ -1647,7 +1643,7 @@ class UpdateGroupBox(QGroupBox):
 
         temp_move_dir = tempfile.mkdtemp(prefix=cons.TEMP_PREFIX)
 
-        excluded_entries = set(['previous_version'])
+        excluded_entries = {'previous_version'}
         sessions = json.loads(get_config_value('session_directories', '[]'))
         for session in sessions:
             if os.path.dirname(session) == game_dir:
