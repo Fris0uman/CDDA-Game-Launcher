@@ -181,15 +181,6 @@ class GameDirGroupBox(QGroupBox):
         self.sess_state_icon.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
         self.sess_state_icon.hide()
 
-        version_label = QLabel()
-        layout.addWidget(version_label, 2, 0, Qt.AlignmentFlag.AlignRight)
-        self.version_label = version_label
-
-        version_value_label = QLineEdit()
-        version_value_label.setReadOnly(True)
-        layout.addWidget(version_value_label, 2, 1)
-        self.version_value_label = version_value_label
-
         build_label = QLabel()
         layout.addWidget(build_label, 3, 0, Qt.AlignmentFlag.AlignRight)
         self.build_label = build_label
@@ -245,7 +236,6 @@ class GameDirGroupBox(QGroupBox):
     def set_text(self):
         self.dir_label.setText(_('Game Directory:'))
         self.session_label.setText(_('User Data:'))
-        self.version_label.setText(_('Version:'))
         self.build_label.setText(_('Build:'))
         self.saves_label.setText(_('Saves:'))
         self.saves_warning_label.setToolTip(
@@ -663,24 +653,15 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
         if ensure_slash(get_cddagl_path()).startswith(ensure_slash(directory)):
             dir_state = 'critical'
             self.set_dir_state_icon(dir_state)
-            self.version_value_label.setText(
-                _('Unknown version - Reason:') + ' ' +
-                _('Kitten CDDA Launcher files cannot be inside Game directory!')
-            )
+
         elif os.path.isfile(directory):
             dir_state = 'critical'
             self.set_dir_state_icon(dir_state)
-            self.version_value_label.setText(
-                _('Unknown version - Reason:') + ' ' +
-                _('Game directory was set to a file!')
-            )
+
         elif not os.path.isdir(directory):
             dir_state = 'warning'
             self.set_dir_state_icon(dir_state)
-            self.version_value_label.setText(
-                _('Unknown version - Reason:') + ' ' +
-                _("Game directory doesn't exist, Game is not installed here.")
-            )
+
         else:
             # Check for previous version
             previous_version_dir = os.path.join(directory, 'previous_version')
@@ -711,7 +692,6 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
                 self.exe_path = exe_path
                 self.version_type = version_type
                 if self.last_game_directory != directory:
-                    self.version_value_label.setText(_('Analyzing...'))
                     self.build_value_label.setText(_('Analyzing...'))
                     self.saves_value_edit.setText(_('Analyzing...'))
                     self.update_version()
@@ -830,11 +810,6 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
                     self.game_version = _('Unknown')
                 else:
                     self.add_game_dir()
-
-                self.version_value_label.setText(
-                    '{version} ({type})'
-                    .format(version=self.game_version, type=self.version_type)
-                )
 
                 new_version(self.game_version, sha256, is_stable)
 
@@ -1086,7 +1061,6 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
             exe_path = tiles_exe
 
         if version_type is None:
-            self.version_value_label.setText(_('Not a CDDA directory'))
             self.build_value_label.setText(_('Unknown'))
             self.current_build = None
 
@@ -1190,10 +1164,6 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
 
                     if self.game_version == '':
                         self.game_version = _('Unknown')
-                    self.version_value_label.setText(
-                        '{version} ({type})'
-                        .format(version=self.game_version, type=self.version_type)
-                    )
 
                     new_build(self.game_version, sha256, is_stable, self.build_number,
                         self.build_date)
