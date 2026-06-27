@@ -22,15 +22,14 @@ from urllib.parse import urljoin
 
 import arrow
 from PySide6.QtCore import (
-    Qt, QTimer, QUrl, QFileInfo, Signal, QStringListModel, QThread, QRegularExpression
-)
+    Qt, QTimer, QUrl, QFileInfo, Signal, QStringListModel, QThread)
+from PySide6.QtGui import QStandardItemModel
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 from PySide6.QtWidgets import (
     QApplication, QWidget, QGridLayout, QGroupBox, QVBoxLayout, QLabel, QLineEdit,
     QPushButton, QFileDialog, QToolButton, QProgressBar, QButtonGroup, QRadioButton,
     QComboBox, QTextBrowser, QMessageBox, QStyle, QHBoxLayout, QSizePolicy
 )
-from PySide6.QtGui import QRegularExpressionValidator
 from babel.dates import format_datetime
 from pywintypes import error as PyWinError
 
@@ -39,7 +38,7 @@ from cddagl.constants import get_cddagl_path
 from cddagl import __version__ as version
 from cddagl.functions import (
     tryint, move_path, sizeof_fmt, delete_path,
-    clean_qt_path, unique, log_exception, ensure_slash, safe_humanize
+    clean_qt_path, ensure_slash, safe_humanize
 )
 from cddagl.i18n import proxy_ngettext as ngettext, proxy_gettext as _
 from cddagl.sql.functions import (
@@ -147,7 +146,7 @@ class GameDirGroupBox(QGroupBox):
         self.dir_combo.setEditable(True)
         self.dir_combo.setInsertPolicy(QComboBox.InsertPolicy.InsertAtTop)
         self.dir_combo.currentIndexChanged.connect(self.dc_index_changed)
-        self.dir_combo.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.dir_combo.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         game_directories = json.loads(get_config_value('game_directories', '[]'))
         self.dir_combo_model = QStringListModel(game_directories, self)
         self.dir_combo.setModel(self.dir_combo_model)
@@ -160,7 +159,7 @@ class GameDirGroupBox(QGroupBox):
 
         self.dir_state_icon = QLabel()
         self.layout_dir.addWidget(self.dir_state_icon)
-        self.dir_state_icon.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        self.dir_state_icon.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
         self.dir_state_icon.hide()
 
         self.sess_combo = QComboBox()
@@ -168,7 +167,7 @@ class GameDirGroupBox(QGroupBox):
         self.sess_combo.setEditable(True)
         self.sess_combo.setInsertPolicy(QComboBox.InsertPolicy.InsertAtTop)
         self.sess_combo.currentIndexChanged.connect(self.sess_index_changed)
-        self.sess_combo.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.sess_combo.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         session_directories = json.loads(get_config_value('session_directories', '[]'))
         self.sess_combo_model = QStringListModel(session_directories, self)
         self.sess_combo.setModel(self.sess_combo_model)
@@ -181,7 +180,7 @@ class GameDirGroupBox(QGroupBox):
 
         self.sess_state_icon = QLabel()
         self.layout_sess.addWidget(self.sess_state_icon)
-        self.sess_state_icon.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        self.sess_state_icon.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
         self.sess_state_icon.hide()
 
         build_label = QLabel()
@@ -361,7 +360,7 @@ class GameDirGroupBox(QGroupBox):
                 with tempfile.TemporaryDirectory(prefix=cons.TEMP_PREFIX
                     ) as temp_move_dir:
 
-                    excluded_entries = set(['previous_version'])
+                    excluded_entries = {'previous_version'}
                     sessions = json.loads(get_config_value('session_directories', '[]'))
                     for session in sessions:
                         if os.path.dirname(session) == game_dir:
@@ -583,7 +582,7 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
 
             backups_tab.backup_saves(name)
 
-    def get_main_tab(self):
+    def get_main_tab(self) -> MainTab:
         return self.parentWidget()
 
     def get_main_window(self):
@@ -726,10 +725,6 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
             if version_type is None:
                 dir_state = 'warning'
                 self.set_dir_state_icon(dir_state)
-                self.version_value_label.setText(
-                    _('Unknown version - Reason:') + ' ' +
-                    _("Game is not installed in this directory.")
-                )
             else:
                 dir_state = 'ok'
                 self.exe_path = exe_path
@@ -1649,7 +1644,7 @@ class UpdateGroupBox(QGroupBox):
 
         temp_move_dir = tempfile.mkdtemp(prefix=cons.TEMP_PREFIX)
 
-        excluded_entries = set(['previous_version'])
+        excluded_entries = {'previous_version'}
         sessions = json.loads(get_config_value('session_directories', '[]'))
         for session in sessions:
             if os.path.dirname(session) == game_dir:
@@ -1698,7 +1693,7 @@ class UpdateGroupBox(QGroupBox):
 
             delete_path(previous_version_dir)
 
-    def get_main_tab(self):
+    def get_main_tab(self) -> MainTab:
         return self.parentWidget()
 
     def get_main_window(self):
@@ -2887,18 +2882,16 @@ class UpdateGroupBox(QGroupBox):
                     userData=build
                 )
 
-            combo_model = self.builds_combo.model()
+            combo_model: QStandardItemModel = self.builds_combo.model()
             default_set = False
             for x in range(combo_model.rowCount()):
                 if combo_model.item(x).data(Qt.ItemDataRole.UserRole)['url'] is None:
                     combo_model.item(x).setEnabled(False)
-                    combo_model.item(x).setText(combo_model.item(x).text() +
-                        _(' - build unavailable'))
+                    combo_model.item(x).setText(combo_model.item(x).text() + _(' - build unavailable'))
                 elif not default_set:
                     default_set = True
                     self.builds_combo.setCurrentIndex(x)
-                    combo_model.item(x).setText(combo_model.item(x).text() +
-                        _(' - latest build available'))
+                    combo_model.item(x).setText(combo_model.item(x).text() + _(' - latest build available'))
 
             if not game_dir_group_box.game_started:
                 self.builds_combo.setEnabled(True)
