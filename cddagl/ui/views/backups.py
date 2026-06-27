@@ -968,8 +968,10 @@ class BackupsTab(QTabWidget):
         def backup_next_file():
             try:
                 if self.backup_compressing:
+                    session = get_config_value('session_directory')
+
                     next_file = self.backup_files.popleft()
-                    relpath = os.path.relpath(next_file, self.game_dir)
+                    relpath = os.path.relpath(next_file, session)
                     self.next_backup_file = next_file
 
                     self.compressing_label.setText(_('Compressing {filename}').format(filename=relpath))
@@ -1187,17 +1189,12 @@ class BackupsTab(QTabWidget):
 
                                 uncompressed_size += info.file_size
 
-                                # For compatibility with 1.6.3
-                                session = get_config_value('session_directory')
-                                if session == 'default_session':
-                                    session = self.game_dir
-
                                 path_items = info.filename.split('/')
                                 target_length = 3
 
                                 if len(path_items) == target_length:
                                     save_file = path_items[-1]
-                                    if save_file.endswith('.sav'):
+                                    if save_file.endswith('.zzip'):
                                         character_count += 1
                                     if save_file in cons.WORLD_FILES:
                                         worlds_set.add(path_items[1])

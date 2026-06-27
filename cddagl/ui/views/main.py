@@ -1044,7 +1044,7 @@ antivirus whitelist or select the action to trust this binary when detected.</p>
                 elif entry.is_file():
                     self.saves_size += entry.stat().st_size
 
-                    if entry.name.endswith('.sav'):
+                    if entry.name.endswith('.zzip'):
                         world_dir = os.path.dirname(entry.path)
                         if self.save_dir == os.path.dirname(world_dir):
                             self.saves_characters += 1
