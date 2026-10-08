@@ -645,11 +645,10 @@ class BackupsTab(QTabWidget):
         confirm_msgbox.setInformativeText(_('Are you sure you want to '
                                             'delete the <strong>{filename}</strong> backup?').format(
             filename=selected_info['path']))
-        confirm_msgbox.addButton(_('Delete the backup'), QMessageBox.ButtonRole.YesRole)
-        confirm_msgbox.addButton(_('I want to keep the backup'), QMessageBox.ButtonRole.NoRole)
+        confirm_msgbox.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         confirm_msgbox.setIcon(QMessageBox.Icon.Warning)
 
-        if confirm_msgbox.exec() == 0:
+        if confirm_msgbox.exec() == QMessageBox.StandardButton.Yes:
             main_window = self.get_main_window()
             status_bar = main_window.statusBar()
 
