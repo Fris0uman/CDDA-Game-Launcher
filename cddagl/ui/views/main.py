@@ -2990,6 +2990,11 @@ class UpdateGroupBox(QGroupBox):
             found_candidate = False
             for tag in stable_tags.copy():
                 if tag.startswith('cdda-'):
+                    # If we already have the full release we don't need the candidate
+                    if tag.split("-")[1] in stable_tags:
+                        stable_tags.remove(tag)
+                        continue
+                    # We only need one candidate
                     if not found_candidate:
                         found_candidate = True
                     else:
